@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Afterpay SMB Biweekly Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0B1120;
+  --card-bg: #111827;
+  --card-border: #1E293B;
+  --mint: #B2FCE4;
+  --green: #10B981;
+  --red: #EF4444;
+  --yellow: #F59E0B;
+  --text: #F1F5F9;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.dashboard {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 24px 32px 40px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.header-left h1 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text);
+}
+
+.header-left h1 span.mint { color: var(--mint); }
+
+.header-left .subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.header-actions button {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.header-actions button:hover {
+  border-color: var(--mint);
+  background: #1a2332;
+}
+
+.bell-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--card-bg);
+}
+
+.bell-dot.fresh { background: var(--green); }
+.bell-dot.stale { background: var(--red); }
+
+.bell-badge-stale {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--card-bg);
+}
+
+@keyframes pulse-stale {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+}
+
+.btn-bell.stale { animation: pulse-stale 2s infinite; }
+
+.mint-hr {
+  height: 3px;
+  border: none;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--mint), #10B981, #059669, transparent);
+  margin: 16px 0 28px;
+}
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* Executive Summary */
+.exec-summary {
+  margin-bottom: 28px;
+}
+
+.exec-summary .card-title { color: var(--mint); }
+
+.exec-summary p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+/* Channel Temp Check */
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.channel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.channel-card .channel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.channel-card .channel-name {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-mixed { background: rgba(245,158,11,0.15); color: var(--yellow); }
+.badge-strong { background: rgba(16,185,129,0.15); color: var(--green); }
+.badge-watch { background: rgba(239,68,68,0.15); color: var(--red); }
+
+.channel-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.channel-metrics .metric {
+  text-align: center;
+  padding: 8px 4px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+}
+
+.metric-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.metric-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.channel-insight {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  border-top: 1px solid var(--card-border);
+  padding-top: 12px;
+}
+
+/* Regional Breakdown */
+.regional-section { margin-bottom: 32px; }
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+}
+
+.tab {
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  transition: all 0.2s;
+}
+
+.tab:hover { color: var(--text); }
+
+.tab.active {
+  background: var(--card-bg);
+  color: var(--mint);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table thead th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--card-border);
+  white-space: nowrap;
+}
+
+.data-table tbody td {
+  padding: 12px 12px;
+  border-bottom: 1px solid rgba(30,41,59,0.5);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.data-table tbody tr:last-child td { border-bottom: none; }
+
+.data-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+.change-green { color: var(--green); font-weight: 600; }
+.change-red { color: var(--red); font-weight: 600; }
+.change-yellow { color: var(--yellow); font-weight: 600; }
+
+.table-insight {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: rgba(178,252,228,0.04);
+  border-left: 3px solid var(--mint);
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* Watch-outs */
+.watchouts-section { margin-bottom: 32px; }
+
+.alert-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alert-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 18px 22px;
+  border-left: 4px solid;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.alert-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.alert-card.critical { border-left-color: var(--red); }
+.alert-card.monitor { border-left-color: var(--yellow); }
+.alert-card.opportunity { border-left-color: var(--green); }
+
+.alert-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.alert-type {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.alert-type.critical { color: var(--red); }
+.alert-type.monitor { color: var(--yellow); }
+.alert-type.opportunity { color: var(--green); }
+
+.alert-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.alert-body {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.alert-action {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Footer */
+.footer-hr {
+  height: 2px;
+  border: none;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--mint), #10B981, #059669, transparent);
+  margin: 32px 0 16px;
+}
+
+.footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+  padding-bottom: 16px;
+}
+
+/* Modals */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 28px;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.modal-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.modal-close {
+  float: right;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+}
+
+.modal-close:hover { color: var(--text); }
+
+.share-input-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.share-input-group input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+}
+
+.share-input-group input:focus { outline: none; border-color: var(--mint); }
+
+.btn-copy {
+  background: var(--mint);
+  color: #0B1120;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.btn-copy:hover { opacity: 0.85; }
+
+/* Dropzone */
+.dropzone {
+  border: 2px dashed var(--card-border);
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+
+.dropzone:hover, .dropzone.dragover {
+  border-color: var(--mint);
+  background: rgba(178,252,228,0.04);
+}
+
+.dropzone-icon { font-size: 36px; margin-bottom: 8px; }
+
+.dropzone-text {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.dropzone-text strong { color: var(--mint); }
+
+.dropzone-hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+.dropzone-file {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(178,252,228,0.06);
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.dropzone-file.show { display: flex; }
+
+.dropzone-file .file-name {
+  flex: 1;
+  font-size: 13px;
+  color: var(--mint);
+  font-weight: 500;
+}
+
+.dropzone-file .file-remove {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.bell-instructions {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+.staleness-info {
+  font-size: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.staleness-info.fresh { background: rgba(16,185,129,0.1); color: var(--green); }
+.staleness-info.stale { background: rgba(239,68,68,0.1); color: var(--red); }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .channel-grid { grid-template-columns: 1fr; }
+  .dashboard { padding: 16px; }
+}
+
+@media (max-width: 768px) {
+  .data-table { font-size: 11px; }
+  .data-table thead th, .data-table tbody td { padding: 8px 6px; }
+  .header { flex-direction: column; gap: 12px; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
+</style>
+  <script type="application/ld+json">
+{
+  "@context": "urn:goose.ai:schema",
+  "@type": "GooseApp",
+  "name": "afterpay-smb-dashboard",
+  "description": "Afterpay SMB Biweekly Q1 marketing dashboard with cross-channel performance metrics.",
+  "width": 1400,
+  "height": 900,
+  "resizable": true,
+  "mcpServers": [
+    "apps"
+  ]
+}
+  </script>
+  <script type="application/x-goose-prd">
+Create an exact replica of the Afterpay SMB Biweekly Q1 marketing dashboard with these specifications. This is a dark-themed dashboard for Feb 1-15, 2026 cross-channel performance.
+
+IMPORTANT: Reproduce this EXACTLY as specified below, including all styling, modals, and interactivity.
+
+## Design
+- Dark theme: --bg: #0B1120, --card-bg: #111827, --card-border: #1E293B, --mint: #B2FCE4, --green: #10B981, --red: #EF4444, --yellow: #F59E0B
+- Title: "AFTERPAY <> MONKS BIWEEKLY LITE 🍺"
+- Subtitle: "February 1 - 15 · Cross-Channel Performance"
+- Mint gradient horizontal rule under header
+- Cards with hover lift effect, rounded corners (12px)
+
+## Header Actions (top right)
+1. Share button (📤) - opens modal with URL input "https://blockcell.sqprod.co/sites/afterpay-smb-report/" and copy button
+2. Bell button (🔔) - staleness tracker. LAST_UPDATED = '2026-02-25', STALE_THRESHOLD = 14 days. Shows green dot if fresh, red badge with "!" if stale. Opens modal with file upload dropzone (.xlsx/.xls/.csv) and instructions to bring file to Goose.
+
+## Executive Summary Card
+"Global spend scaled to ~$358K (+93% vs prior period) across Paid Social, Programmatic, and Search, generating 33.4M impressions and 600K clicks. CTR held steady at 1.79%. However, CPL nearly doubled from $90.66 to $171.09 as budgets scaled — efficiency gains are needed across upper-funnel channels. Search remains the strongest channel globally with a $53.74 CPL, while Paid Social and Programmatic show serious regional efficiency concerns, particularly in UK and ANZ where form-to-lead conversion is breaking down."
+
+## Channel Temp-Check (3 cards in a row)
+
+### Paid Social (⚠️ Mixed badge)
+Spend: $197,917 | Impressions: 20.1M | Clicks: 387K | CTR: 1.93% | Leads: 480 | CPL: $412.33
+Insight: "US is the engine (378 leads, $184 CPL). UK and ANZ struggling with lead conversion — high form starts but poor follow-through."
+
+### Programmatic (⚠️ Mixed badge)
+Spend: $82,369 | Impressions: 12.7M | Clicks: 51K | CTR: 0.40% | Leads: 175 | CPL: $470.68
+Insight: "US driving 77% of programmatic leads. UK is a red flag — only 1 lead from $16K spend. ANZ leads growing but CPL doubling."
+
+### Search (✅ Strong badge)
+Spend: $77,390 | Impressions: 596K | Clicks: 162K | CTR: 27.2% | Leads: 1,440 | CPL: $53.74
+Insight: "Best performing channel across all regions. PMax campaigns delivering exceptional CPLs. US leads up 63%, UK up 59%."
+
+## Regional Breakdown (tabbed: 🇺🇸 United States | 🇬🇧 United Kingdom | 🇦🇺 ANZ)
+
+Each tab has a table with these columns:
+**Channel | Spend | Spend vs. Prior | Impressions | Clicks | CTR | Leads | CPL | Leads vs. Prior | Status**
+
+### 🇺🇸 US Tab
+| Paid Social | $69,597 | +78% (green) | 1.6M | 19K | 1.23% | 378 | $184 | Leads +270% (green) | Win (green badge) |
+| Programmatic | $32,771 | +177% (green) | 8.6M | 236K | 2.76% | 134 | $245 | Leads +103% (green) | Win (green badge) |
+| Search | $40,020 | +61% (green) | 59K | 7.2K | 12.26% | 896 | $44.67 | Leads +63% (green) | Win (green badge) |
+
+Insight: "US is firing on all cylinders. All three channels showing strong lead growth. Search PMax at $27.79 CPL is a standout. Only watch-out: LinkedIn CPL at $4,034 — consider reallocating to Meta."
+
+### 🇬🇧 UK Tab
+| Paid Social | $32,887 | +79% (green) | 1.6M | 16K | 1.03% | 21 | $1,566 | Leads -9% (red) | Watch-out (red badge) |
+| Programmatic | $16,419 | +186% (green) | 6.9M | 128K | 1.84% | 1 | $16,419 | Leads -50% (red) | Watch-out (red badge) |
+| Search | $29,720 | +28% (green) | 126K | 4.2K | 3.32% | 120 | $248 | Leads +59% (green) | Win (green badge) |
+
+Insight: "UK is a tale of two stories. Search is thriving (+59% leads, PMax CVR up 198%). But Social and Programmatic are in trouble — 825 form starts converting to only 142 leads in Social (83% drop-off), and Programmatic generated just 1 lead from $16K spend. Urgent: investigate landing page / form issues for UK." (The "Urgent" text should be red and bold)
+
+### 🇦🇺 ANZ Tab
+| Paid Social | $70,621 | +86% (green) | 3.5M | 26K | 0.75% | 81 | $872 | Leads -58% (red) | Watch-out (red badge) |
+| Programmatic | $33,179 | +183% (green) | 11.1M | 158K | 1.43% | 40 | $821 | Leads +38% (yellow) | Mixed (yellow badge) |
+| Search | $33,564 | +17% (green) | 122K | 5.4K | 4.41% | 424 | $79 | Leads +15% (green) | Win (green badge) |
+
+Insight: "ANZ Social is the biggest concern this period. AU Meta leads dropped 56% (106→46) and NZ Meta dropped 55% (69→31) despite increased spend. Programmatic leads growing but CPL doubled. Search remains efficient and stable. Recommend: audit Meta audience targeting and creative fatigue in AU/NZ." (The "Recommend" text should be yellow and bold)
+
+## Watch-Outs and Action Items (alert cards with colored left border)
+
+1. 🔴 Critical - "UK Programmatic: 1 Lead from $16,419 Spend" - DV360 generating 217 form starts but almost zero conversions. Likely a landing page or form issue specific to UK. ACTION: Audit UK landing pages and form flow immediately.
+
+2. 🔴 Critical - "ANZ Paid Social: Lead Volume Collapsed -58%" - AU Meta leads down 56%, NZ Meta down 55%. Spend increased but leads cratered. ACTION: Review audience saturation, creative rotation, and frequency caps on Meta AU/NZ.
+
+3. 🔴 Critical - "UK Paid Social: 825 Form Starts → 142 Leads (83% Drop-off)" - Users are engaging but not converting. Form friction or technical issue likely. ACTION: Test UK form completion flow end-to-end.
+
+4. 🟡 Monitor - "US LinkedIn CPL: $4,034 per Lead" - Only 3 leads from LinkedIn despite meaningful spend. ACTION: Evaluate LinkedIn budget reallocation to Meta.
+
+5. 🟡 Monitor - "Global CPL Nearly Doubled: $90.66 → $171.09" - Expected with budget scaling, but efficiency needs to catch up. ACTION: Monitor over next 2 periods.
+
+6. 🟢 Opportunity - "US Search PMax: $27.79 CPL" - Outstanding efficiency. Opportunity to scale PMax budget further. ACTION: Test incremental PMax budget increase.
+
+7. 🟢 Opportunity - "UK Search PMax CVR +198%" - Conversion rate nearly tripled. ACTION: Apply UK PMax learnings to other regions.
+
+## Footer
+Mint gradient line, then "(v1.3) Made with ❤️ by Nick and Goose 🪿"
+
+## Interactivity
+- Tab switching for regional breakdown (US active by default)
+- Bell staleness system with pulse animation when stale
+- Share modal with copy-to-clipboard
+- Update report modal with drag-and-drop file upload
+- ESC key closes any open modal
+- All modals have backdrop blur overlay
+  </script>
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1><span class="mint">AFTERPAY</span> &lt;&gt; <span class="mint">MONKS</span> BIWEEKLY LITE 🍺</h1>
+      <div class="subtitle">February 1 – 15 · Cross-Channel Performance</div>
+    </div>
+    <div class="header-actions">
+      <button id="btnShare" title="Share report">📤</button>
+      <button id="btnBell" class="btn-bell" title="Staleness tracker">🔔<span id="bellIndicator"></span></button>
+    </div>
+  </div>
+  <hr class="mint-hr">
+
+  <!-- Executive Summary -->
+  <div class="exec-summary card">
+    <div class="card-title">📊 Executive Summary</div>
+    <p>Global spend scaled to ~$358K (+93% vs prior period) across Paid Social, Programmatic, and Search, generating 33.4M impressions and 600K clicks. CTR held steady at 1.79%. However, CPL nearly doubled from $90.66 to $171.09 as budgets scaled — efficiency gains are needed across upper-funnel channels. Search remains the strongest channel globally with a $53.74 CPL, while Paid Social and Programmatic show serious regional efficiency concerns, particularly in UK and ANZ where form-to-lead conversion is breaking down.</p>
+  </div>
+
+  <!-- Channel Temp Check -->
+  <div style="margin-top: 28px;">
+    <div class="section-title">📡 Channel Temp-Check</div>
+    <div class="channel-grid">
+
+      <!-- Paid Social -->
+      <div class="card channel-card">
+        <div class="channel-header">
+          <div class="channel-name">Paid Social</div>
+          <span class="badge badge-mixed">⚠️ Mixed</span>
+        </div>
+        <div class="channel-metrics">
+          <div class="metric"><div class="metric-value">$197,917</div><div class="metric-label">Spend</div></div>
+          <div class="metric"><div class="metric-value">20.1M</div><div class="metric-label">Impressions</div></div>
+          <div class="metric"><div class="metric-value">387K</div><div class="metric-label">Clicks</div></div>
+          <div class="metric"><div class="metric-value">1.93%</div><div class="metric-label">CTR</div></div>
+          <div class="metric"><div class="metric-value">480</div><div class="metric-label">Leads</div></div>
+          <div class="metric"><div class="metric-value">$412.33</div><div class="metric-label">CPL</div></div>
+        </div>
+        <div class="channel-insight">US is the engine (378 leads, $184 CPL). UK and ANZ struggling with lead conversion — high form starts but poor follow-through.</div>
+      </div>
+
+      <!-- Programmatic -->
+      <div class="card channel-card">
+        <div class="channel-header">
+          <div class="channel-name">Programmatic</div>
+          <span class="badge badge-mixed">⚠️ Mixed</span>
+        </div>
+        <div class="channel-metrics">
+          <div class="metric"><div class="metric-value">$82,369</div><div class="metric-label">Spend</div></div>
+          <div class="metric"><div class="metric-value">12.7M</div><div class="metric-label">Impressions</div></div>
+          <div class="metric"><div class="metric-value">51K</div><div class="metric-label">Clicks</div></div>
+          <div class="metric"><div class="metric-value">0.40%</div><div class="metric-label">CTR</div></div>
+          <div class="metric"><div class="metric-value">175</div><div class="metric-label">Leads</div></div>
+          <div class="metric"><div class="metric-value">$470.68</div><div class="metric-label">CPL</div></div>
+        </div>
+        <div class="channel-insight">US driving 77% of programmatic leads. UK is a red flag — only 1 lead from $16K spend. ANZ leads growing but CPL doubling.</div>
+      </div>
+
+      <!-- Search -->
+      <div class="card channel-card">
+        <div class="channel-header">
+          <div class="channel-name">Search</div>
+          <span class="badge badge-strong">✅ Strong</span>
+        </div>
+        <div class="channel-metrics">
+          <div class="metric"><div class="metric-value">$77,390</div><div class="metric-label">Spend</div></div>
+          <div class="metric"><div class="metric-value">596K</div><div class="metric-label">Impressions</div></div>
+          <div class="metric"><div class="metric-value">162K</div><div class="metric-label">Clicks</div></div>
+          <div class="metric"><div class="metric-value">27.2%</div><div class="metric-label">CTR</div></div>
+          <div class="metric"><div class="metric-value">1,440</div><div class="metric-label">Leads</div></div>
+          <div class="metric"><div class="metric-value">$53.74</div><div class="metric-label">CPL</div></div>
+        </div>
+        <div class="channel-insight">Best performing channel across all regions. PMax campaigns delivering exceptional CPLs. US leads up 63%, UK up 59%.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Regional Breakdown -->
+  <div class="regional-section">
+    <div class="section-title">🌍 Regional Breakdown</div>
+    <div class="tabs">
+      <button class="tab active" data-tab="us">🇺🇸 United States</button>
+      <button class="tab" data-tab="uk">🇬🇧 United Kingdom</button>
+      <button class="tab" data-tab="anz">🇦🇺 ANZ</button>
+    </div>
+
+    <!-- US Tab -->
+    <div class="tab-content active" id="tab-us">
+      <div class="card" style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Channel</th><th>Spend</th><th>Spend vs. Prior</th><th>Impressions</th><th>Clicks</th><th>CTR</th><th>Leads</th><th>CPL</th><th>Leads vs. Prior</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Paid Social</strong></td><td>$69,597</td><td class="change-green">+78%</td><td>1.6M</td><td>19K</td><td>1.23%</td><td>378</td><td>$184</td><td class="change-green">+270%</td><td><span class="badge badge-strong">Win</span></td>
+            </tr>
+            <tr>
+              <td><strong>Programmatic</strong></td><td>$32,771</td><td class="change-green">+177%</td><td>8.6M</td><td>236K</td><td>2.76%</td><td>134</td><td>$245</td><td class="change-green">+103%</td><td><span class="badge badge-strong">Win</span></td>
+            </tr>
+            <tr>
+              <td><strong>Search</strong></td><td>$40,020</td><td class="change-green">+61%</td><td>59K</td><td>7.2K</td><td>12.26%</td><td>896</td><td>$44.67</td><td class="change-green">+63%</td><td><span class="badge badge-strong">Win</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-insight">US is firing on all cylinders. All three channels showing strong lead growth. Search PMax at $27.79 CPL is a standout. Only watch-out: LinkedIn CPL at $4,034 — consider reallocating to Meta.</div>
+      </div>
+    </div>
+
+    <!-- UK Tab -->
+    <div class="tab-content" id="tab-uk">
+      <div class="card" style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Channel</th><th>Spend</th><th>Spend vs. Prior</th><th>Impressions</th><th>Clicks</th><th>CTR</th><th>Leads</th><th>CPL</th><th>Leads vs. Prior</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Paid Social</strong></td><td>$32,887</td><td class="change-green">+79%</td><td>1.6M</td><td>16K</td><td>1.03%</td><td>21</td><td>$1,566</td><td class="change-red">-9%</td><td><span class="badge badge-watch">Watch-out</span></td>
+            </tr>
+            <tr>
+              <td><strong>Programmatic</strong></td><td>$16,419</td><td class="change-green">+186%</td><td>6.9M</td><td>128K</td><td>1.84%</td><td>1</td><td>$16,419</td><td class="change-red">-50%</td><td><span class="badge badge-watch">Watch-out</span></td>
+            </tr>
+            <tr>
+              <td><strong>Search</strong></td><td>$29,720</td><td class="change-green">+28%</td><td>126K</td><td>4.2K</td><td>3.32%</td><td>120</td><td>$248</td><td class="change-green">+59%</td><td><span class="badge badge-strong">Win</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-insight">UK is a tale of two stories. Search is thriving (+59% leads, PMax CVR up 198%). But Social and Programmatic are in trouble — 825 form starts converting to only 142 leads in Social (83% drop-off), and Programmatic generated just 1 lead from $16K spend. <span style="color:var(--red);font-weight:700;">Urgent:</span> investigate landing page / form issues for UK.</div>
+      </div>
+    </div>
+
+    <!-- ANZ Tab -->
+    <div class="tab-content" id="tab-anz">
+      <div class="card" style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Channel</th><th>Spend</th><th>Spend vs. Prior</th><th>Impressions</th><th>Clicks</th><th>CTR</th><th>Leads</th><th>CPL</th><th>Leads vs. Prior</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Paid Social</strong></td><td>$70,621</td><td class="change-green">+86%</td><td>3.5M</td><td>26K</td><td>0.75%</td><td>81</td><td>$872</td><td class="change-red">-58%</td><td><span class="badge badge-watch">Watch-out</span></td>
+            </tr>
+            <tr>
+              <td><strong>Programmatic</strong></td><td>$33,179</td><td class="change-green">+183%</td><td>11.1M</td><td>158K</td><td>1.43%</td><td>40</td><td>$821</td><td class="change-yellow">+38%</td><td><span class="badge badge-mixed">Mixed</span></td>
+            </tr>
+            <tr>
+              <td><strong>Search</strong></td><td>$33,564</td><td class="change-green">+17%</td><td>122K</td><td>5.4K</td><td>4.41%</td><td>424</td><td>$79</td><td class="change-green">+15%</td><td><span class="badge badge-strong">Win</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-insight">ANZ Social is the biggest concern this period. AU Meta leads dropped 56% (106→46) and NZ Meta dropped 55% (69→31) despite increased spend. Programmatic leads growing but CPL doubled. Search remains efficient and stable. <span style="color:var(--yellow);font-weight:700;">Recommend:</span> audit Meta audience targeting and creative fatigue in AU/NZ.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Watch-Outs & Action Items -->
+  <div class="watchouts-section">
+    <div class="section-title">🚨 Watch-Outs &amp; Action Items</div>
+    <div class="alert-cards">
+
+      <div class="alert-card critical">
+        <div class="alert-header">
+          <span>🔴</span>
+          <span class="alert-type critical">Critical</span>
+          <span class="alert-title">UK Programmatic: 1 Lead from $16,419 Spend</span>
+        </div>
+        <div class="alert-body">DV360 generating 217 form starts but almost zero conversions. Likely a landing page or form issue specific to UK. <span class="alert-action">ACTION: Audit UK landing pages and form flow immediately.</span></div>
+      </div>
+
+      <div class="alert-card critical">
+        <div class="alert-header">
+          <span>🔴</span>
+          <span class="alert-type critical">Critical</span>
+          <span class="alert-title">ANZ Paid Social: Lead Volume Collapsed -58%</span>
+        </div>
+        <div class="alert-body">AU Meta leads down 56%, NZ Meta down 55%. Spend increased but leads cratered. <span class="alert-action">ACTION: Review audience saturation, creative rotation, and frequency caps on Meta AU/NZ.</span></div>
+      </div>
+
+      <div class="alert-card critical">
+        <div class="alert-header">
+          <span>🔴</span>
+          <span class="alert-type critical">Critical</span>
+          <span class="alert-title">UK Paid Social: 825 Form Starts → 142 Leads (83% Drop-off)</span>
+        </div>
+        <div class="alert-body">Users are engaging but not converting. Form friction or technical issue likely. <span class="alert-action">ACTION: Test UK form completion flow end-to-end.</span></div>
+      </div>
+
+      <div class="alert-card monitor">
+        <div class="alert-header">
+          <span>🟡</span>
+          <span class="alert-type monitor">Monitor</span>
+          <span class="alert-title">US LinkedIn CPL: $4,034 per Lead</span>
+        </div>
+        <div class="alert-body">Only 3 leads from LinkedIn despite meaningful spend. <span class="alert-action">ACTION: Evaluate LinkedIn budget reallocation to Meta.</span></div>
+      </div>
+
+      <div class="alert-card monitor">
+        <div class="alert-header">
+          <span>🟡</span>
+          <span class="alert-type monitor">Monitor</span>
+          <span class="alert-title">Global CPL Nearly Doubled: $90.66 → $171.09</span>
+        </div>
+        <div class="alert-body">Expected with budget scaling, but efficiency needs to catch up. <span class="alert-action">ACTION: Monitor over next 2 periods.</span></div>
+      </div>
+
+      <div class="alert-card opportunity">
+        <div class="alert-header">
+          <span>🟢</span>
+          <span class="alert-type opportunity">Opportunity</span>
+          <span class="alert-title">US Search PMax: $27.79 CPL</span>
+        </div>
+        <div class="alert-body">Outstanding efficiency. Opportunity to scale PMax budget further. <span class="alert-action">ACTION: Test incremental PMax budget increase.</span></div>
+      </div>
+
+      <div class="alert-card opportunity">
+        <div class="alert-header">
+          <span>🟢</span>
+          <span class="alert-type opportunity">Opportunity</span>
+          <span class="alert-title">UK Search PMax CVR +198%</span>
+        </div>
+        <div class="alert-body">Conversion rate nearly tripled. <span class="alert-action">ACTION: Apply UK PMax learnings to other regions.</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <hr class="footer-hr">
+  <div class="footer">(v1.3) Made with ❤️ by Nick and Goose 🪿</div>
+
+</div>
+
+<!-- Share Modal -->
+<div class="modal-overlay" id="shareModal">
+  <div class="modal">
+    <button class="modal-close" id="shareClose">✕</button>
+    <div class="modal-title">📤 Share Report</div>
+    <div class="modal-subtitle">Copy the link below to share this dashboard.</div>
+    <div class="share-input-group">
+      <input type="text" id="shareUrl" value="https://blockcell.sqprod.co/sites/afterpay-smb-report/" readonly>
+      <button class="btn-copy" id="btnCopy">Copy</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bell / Staleness Modal -->
+<div class="modal-overlay" id="bellModal">
+  <div class="modal">
+    <button class="modal-close" id="bellClose">✕</button>
+    <div class="modal-title">🔔 Report Staleness Tracker</div>
+    <div class="modal-subtitle">Monitor data freshness and upload updated reports.</div>
+    <div class="staleness-info" id="stalenessInfo"></div>
+    <div class="dropzone" id="dropzone">
+      <div class="dropzone-icon">📁</div>
+      <div class="dropzone-text">Drag &amp; drop your file here, or <strong>click to browse</strong></div>
+      <div class="dropzone-hint">Accepts .xlsx, .xls, .csv</div>
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none;">
+    </div>
+    <div class="dropzone-file" id="fileInfo">
+      <span>📄</span>
+      <span class="file-name" id="fileName"></span>
+      <button class="file-remove" id="fileRemove">✕</button>
+    </div>
+    <div class="bell-instructions">After uploading, bring this file to <strong>Goose</strong> to process and update the dashboard data.</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Staleness logic
+  const LAST_UPDATED = '2026-02-25';
+  const STALE_THRESHOLD = 14;
+  const lastDate = new Date(LAST_UPDATED);
+  const now = new Date();
+  const diffDays = Math.floor((now - lastDate) / (1000 * 60 * 60 * 24));
+  const isStale = diffDays > STALE_THRESHOLD;
+
+  const bellBtn = document.getElementById('btnBell');
+  const bellIndicator = document.getElementById('bellIndicator');
+  const stalenessInfo = document.getElementById('stalenessInfo');
+
+  if (isStale) {
+    bellBtn.classList.add('stale');
+    bellIndicator.className = 'bell-badge-stale';
+    bellIndicator.textContent = '!';
+    stalenessInfo.className = 'staleness-info stale';
+    stalenessInfo.innerHTML = '⚠️ <strong>Data is stale!</strong> Last updated ' + LAST_UPDATED + ' (' + diffDays + ' days ago). Threshold: ' + STALE_THRESHOLD + ' days.';
+  } else {
+    bellIndicator.className = 'bell-dot fresh';
+    stalenessInfo.className = 'staleness-info fresh';
+    stalenessInfo.innerHTML = '✅ <strong>Data is fresh.</strong> Last updated ' + LAST_UPDATED + ' (' + diffDays + ' days ago). Threshold: ' + STALE_THRESHOLD + ' days.';
+  }
+
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.tab-content').forEach(function(tc) { tc.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Share modal
+  var shareModal = document.getElementById('shareModal');
+  document.getElementById('btnShare').addEventListener('click', function() { shareModal.classList.add('open'); });
+  document.getElementById('shareClose').addEventListener('click', function() { shareModal.classList.remove('open'); });
+  shareModal.addEventListener('click', function(e) { if (e.target === shareModal) shareModal.classList.remove('open'); });
+
+  // Copy button
+  var btnCopy = document.getElementById('btnCopy');
+  var shareUrl = document.getElementById('shareUrl');
+  btnCopy.addEventListener('click', function() {
+    shareUrl.select();
+    try {
+      navigator.clipboard.writeText(shareUrl.value).then(function() {
+        btnCopy.textContent = 'Copied!';
+        setTimeout(function() { btnCopy.textContent = 'Copy'; }, 2000);
+      });
+    } catch(e) {
+      document.execCommand('copy');
+      btnCopy.textContent = 'Copied!';
+      setTimeout(function() { btnCopy.textContent = 'Copy'; }, 2000);
+    }
+  });
+
+  // Bell modal
+  var bellModal = document.getElementById('bellModal');
+  bellBtn.addEventListener('click', function() { bellModal.classList.add('open'); });
+  document.getElementById('bellClose').addEventListener('click', function() { bellModal.classList.remove('open'); });
+  bellModal.addEventListener('click', function(e) { if (e.target === bellModal) bellModal.classList.remove('open'); });
+
+  // Dropzone
+  var dropzone = document.getElementById('dropzone');
+  var fileInput = document.getElementById('fileInput');
+  var fileInfo = document.getElementById('fileInfo');
+  var fileName = document.getElementById('fileName');
+  var fileRemove = document.getElementById('fileRemove');
+
+  dropzone.addEventListener('click', function() { fileInput.click(); });
+
+  dropzone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+
+  dropzone.addEventListener('dragleave', function() {
+    dropzone.classList.remove('dragover');
+  });
+
+  dropzone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+  });
+
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
+  });
+
+  function handleFile(file) {
+    var ext = file.name.split('.').pop().toLowerCase();
+    if (['xlsx', 'xls', 'csv'].indexOf(ext) === -1) {
+      alert('Please upload a .xlsx, .xls, or .csv file.');
+      return;
+    }
+    fileName.textContent = file.name;
+    fileInfo.classList.add('show');
+    dropzone.style.display = 'none';
+  }
+
+  fileRemove.addEventListener('click', function() {
+    fileInfo.classList.remove('show');
+    dropzone.style.display = '';
+    fileInput.value = '';
+  });
+
+  // ESC closes modals
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      shareModal.classList.remove('open');
+      bellModal.classList.remove('open');
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
