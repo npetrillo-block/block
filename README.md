@@ -228,10 +228,10 @@ python scheduler.py --once       # One-time refresh (good for testing)
 
 | Version | Date | What Changed |
 |---|---|---|
-| **v2.0** | Mar 2026 | 🚀 Live data layer — Python backend, Snowflake integration, API endpoints, auto-refresh, dynamic rendering, sparklines, spend donut, regional heatmap, Slack/email alerts, staleness auto-detection |
-| v1.3–1.4 | Mar 2026 | Light/dark mode toggle, staleness tracker, share modal, file upload zone |
-| v0.2 | Mar 2026 | Initial B2B dashboard with Canvas 2D charts |
-| v0.1 | Mar 2026 | First Monks Biweekly prototype |
+| **v2.0** | Mar 5, 2026 | 🚀 Live data layer — Python backend, Snowflake integration, API endpoints, auto-refresh, dynamic rendering, sparklines, spend donut, regional heatmap, Slack/email alerts, staleness auto-detection |
+| v1.3–1.4 | Mar 4, 2026 | Light/dark mode toggle, staleness tracker, share modal, file upload zone |
+| v0.2 | Feb 26, 2026 | Initial B2B dashboard with Canvas 2D charts |
+| v0.1 | Feb 25, 2026 | First Monks Biweekly prototype |
 
 ---
 
