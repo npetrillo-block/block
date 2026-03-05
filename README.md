@@ -2,7 +2,7 @@
 
 **v2.0 — Live Dashboards with Python Backend**
 
-Two interactive HTML dashboards for the Afterpay SMB marketing team, now powered by a Python backend that connects to Snowflake, auto-refreshes daily, and sends Slack/email alerts when red flags pop up.
+Two interactive HTML dashboards for the Afterpay B2B Growth Marketing team, now powered by a Python backend that connects to Snowflake, auto-refreshes daily, and sends Slack/email alerts when red flags pop up.
 
 > **What changed in v2.0?** These dashboards evolved from static, read-only HTML prototypes into live tools that pull data from Snowflake, refresh their visualizations automatically, generate commentary on the fly, and notify you when something needs attention.
 
