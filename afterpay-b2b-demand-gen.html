@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
+
+/* ── Dark Theme (default) ── */
+:root, [data-theme="dark"] {
 --bg:#0f0f1a;--bg2:#161625;--card:#1c1c30;--card-hover:#22223a;
 --border:#2a2a45;--text:#e8e8f0;--text-muted:#8888a8;--text-dim:#5a5a78;
 --accent:#4ecdc4;--accent2:#45b7aa;--green:#34d399;--green-bg:rgba(52,211,153,0.08);--green-border:rgba(52,211,153,0.2);
@@ -15,12 +17,71 @@
 --amber:#fbbf24;--amber-bg:rgba(251,191,36,0.08);--amber-border:rgba(251,191,36,0.2);
 --purple:#a78bfa;--blue:#60a5fa;--pink:#f472b6;
 --small-color:#4ecdc4;--medium-color:#a78bfa;--premium-color:#fbbf24;--midmarket-color:#f472b6;
+--card-shadow:0 2px 8px rgba(0,0,0,0.2);
+--kpi-hover-shadow:0 8px 30px rgba(0,0,0,0.3);
+--chart-grid:rgba(42,42,69,0.6);
+--chart-ly-bar:rgba(78,205,196,0.25);
+--chart-label:#e8e8f0;
+--chart-label-muted:#8888a8;
+--chart-axis:#5a5a78;
+--donut-label:#fff;
+--donut-center:#e8e8f0;
+--funnel-ty-bg:rgba(78,205,196,0.15);--funnel-ty-bg2:rgba(78,205,196,0.12);--funnel-ty-bg3:rgba(78,205,196,0.09);
+--funnel-won-bg:rgba(52,211,153,0.15);--funnel-won-border:rgba(52,211,153,0.3);
+--funnel-ly-bg:rgba(136,136,168,0.1);--funnel-ly-bg2:rgba(136,136,168,0.08);--funnel-ly-bg3:rgba(136,136,168,0.06);--funnel-ly-bg4:rgba(136,136,168,0.05);
+--wins-text:#a7f3d0;--watchouts-text:#fca5a5;--watchouts-amber-text:#fde68a;
+--scrollbar-track:#161625;--scrollbar-thumb:#2a2a45;
+--table-hover:rgba(78,205,196,0.03);
+--proto-badge-bg:rgba(78,205,196,0.1);--proto-badge-border:rgba(78,205,196,0.25);
+--toggle-bg:#1c1c30;--toggle-border:#2a2a45;--toggle-hover-border:rgba(78,205,196,0.4);
+--minibar-ly:rgba(136,136,168,0.3);
 }
+
+/* ── Light Theme ── */
+[data-theme="light"] {
+--bg:#f0f2f5;--bg2:#e4e7ec;--card:#ffffff;--card-hover:#f8f9fb;
+--border:#d1d5db;--text:#1a1a2e;--text-muted:#5a5f72;--text-dim:#8b90a0;
+--accent:#2fb8ad;--accent2:#28a89e;--green:#059669;--green-bg:rgba(5,150,105,0.08);--green-border:rgba(5,150,105,0.2);
+--red:#dc2626;--red-bg:rgba(220,38,38,0.06);--red-border:rgba(220,38,38,0.18);
+--amber:#d97706;--amber-bg:rgba(217,119,6,0.06);--amber-border:rgba(217,119,6,0.18);
+--purple:#7c3aed;--blue:#2563eb;--pink:#db2777;
+--small-color:#2fb8ad;--medium-color:#7c3aed;--premium-color:#d97706;--midmarket-color:#db2777;
+--card-shadow:0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+--kpi-hover-shadow:0 8px 24px rgba(0,0,0,0.08);
+--chart-grid:rgba(0,0,0,0.06);
+--chart-ly-bar:rgba(47,184,173,0.2);
+--chart-label:#1a1a2e;
+--chart-label-muted:#5a5f72;
+--chart-axis:#8b90a0;
+--donut-label:#1a1a2e;
+--donut-center:#1a1a2e;
+--funnel-ty-bg:rgba(47,184,173,0.12);--funnel-ty-bg2:rgba(47,184,173,0.09);--funnel-ty-bg3:rgba(47,184,173,0.06);
+--funnel-won-bg:rgba(5,150,105,0.1);--funnel-won-border:rgba(5,150,105,0.3);
+--funnel-ly-bg:rgba(0,0,0,0.04);--funnel-ly-bg2:rgba(0,0,0,0.03);--funnel-ly-bg3:rgba(0,0,0,0.025);--funnel-ly-bg4:rgba(0,0,0,0.02);
+--wins-text:#065f46;--watchouts-text:#991b1b;--watchouts-amber-text:#92400e;
+--scrollbar-track:#e4e7ec;--scrollbar-thumb:#c4c8d2;
+--table-hover:rgba(47,184,173,0.04);
+--proto-badge-bg:rgba(47,184,173,0.08);--proto-badge-border:rgba(47,184,173,0.25);
+--toggle-bg:#ffffff;--toggle-border:#d1d5db;--toggle-hover-border:rgba(47,184,173,0.5);
+--minibar-ly:rgba(0,0,0,0.12);
+}
+
+/* ── Smooth Transitions ── */
+body, .kpi-card, .chart-container, .tabs-container, .tab-btn, .donut-card,
+.ww-item, .funnel-col, .funnel-step, .filter-pill, .compact-table th,
+.compact-table td, .seg-metric, .footer, .header, .ww-column h3,
+.section-title, .kpi-label, .kpi-value, .kpi-change, .kpi-prior,
+.proto-badge, .tab-bar, .tab-content, .chart-title, .legend-item,
+.donut-legend-item, .seg-metric-label, .seg-metric-value, .seg-metric-change,
+.seg-metric-prior, .donut-card h4, .donut-card .donut-sub, .chart-header {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
 html{font-size:14px;scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;overflow-x:hidden}
 ::-webkit-scrollbar{width:8px}
-::-webkit-scrollbar-track{background:var(--bg2)}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+::-webkit-scrollbar-track{background:var(--scrollbar-track)}
+::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb);border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:var(--text-dim)}
 
 .container{max-width:1400px;margin:0 auto;padding:0 24px 60px}
@@ -28,15 +89,36 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 /* Header */
 .header{padding:28px 0 20px;border-bottom:1px solid var(--border);margin-bottom:28px}
 .header-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.header-left{flex:1;min-width:0}
+.header-right{display:flex;align-items:center;gap:12px}
 .header h1{font-size:1.6rem;font-weight:800;letter-spacing:2px;color:var(--accent);margin-bottom:4px}
 .header .subtitle{font-size:0.92rem;color:var(--text-muted);font-weight:400}
-.proto-badge{display:inline-block;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.25);color:var(--accent);font-size:0.7rem;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase}
+.proto-badge{display:inline-block;background:var(--proto-badge-bg);border:1px solid var(--proto-badge-border);color:var(--accent);font-size:0.7rem;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase}
 .filters-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-.filter-pill{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:default;transition:border-color 0.2s}
+.filter-pill{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:default;transition:border-color 0.2s, background-color 0.3s ease;box-shadow:var(--card-shadow)}
 .filter-pill:hover{border-color:var(--accent)}
 .filter-label{color:var(--text-dim);font-weight:500;text-transform:uppercase;font-size:0.65rem;letter-spacing:0.5px}
 .filter-value{color:var(--text);font-weight:500}
 .filter-arrow{color:var(--text-dim);font-size:0.6rem}
+
+/* Theme Toggle */
+.theme-toggle{
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--toggle-border);
+  background:var(--toggle-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;transition:all 0.3s ease;position:relative;box-shadow:var(--card-shadow);
+  flex-shrink:0;
+}
+.theme-toggle:hover{border-color:var(--toggle-hover-border);transform:scale(1.08)}
+.theme-toggle:active{transform:scale(0.95)}
+.theme-toggle .bulb{transition:all 0.3s ease;filter:saturate(0.3) brightness(0.7)}
+[data-theme="light"] .theme-toggle .bulb{filter:saturate(1) brightness(1);text-shadow:0 0 8px rgba(251,191,36,0.6)}
+.theme-toggle::after{
+  content:'';position:absolute;inset:-3px;border-radius:50%;
+  background:transparent;transition:all 0.3s ease;pointer-events:none;
+}
+[data-theme="light"] .theme-toggle::after{
+  box-shadow:0 0 12px rgba(251,191,36,0.15);
+}
 
 /* Section titles */
 .section-title{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:10px}
@@ -45,9 +127,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 
 /* KPI Cards */
 .kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:32px}
-.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;transition:all 0.3s ease;position:relative;overflow:hidden}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;transition:all 0.3s ease;position:relative;overflow:hidden;box-shadow:var(--card-shadow)}
 .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:0;transition:opacity 0.3s}
-.kpi-card:hover{transform:translateY(-2px);border-color:rgba(78,205,196,0.3);box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+.kpi-card:hover{transform:translateY(-2px);border-color:rgba(78,205,196,0.3);box-shadow:var(--kpi-hover-shadow)}
 .kpi-card:hover::before{opacity:1}
 .kpi-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);font-weight:600;margin-bottom:8px}
 .kpi-value{font-size:1.7rem;font-weight:800;color:var(--text);line-height:1.1;margin-bottom:6px}
@@ -61,14 +143,14 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .ww-column h3{font-size:0.95rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .ww-column.wins h3{color:var(--green)}
 .ww-column.watchouts h3{color:var(--red)}
-.ww-item{padding:12px 16px;border-radius:10px;margin-bottom:8px;font-size:0.82rem;line-height:1.5;font-weight:500;transition:transform 0.2s;cursor:default}
+.ww-item{padding:12px 16px;border-radius:10px;margin-bottom:8px;font-size:0.82rem;line-height:1.5;font-weight:500;transition:transform 0.2s, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;cursor:default}
 .ww-item:hover{transform:translateX(4px)}
-.wins .ww-item{background:var(--green-bg);border:1px solid var(--green-border);color:#a7f3d0}
-.watchouts .ww-item{background:var(--red-bg);border:1px solid var(--red-border);color:#fca5a5}
-.watchouts .ww-item.amber{background:var(--amber-bg);border:1px solid var(--amber-border);color:#fde68a}
+.wins .ww-item{background:var(--green-bg);border:1px solid var(--green-border);color:var(--wins-text)}
+.watchouts .ww-item{background:var(--red-bg);border:1px solid var(--red-border);color:var(--watchouts-text)}
+.watchouts .ww-item.amber{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--watchouts-amber-text)}
 
 /* Chart containers */
-.chart-container{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+.chart-container{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:var(--card-shadow)}
 .chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .chart-title{font-size:0.95rem;font-weight:700;color:var(--text)}
 .chart-legend{display:flex;gap:16px}
@@ -77,10 +159,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 
 /* Funnel */
 .funnel-wrapper{display:flex;gap:24px;align-items:stretch}
-.funnel-col{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px}
+.funnel-col{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:var(--card-shadow)}
 .funnel-col h4{font-size:0.85rem;font-weight:700;margin-bottom:16px;color:var(--text);text-align:center}
 .funnel-col .year-label{text-align:center;font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-.funnel-step{position:relative;margin:0 auto 12px;text-align:center;padding:14px 10px;border-radius:10px;transition:transform 0.2s}
+.funnel-step{position:relative;margin:0 auto 12px;text-align:center;padding:14px 10px;border-radius:10px;transition:transform 0.2s, background-color 0.3s ease}
 .funnel-step:hover{transform:scale(1.02)}
 .funnel-step .step-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);font-weight:600}
 .funnel-step .step-value{font-size:1.4rem;font-weight:800;color:var(--text)}
@@ -88,7 +170,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .funnel-arrow{text-align:center;color:var(--text-dim);font-size:1rem;margin:-4px 0}
 
 /* Tabs */
-.tabs-container{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.tabs-container{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--card-shadow)}
 .tab-bar{display:flex;border-bottom:1px solid var(--border);overflow-x:auto}
 .tab-btn{padding:12px 24px;font-size:0.82rem;font-weight:600;color:var(--text-muted);background:transparent;border:none;cursor:pointer;position:relative;white-space:nowrap;transition:color 0.2s}
 .tab-btn:hover{color:var(--text)}
@@ -99,7 +181,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 .segment-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.seg-metric{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px}
+.seg-metric{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;transition:background-color 0.3s ease, border-color 0.3s ease}
 .seg-metric-label{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);font-weight:600;margin-bottom:6px}
 .seg-metric-value{font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:4px}
 .seg-metric-change{font-size:0.75rem;font-weight:600}
@@ -108,12 +190,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .seg-metric-change.neutral{color:var(--text-muted)}
 .seg-metric-prior{font-size:0.68rem;color:var(--text-dim);margin-top:2px}
 .seg-mini-bar{display:flex;gap:4px;align-items:flex-end;height:30px;margin-top:8px}
-.seg-mini-bar .bar{border-radius:3px 3px 0 0;min-width:14px;transition:height 0.5s ease}
+.seg-mini-bar .bar{border-radius:3px 3px 0 0;min-width:14px;transition:height 0.5s ease, background-color 0.3s ease}
 
 /* Donut section */
 .donut-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.donut-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center}
-.donut-card h4{font-size:0.9rem;font-weight:700;margin-bottom:4px}
+.donut-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;box-shadow:var(--card-shadow)}
+.donut-card h4{font-size:0.9rem;font-weight:700;margin-bottom:4px;color:var(--text)}
 .donut-card .donut-sub{font-size:0.75rem;color:var(--text-muted);margin-bottom:16px}
 .donut-canvas-wrap{position:relative;max-width:240px;margin:0 auto 16px}
 .donut-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
@@ -124,7 +206,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .compact-table{width:100%;border-collapse:collapse;font-size:0.78rem;margin-top:12px}
 .compact-table th{text-align:left;padding:8px 12px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;font-size:0.68rem;border-bottom:1px solid var(--border)}
 .compact-table td{padding:8px 12px;border-bottom:1px solid rgba(42,42,69,0.5);color:var(--text-muted)}
-.compact-table tr:hover td{background:rgba(78,205,196,0.03);color:var(--text)}
+[data-theme="light"] .compact-table td{border-bottom-color:rgba(0,0,0,0.06)}
+.compact-table tr:hover td{background:var(--table-hover);color:var(--text)}
 .compact-table .num{text-align:right;font-variant-numeric:tabular-nums}
 .compact-table .highlight{color:var(--text);font-weight:600}
 
@@ -148,156 +231,21 @@ canvas{max-width:100%}
 .segment-grid{grid-template-columns:1fr 1fr}
 }
 </style>
+  
+  
   <script type="application/ld+json">
 {
   "@context": "urn:goose.ai:schema",
   "@type": "GooseApp",
   "name": "afterpay-b2b-demand-gen",
-  "description": "Dark-themed B2B marketing performance dashboard with charts, KPIs, and YoY insights.",
-  "width": 1440,
+  "description": "Afterpay B2B marketing dashboard with auto light/dark mode toggle and YoY performance analytics",
+  "width": 1400,
   "height": 900,
   "resizable": true,
   "mcpServers": [
     "apps"
   ]
 }
-  </script>
-  <script type="application/x-goose-prd">
-
-# Afterpay B2B Marketing Performance Dashboard — Prototype
-
-## Overview
-A dark-themed, visually rich marketing performance dashboard that replaces an ugly Tableau dashboard full of flat tables. This dashboard should tell the STORY of the data — with charts, trend callouts, big wins, watchouts, and visual hierarchy. It should feel like a modern analytics product, not a spreadsheet.
-
-## Design Philosophy
-- Dark theme (similar to the biweekly report we built before — dark background, clean cards)
-- Charts and visual elements FIRST, tables as supporting detail
-- Automated insight callouts (big wins in green, watchouts in red/amber)
-- The dashboard should have OPINIONS about the data, not just display numbers
-
-## Layout & Sections
-
-### Header
-- Title: "AFTERPAY B2B DEMAND GEN DASHBOARD"
-- Subtitle: "Jan 1–5, 2026 vs Jan 1–5, 2025 · YoY Performance by Segment"
-- Small note: "Prototype — Static Data" in a muted badge
-- Filters row (non-functional for now, just visual): Region [All], Channel [All], Segment [All], Date Range [1/1/2026 - 1/5/2026]
-
-### Section 1: KPI Summary Cards (top row, 5-6 cards)
-Big number cards with YoY comparison arrows:
-- Total Leads: 514 (↑166% YoY from 193)
-- Total MQLs: 514 (↑166% YoY from 193)
-- Addressable Leads: 230 (↑290% YoY from 59)
-- Addressability Rate: 45% (↑7pp YoY from 42%)
-- 28D Close Won Rate: 5.65% (↑233% YoY from 1.69%)
-- Total Addressable aGPV: $198.25M (↑1826% YoY from $10.29M)
-
-Each card should have the current value large, the YoY % change with a colored arrow (green for positive, red for negative), and the prior year value small underneath.
-
-### Section 2: Big Wins & Watchouts (2-column layout)
-LEFT COLUMN — 🏆 Big Wins (green-tinted cards):
-- "Premium MQLs exploded +300% YoY (6 → 24)" 
-- "Addressable Leads nearly 4x'd — 59 → 230 (+290%)"
-- "28D Close Won rate jumped from 1.69% to 5.65% (+233%)"
-- "Premium 28D Close Won hit 20% (from 0% last year)"
-- "Addressable aGPV per Lead up 394% ($0.17M → $0.86M)"
-- "Premium aGPV surged 889% ($3M → $29.66M)"
-
-RIGHT COLUMN — 🚨 Watchouts (red/amber-tinted cards):
-- "Medium 28D Close Won dropped -42% YoY (6.67% → 3.85%)"
-- "Mid-Market segment has near-zero historical baseline — hard to benchmark"
-- "Mid-Market 28D Close Won at 0% — no conversions yet"
-- "Small segment dominates lead mix at 69% — concentration risk?"
-- "Date range is only Jan 1-5 — very small sample size, interpret with caution"
-
-### Section 3: Lead Volume by Segment (Chart + Table)
-A horizontal stacked bar chart or grouped bar chart showing:
-- X-axis: Segments (Small, Medium, Premium, Mid-Market)
-- Two bars per segment: Last Year (muted/transparent) vs This Year (solid)
-- Values: Small (145→355), Medium (42→130), Premium (6→24), Mid-Market (0→5)
-- Use Chart.js or similar — render actual SVG/canvas charts
-
-Below the chart, a compact table with the same data plus MQL columns.
-
-### Section 4: Funnel Visualization — Addressability & Close Rates
-A visual funnel or stepped bar chart showing the progression:
-- Leads (514) → MQLs (514) → Addressable (230) → showing addressability rate 45%
-- Then 28D Close Won rate: 5.65%
-
-Show this as a horizontal funnel with decreasing widths and percentages at each step.
-Include YoY comparison: Last year funnel was 193 → 193 → 59 (42% addressability) → 1.69% close rate
-
-### Section 5: Segment Deep Dive (Tabbed or Accordion)
-Tabs for each segment: Small | Medium | Premium | Mid-Market | Grand Total
-
-Each tab shows a card with:
-- Lead metrics (leads, MQLs, addressable leads — this year vs last year with YoY %)
-- Addressability rate comparison
-- 28D Close Won rate comparison  
-- Addressable aGPV and aGPV per lead
-- A small sparkline or mini bar chart if possible
-
-Data per segment:
-
-**Small:**
-- Leads: 145 → 355 (+145%)
-- MQLs: 145 → 355 (+145%)
-- Addressable Leads: 42 → 167 (+298%)
-- Addressability: 45% → 47% (+4%)
-- 28D Close Won: 0% → 5.39%
-- Addressable aGPV: $2.46M → $9.74M (+296%)
-- aGPV per Lead: $0.06M → $0.06M (0%)
-
-**Medium:**
-- Leads: 42 → 130 (+210%)
-- MQLs: 42 → 130 (+210%)
-- Addressable Leads: 15 → 52 (+247%)
-- Addressability: 36% → 40% (+12%)
-- 28D Close Won: 6.67% → 3.85% (-42%)
-- Addressable aGPV: $4.83M → $18.85M (+290%)
-- aGPV per Lead: $0.32M → $0.36M (+13%)
-
-**Premium:**
-- Leads: 6 → 24 (+300%)
-- MQLs: 6 → 24 (+300%)
-- Addressable Leads: 2 → 10 (+400%)
-- Addressability: 33% → 42% (+25%)
-- 28D Close Won: 0% → 20%
-- Addressable aGPV: $3M → $29.66M (+889%)
-- aGPV per Lead: $1.50M → $2.97M (+98%)
-
-**Mid-Market:**
-- Leads: 0 → 5
-- MQLs: 0 → 5
-- Addressable Leads: 0 → 1
-- Addressability: N/A → 25%
-- 28D Close Won: N/A → 0%
-- Addressable aGPV: $0 → $140M
-- aGPV per Lead: N/A → $140M
-
-### Section 6: Segment Mix (Donut Charts)
-Two side-by-side donut charts:
-1. Lead Distribution This Year: Small 69.1% (355), Medium 25.3% (130), Premium 4.7% (24), Mid-Market 1.0% (5)
-2. Addressable aGPV Distribution This Year: Small 4.9% ($9.74M), Medium 9.5% ($18.85M), Premium 15.0% ($29.66M), Mid-Market 70.6% ($140M)
-
-This contrast is powerful — Small dominates leads but Mid-Market/Premium dominate value.
-
-### Footer
-- "(v0.1) Prototype — Static Data · Made with ❤️ by Nick and Goose 🪿"
-- Muted text, with a thin line above it
-
-## Technical Requirements
-- Single HTML file with embedded CSS and JavaScript
-- Use Chart.js CDN (https://cdn.jsdelivr.net/npm/chart.js) for all charts
-- Dark theme: background #1a1a2e or similar dark navy, cards with subtle borders, white/light text
-- Accent colors: Use a teal/mint (#4ecdc4) as primary accent (matching the Tableau teal but modernized), green for positive YoY, red/coral for negative YoY
-- Responsive but optimized for desktop (1280px+)
-- Smooth animations on load
-- Cards should have subtle hover effects
-- All charts should have clean tooltips
-- Tabs should work with smooth transitions
-- The whole thing should feel premium and polished — like a real analytics product
-
   </script>
 </head>
 <body>
@@ -306,11 +254,16 @@ This contrast is powerful — Small dominates leads but Mid-Market/Premium domin
   <!-- HEADER -->
   <header class="header">
     <div class="header-top">
-      <div>
+      <div class="header-left">
         <h1>AFTERPAY B2B DEMAND GEN DASHBOARD</h1>
         <p class="subtitle">Jan 1–5, 2026 vs Jan 1–5, 2025 · YoY Performance by Segment</p>
       </div>
-      <span class="proto-badge">Prototype — Static Data</span>
+      <div class="header-right">
+        <span class="proto-badge">Prototype — Static Data</span>
+        <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">
+          <span class="bulb">💡</span>
+        </button>
+      </div>
     </div>
     <div class="filters-row">
       <div class="filter-pill"><span class="filter-label">Region</span><span class="filter-value">All</span><span class="filter-arrow">▾</span></div>
@@ -357,7 +310,7 @@ This contrast is powerful — Small dominates leads but Mid-Market/Premium domin
       <div class="chart-header">
         <span class="chart-title">Leads — This Year vs Last Year</span>
         <div class="chart-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:rgba(78,205,196,0.3)"></div>Last Year</div>
+          <div class="legend-item"><div class="legend-dot" id="legendDotLY" style="background:rgba(78,205,196,0.3)"></div>Last Year</div>
           <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div>This Year</div>
         </div>
       </div>
@@ -386,46 +339,46 @@ This contrast is powerful — Small dominates leads but Mid-Market/Premium domin
     <div class="funnel-wrapper">
       <div class="funnel-col">
         <div class="year-label">This Year (2026)</div>
-        <div class="funnel-step" style="background:rgba(78,205,196,0.15);width:100%">
+        <div class="funnel-step" style="background:var(--funnel-ty-bg);width:100%">
           <div class="step-label">Total Leads</div>
           <div class="step-value">514</div>
         </div>
         <div class="funnel-arrow">↓ 100%</div>
-        <div class="funnel-step" style="background:rgba(78,205,196,0.12);width:100%">
+        <div class="funnel-step" style="background:var(--funnel-ty-bg2);width:100%">
           <div class="step-label">MQLs</div>
           <div class="step-value">514</div>
         </div>
         <div class="funnel-arrow">↓ 45% addressable</div>
-        <div class="funnel-step" style="background:rgba(78,205,196,0.09);width:70%">
+        <div class="funnel-step" style="background:var(--funnel-ty-bg3);width:70%">
           <div class="step-label">Addressable Leads</div>
           <div class="step-value">230</div>
           <div class="step-rate">45% Addressability Rate</div>
         </div>
         <div class="funnel-arrow">↓ 5.65% close rate</div>
-        <div class="funnel-step" style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);width:45%">
+        <div class="funnel-step" style="background:var(--funnel-won-bg);border:1px solid var(--funnel-won-border);width:45%">
           <div class="step-label">28D Close Won Rate</div>
           <div class="step-value" style="color:var(--green)">5.65%</div>
         </div>
       </div>
       <div class="funnel-col">
         <div class="year-label">Last Year (2025)</div>
-        <div class="funnel-step" style="background:rgba(136,136,168,0.1);width:100%">
+        <div class="funnel-step" style="background:var(--funnel-ly-bg);width:100%">
           <div class="step-label">Total Leads</div>
           <div class="step-value" style="color:var(--text-muted)">193</div>
         </div>
         <div class="funnel-arrow">↓ 100%</div>
-        <div class="funnel-step" style="background:rgba(136,136,168,0.08);width:100%">
+        <div class="funnel-step" style="background:var(--funnel-ly-bg2);width:100%">
           <div class="step-label">MQLs</div>
           <div class="step-value" style="color:var(--text-muted)">193</div>
         </div>
         <div class="funnel-arrow">↓ 42% addressable</div>
-        <div class="funnel-step" style="background:rgba(136,136,168,0.06);width:55%">
+        <div class="funnel-step" style="background:var(--funnel-ly-bg3);width:55%">
           <div class="step-label">Addressable Leads</div>
           <div class="step-value" style="color:var(--text-muted)">59</div>
           <div class="step-rate" style="color:var(--text-dim)">42% Addressability Rate</div>
         </div>
         <div class="funnel-arrow">↓ 1.69% close rate</div>
-        <div class="funnel-step" style="background:rgba(136,136,168,0.05);width:35%">
+        <div class="funnel-step" style="background:var(--funnel-ly-bg4);width:35%">
           <div class="step-label">28D Close Won Rate</div>
           <div class="step-value" style="color:var(--text-dim)">1.69%</div>
         </div>
@@ -469,11 +422,57 @@ This contrast is powerful — Small dominates leads but Mid-Market/Premium domin
 
   <!-- FOOTER -->
   <footer class="footer">
-    (v0.1) Prototype — Static Data · Made with ❤️ by Nick and Goose 🪿
+    (v0.2) Prototype — Static Data · Made with ❤️ by Nick and Goose 🪿
   </footer>
 </div>
 
 <script>
+// ── Theme Management ──
+function getAutoTheme() {
+  const hour = new Date().getHours();
+  return (hour >= 9 && hour < 17) ? 'light' : 'dark';
+}
+
+function getCurrentTheme() {
+  return document.documentElement.getAttribute('data-theme') || 'dark';
+}
+
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  // Re-render canvas charts since they don't respond to CSS vars automatically
+  setTimeout(initCharts, 50);
+}
+
+function getThemeColors() {
+  const style = getComputedStyle(document.documentElement);
+  return {
+    text: style.getPropertyValue('--text').trim(),
+    textMuted: style.getPropertyValue('--text-muted').trim(),
+    textDim: style.getPropertyValue('--text-dim').trim(),
+    accent: style.getPropertyValue('--accent').trim(),
+    chartGrid: style.getPropertyValue('--chart-grid').trim(),
+    chartLyBar: style.getPropertyValue('--chart-ly-bar').trim(),
+    chartLabel: style.getPropertyValue('--chart-label').trim(),
+    chartLabelMuted: style.getPropertyValue('--chart-label-muted').trim(),
+    chartAxis: style.getPropertyValue('--chart-axis').trim(),
+    donutLabel: style.getPropertyValue('--donut-label').trim(),
+    donutCenter: style.getPropertyValue('--donut-center').trim(),
+    smallColor: style.getPropertyValue('--small-color').trim(),
+    mediumColor: style.getPropertyValue('--medium-color').trim(),
+    premiumColor: style.getPropertyValue('--premium-color').trim(),
+    midmarketColor: style.getPropertyValue('--midmarket-color').trim(),
+  };
+}
+
+// Set auto theme on load
+setTheme(getAutoTheme());
+
+// Toggle button
+document.getElementById('themeToggle').addEventListener('click', function() {
+  const current = getCurrentTheme();
+  setTheme(current === 'dark' ? 'light' : 'dark');
+});
+
 // ── Data ──
 const kpis = [
   { label:'Total Leads', value:'514', change:'+166%', dir:'up', prior:'193 last year' },
@@ -486,7 +485,7 @@ const kpis = [
 
 const segments = {
   small: {
-    name:'Small', color:'var(--small-color)',
+    name:'Small', colorVar:'--small-color',
     metrics:[
       {label:'Leads',ly:'145',ty:'355',change:'+145%',dir:'up'},
       {label:'MQLs',ly:'145',ty:'355',change:'+145%',dir:'up'},
@@ -498,7 +497,7 @@ const segments = {
     ]
   },
   medium: {
-    name:'Medium', color:'var(--medium-color)',
+    name:'Medium', colorVar:'--medium-color',
     metrics:[
       {label:'Leads',ly:'42',ty:'130',change:'+210%',dir:'up'},
       {label:'MQLs',ly:'42',ty:'130',change:'+210%',dir:'up'},
@@ -510,7 +509,7 @@ const segments = {
     ]
   },
   premium: {
-    name:'Premium', color:'var(--premium-color)',
+    name:'Premium', colorVar:'--premium-color',
     metrics:[
       {label:'Leads',ly:'6',ty:'24',change:'+300%',dir:'up'},
       {label:'MQLs',ly:'6',ty:'24',change:'+300%',dir:'up'},
@@ -522,7 +521,7 @@ const segments = {
     ]
   },
   midmarket: {
-    name:'Mid-Market', color:'var(--midmarket-color)',
+    name:'Mid-Market', colorVar:'--midmarket-color',
     metrics:[
       {label:'Leads',ly:'0',ty:'5',change:'New',dir:'up'},
       {label:'MQLs',ly:'0',ty:'5',change:'New',dir:'up'},
@@ -534,7 +533,7 @@ const segments = {
     ]
   },
   total: {
-    name:'Grand Total', color:'var(--accent)',
+    name:'Grand Total', colorVar:'--accent',
     metrics:[
       {label:'Leads',ly:'193',ty:'514',change:'+166%',dir:'up'},
       {label:'MQLs',ly:'193',ty:'514',change:'+166%',dir:'up'},
@@ -568,10 +567,10 @@ Object.entries(segments).forEach(([key, seg]) => {
   const div = document.createElement('div');
   div.className = 'tab-content' + (key==='small'?' active':'');
   div.id = 'tab-'+key;
+  const segColor = 'var(' + seg.colorVar + ')';
   let metricsHTML = seg.metrics.map(m => {
     const dirClass = m.dir==='up'?'up':m.dir==='down'?'down':'neutral';
     const arrow = m.dir==='up'?'↑':m.dir==='down'?'↓':'—';
-    // mini bar
     const lyNum = parseFloat(m.ly.replace(/[$%MN\/A,]/g,'')) || 0;
     const tyNum = parseFloat(m.ty.replace(/[$%MN\/A,]/g,'')) || 0;
     const maxVal = Math.max(lyNum, tyNum, 1);
@@ -583,13 +582,13 @@ Object.entries(segments).forEach(([key, seg]) => {
       <div class="seg-metric-change ${dirClass}">${arrow} ${m.change} YoY</div>
       <div class="seg-metric-prior">Prior: ${m.ly}</div>
       <div class="seg-mini-bar">
-        <div class="bar" style="width:14px;height:${lyH}px;background:rgba(136,136,168,0.3)" title="LY: ${m.ly}"></div>
-        <div class="bar" style="width:14px;height:${tyH}px;background:${seg.color}" title="TY: ${m.ty}"></div>
+        <div class="bar" style="width:14px;height:${lyH}px;background:var(--minibar-ly)" title="LY: ${m.ly}"></div>
+        <div class="bar" style="width:14px;height:${tyH}px;background:${segColor}" title="TY: ${m.ty}"></div>
       </div>
     </div>`;
   }).join('');
   div.innerHTML = `<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-    <div style="width:12px;height:12px;border-radius:3px;background:${seg.color}"></div>
+    <div style="width:12px;height:12px;border-radius:3px;background:${segColor}"></div>
     <h3 style="font-size:1rem;font-weight:700">${seg.name}</h3>
   </div>
   <div class="segment-grid">${metricsHTML}</div>`;
@@ -612,9 +611,8 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold:0.1 });
 document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
 
-// ── Charts (drawn with Canvas 2D — no external library needed) ──
+// ── Charts (drawn with Canvas 2D) ──
 
-// Helper: draw rounded rect
 function roundRect(ctx,x,y,w,h,r){
   r=Math.min(r,w/2,h/2);
   ctx.beginPath();
@@ -627,10 +625,11 @@ function roundRect(ctx,x,y,w,h,r){
 
 // ── Lead Volume Bar Chart ──
 function drawLeadChart(){
+  const colors = getThemeColors();
   const canvas = document.getElementById('leadChart');
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.parentElement.getBoundingClientRect();
-  const W = rect.width - 48; // padding
+  const W = rect.width - 48;
   canvas.width = W * dpr;
   canvas.height = 220 * dpr;
   canvas.style.width = W + 'px';
@@ -644,17 +643,17 @@ function drawLeadChart(){
     {label:'Premium',ly:6,ty:24},
     {label:'Mid-Market',ly:0,ty:5}
   ];
-  const segColors = ['#4ecdc4','#a78bfa','#fbbf24','#f472b6'];
+  const segColors = [colors.smallColor, colors.mediumColor, colors.premiumColor, colors.midmarketColor];
   const maxVal = 400;
   const chartLeft = 90, chartRight = W - 30, chartTop = 10, chartBottom = 185;
   const chartW = chartRight - chartLeft;
   const chartH = chartBottom - chartTop;
 
   // Grid lines
-  ctx.strokeStyle = 'rgba(42,42,69,0.6)';
+  ctx.strokeStyle = colors.chartGrid;
   ctx.lineWidth = 1;
   ctx.font = '11px Inter, sans-serif';
-  ctx.fillStyle = '#5a5a78';
+  ctx.fillStyle = colors.chartAxis;
   ctx.textAlign = 'right';
   for(let i=0;i<=4;i++){
     const val = (maxVal/4)*i;
@@ -673,7 +672,7 @@ function drawLeadChart(){
     const centerY = groupY + barGroupH/2;
 
     // Label
-    ctx.fillStyle = '#e8e8f0';
+    ctx.fillStyle = colors.chartLabel;
     ctx.font = '12px Inter, sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText(d.label, chartLeft - 12, centerY + 2);
@@ -681,11 +680,10 @@ function drawLeadChart(){
     // LY bar
     const lyW = Math.max(2, (d.ly/maxVal)*chartW);
     const lyY = centerY - barH - gap/2;
-    ctx.fillStyle = 'rgba(78,205,196,0.25)';
+    ctx.fillStyle = colors.chartLyBar;
     roundRect(ctx, chartLeft, lyY, lyW, barH, 4);
     ctx.fill();
-    // LY value
-    ctx.fillStyle = '#8888a8';
+    ctx.fillStyle = colors.chartLabelMuted;
     ctx.font = '10px Inter, sans-serif';
     ctx.textAlign = 'left';
     ctx.fillText(d.ly.toString(), chartLeft + lyW + 6, lyY + 12);
@@ -696,17 +694,22 @@ function drawLeadChart(){
     ctx.fillStyle = segColors[i];
     roundRect(ctx, chartLeft, tyY, tyW, barH, 4);
     ctx.fill();
-    // TY value
-    ctx.fillStyle = '#e8e8f0';
+    ctx.fillStyle = colors.chartLabel;
     ctx.font = '11px Inter, sans-serif';
-    ctx.fontWeight = '600';
     ctx.textAlign = 'left';
     ctx.fillText(d.ty.toString(), chartLeft + tyW + 6, tyY + 12);
   });
+
+  // Update legend dot color for LY
+  const legendDotLY = document.getElementById('legendDotLY');
+  if (legendDotLY) legendDotLY.style.background = colors.chartLyBar;
 }
 
 // ── Donut Chart ──
-function drawDonut(canvasId, legendId, dataArr, colors, labels){
+function drawDonut(canvasId, legendId, dataArr, labels){
+  const colors = getThemeColors();
+  const segColors = [colors.smallColor, colors.mediumColor, colors.premiumColor, colors.midmarketColor];
+
   const canvas = document.getElementById(canvasId);
   const dpr = window.devicePixelRatio || 1;
   const size = 240;
@@ -727,19 +730,21 @@ function drawDonut(canvasId, legendId, dataArr, colors, labels){
     ctx.arc(cx,cy,outerR,startAngle,startAngle+sliceAngle);
     ctx.arc(cx,cy,innerR,startAngle+sliceAngle,startAngle,true);
     ctx.closePath();
-    ctx.fillStyle = colors[i];
+    ctx.fillStyle = segColors[i];
     ctx.fill();
 
-    // Label on slice if big enough
     if(val/total > 0.05){
       const midAngle = startAngle + sliceAngle/2;
       const labelR = (outerR+innerR)/2;
       const lx = cx + Math.cos(midAngle)*labelR;
       const ly = cy + Math.sin(midAngle)*labelR;
-      ctx.fillStyle = '#fff';
+      ctx.fillStyle = colors.donutLabel;
       ctx.font = 'bold 11px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
+      // Use white text on dark slices for readability in both modes
+      const isDark = getCurrentTheme() === 'dark';
+      ctx.fillStyle = isDark ? '#fff' : '#fff';
       ctx.fillText(Math.round(val/total*100)+'%', lx, ly);
     }
 
@@ -747,7 +752,7 @@ function drawDonut(canvasId, legendId, dataArr, colors, labels){
   });
 
   // Center text
-  ctx.fillStyle = '#e8e8f0';
+  ctx.fillStyle = colors.donutCenter;
   ctx.font = 'bold 14px Inter, sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -756,7 +761,7 @@ function drawDonut(canvasId, legendId, dataArr, colors, labels){
   // Legend
   const legendEl = document.getElementById(legendId);
   legendEl.innerHTML = labels.map((l,i) =>
-    `<div class="donut-legend-item"><div class="donut-legend-dot" style="background:${colors[i]}"></div>${l}</div>`
+    `<div class="donut-legend-item"><div class="donut-legend-dot" style="background:${segColors[i]}"></div>${l}</div>`
   ).join('');
 }
 
@@ -764,19 +769,21 @@ function drawDonut(canvasId, legendId, dataArr, colors, labels){
 function initCharts(){
   drawLeadChart();
 
-  const segColors = ['#4ecdc4','#a78bfa','#fbbf24','#f472b6'];
   drawDonut('donutLeads','legendLeads',
-    [355,130,24,5], segColors,
+    [355,130,24,5],
     ['Small 69.1% (355)','Medium 25.3% (130)','Premium 4.7% (24)','Mid-Market 1.0% (5)']
   );
   drawDonut('donutGPV','legendGPV',
-    [9.74,18.85,29.66,140], segColors,
+    [9.74,18.85,29.66,140],
     ['Small 4.9% ($9.74M)','Medium 9.5% ($18.85M)','Premium 15.0% ($29.66M)','Mid-Market 70.6% ($140M)']
   );
 }
 
 // Run on load and resize
-window.addEventListener('load', initCharts);
+window.addEventListener('load', function() {
+  // Small delay to ensure CSS vars are computed after theme is set
+  setTimeout(initCharts, 100);
+});
 window.addEventListener('resize', () => {
   clearTimeout(window._resizeTimer);
   window._resizeTimer = setTimeout(initCharts, 150);
