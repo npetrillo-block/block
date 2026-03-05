@@ -694,6 +694,57 @@ body {
   .header { flex-direction: column; gap: 12px; }
 }
 
+/* v2.0 — Refresh Button */
+.btn-refresh {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+}
+@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.btn-refresh.spinning .refresh-icon { animation: spin 1s linear infinite; display: inline-block; }
+
+/* v2.0 — Source Badge */
+.source-badge-inline {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+  transition: all var(--transition-speed) ease;
+}
+.source-badge-inline.live { background: rgba(16,185,129,0.12); color: var(--green); }
+.source-badge-inline.fallback { background: rgba(245,158,11,0.12); color: var(--yellow); }
+
+/* v2.0 — Last Refreshed */
+.last-refreshed { font-size: 12px; color: var(--text-dim); margin-top: 4px; transition: color var(--transition-speed) ease; }
+
+/* v2.0 — Spend Donut Section */
+.spend-donut-section { margin-bottom: 32px; }
+.spend-donut-wrap { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.spend-donut-canvas { max-width: 220px; }
+.spend-donut-legend { display: flex; flex-direction: column; gap: 10px; }
+.spend-legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); transition: color var(--transition-speed) ease; }
+.spend-legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+.spend-legend-value { font-weight: 700; color: var(--text); margin-left: auto; transition: color var(--transition-speed) ease; }
+
+/* v2.0 — Channel Sparkline */
+.channel-sparkline { display: block; width: 100%; height: 30px; margin: 10px 0 0; }
+
+/* v2.0 — Regional Heatmap */
+.heatmap-section { margin-bottom: 32px; }
+.heatmap-grid {
+  display: grid; grid-template-columns: 100px repeat(3, 1fr); gap: 2px;
+  font-size: 12px;
+}
+.heatmap-header { padding: 10px 8px; font-weight: 700; color: var(--text-muted); text-align: center; text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px; }
+.heatmap-row-label { padding: 12px 8px; font-weight: 600; color: var(--text); display: flex; align-items: center; transition: color var(--transition-speed) ease; }
+.heatmap-cell {
+  padding: 10px 8px; border-radius: 8px; text-align: center;
+  transition: all 0.2s, background-color var(--transition-speed) ease;
+}
+.heatmap-cell:hover { transform: scale(1.03); }
+.heatmap-cell .cell-leads { font-weight: 700; font-size: 14px; }
+.heatmap-cell .cell-cpl { font-size: 11px; opacity: 0.8; }
+.heatmap-cell.win { background: rgba(16,185,129,0.15); color: var(--green); }
+.heatmap-cell.mixed { background: rgba(245,158,11,0.15); color: var(--yellow); }
+.heatmap-cell.watchout { background: rgba(239,68,68,0.15); color: var(--red); }
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
@@ -728,10 +779,15 @@ body {
       <div class="subtitle">February 1 – 15 · Cross-Channel Performance</div>
     </div>
     <div class="header-actions">
+      <button id="btnRefresh" class="btn-refresh" title="Refresh data"><span class="refresh-icon">🔄</span></button>
       <button id="btnTheme" class="btn-theme" title="Toggle light/dark mode"><span class="bulb-icon">💡</span></button>
       <button id="btnShare" title="Share report">📤</button>
       <button id="btnBell" class="btn-bell" title="Staleness tracker">🔔<span id="bellIndicator"></span></button>
     </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;margin-top:4px;margin-bottom:-8px">
+    <span class="source-badge-inline fallback" id="monksSourceBadge">🟡 Fallback</span>
+    <span class="last-refreshed" id="monksLastRefreshed">Last refreshed: loading…</span>
   </div>
   <hr class="mint-hr">
 
@@ -958,7 +1014,7 @@ body {
 
   <!-- Footer -->
   <hr class="footer-hr">
-  <div class="footer">(v1.4) Made with ❤️ by Nick and Goose 🪿</div>
+  <div class="footer">(v2.0) Live Dashboard — Daily Refresh · Made with ❤️ by Nick and Goose 🪿</div>
 
 </div>
 
@@ -1126,6 +1182,283 @@ body {
       bellModal.classList.remove('open');
     }
   });
+
+  // ═══════════════════════════════════════
+  // v2.0 — API Data Loading + Auto-Refresh
+  // ═══════════════════════════════════════
+  var API_BASE = 'http://localhost:8000'; // TODO: Update for production
+  var REFRESH_MS = 86400000; // 24 hours
+
+  // Refresh button
+  var btnRefresh = document.getElementById('btnRefresh');
+  btnRefresh.addEventListener('click', function() { loadMonksData(); });
+
+  async function loadMonksData(periodStart, periodEnd) {
+    btnRefresh.classList.add('spinning');
+    try {
+      var url = API_BASE + '/api/monks-biweekly';
+      var params = [];
+      if (periodStart) params.push('period_start=' + periodStart);
+      if (periodEnd) params.push('period_end=' + periodEnd);
+      if (params.length) url += '?' + params.join('&');
+      var resp = await fetch(url, { signal: AbortSignal.timeout(10000) });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      var payload = await resp.json();
+      updateMonksHeader(payload.source || 'snowflake', payload.last_updated || new Date().toISOString());
+      renderMonksAll(payload);
+      console.log('Monks data loaded from API:', payload.source);
+    } catch(e) {
+      console.warn('API unavailable, keeping current data:', e.message);
+      updateMonksHeader('fallback', new Date().toISOString());
+    }
+    btnRefresh.classList.remove('spinning');
+  }
+
+  function updateMonksHeader(source, lastUpdated) {
+    var badge = document.getElementById('monksSourceBadge');
+    if (source === 'snowflake') {
+      badge.className = 'source-badge-inline live';
+      badge.textContent = '🟢 Live — Snowflake';
+    } else {
+      badge.className = 'source-badge-inline fallback';
+      badge.textContent = '🟡 Fallback — Static Data';
+    }
+    var ts = new Date(lastUpdated);
+    var timeStr = ts.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    document.getElementById('monksLastRefreshed').textContent = 'Last refreshed: ' + timeStr;
+
+    // Update staleness from API timestamp
+    var diffDaysNew = Math.floor((new Date() - ts) / (1000 * 60 * 60 * 24));
+    var isStaleNew = diffDaysNew > STALE_THRESHOLD;
+    if (isStaleNew) {
+      bellBtn.classList.add('stale');
+      bellIndicator.className = 'bell-badge-stale';
+      bellIndicator.textContent = '!';
+      stalenessInfo.className = 'staleness-info stale';
+      stalenessInfo.innerHTML = '⚠️ <strong>Data is stale!</strong> Last updated ' + lastUpdated.split('T')[0] + ' (' + diffDaysNew + ' days ago). Threshold: ' + STALE_THRESHOLD + ' days.';
+    } else {
+      bellBtn.classList.remove('stale');
+      bellIndicator.className = 'bell-dot fresh';
+      stalenessInfo.className = 'staleness-info fresh';
+      stalenessInfo.innerHTML = '✅ <strong>Data is fresh.</strong> Last updated ' + lastUpdated.split('T')[0] + ' (' + diffDaysNew + ' days ago). Threshold: ' + STALE_THRESHOLD + ' days.';
+    }
+  }
+
+  // ── v2.0 Render: Executive Summary ──
+  function renderExecSummary(text) {
+    if (text) document.querySelector('.exec-summary p').textContent = text;
+  }
+
+  // ── v2.0 Render: Alert Cards ──
+  function renderAlerts(alerts) {
+    if (!alerts || !alerts.length) return;
+    var container = document.querySelector('.alert-cards');
+    container.innerHTML = '';
+    alerts.forEach(function(a) {
+      var sev = a.severity || 'monitor';
+      var emoji = a.emoji || (sev === 'critical' ? '🔴' : sev === 'monitor' ? '🟡' : '🟢');
+      var card = document.createElement('div');
+      card.className = 'alert-card ' + sev;
+      card.innerHTML = '<div class="alert-header">' +
+        '<span>' + emoji + '</span>' +
+        '<span class="alert-type ' + sev + '">' + sev.charAt(0).toUpperCase() + sev.slice(1) + '</span>' +
+        '<span class="alert-title">' + (a.title || '') + '</span>' +
+        '</div>' +
+        '<div class="alert-body">' + (a.body || '') +
+        (a.action ? ' <span class="alert-action">ACTION: ' + a.action + '</span>' : '') +
+        '</div>';
+      container.appendChild(card);
+    });
+  }
+
+  // ── v2.0 Render: Regional Tables ──
+  function renderRegionalTables(regions) {
+    if (!regions) return;
+    var regionKeys = ['us', 'uk', 'anz'];
+    regionKeys.forEach(function(key) {
+      var region = regions[key];
+      if (!region) return;
+      var tab = document.getElementById('tab-' + key);
+      if (!tab) return;
+      var tbody = tab.querySelector('tbody');
+      if (!tbody || !region.rows) return;
+      tbody.innerHTML = '';
+      region.rows.forEach(function(r) {
+        var lcClass = (r.leads_change || '').indexOf('-') === 0 ? 'change-red' : 'change-green';
+        var scClass = 'change-green';
+        var statusBadge = r.status === 'Win' ? 'badge-strong' : r.status === 'Watch-out' ? 'badge-watch' : 'badge-mixed';
+        var tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td><strong>' + r.channel + '</strong></td>' +
+          '<td>$' + (r.spend || 0).toLocaleString() + '</td>' +
+          '<td class="' + scClass + '">' + (r.spend_change || '') + '</td>' +
+          '<td>' + (r.impressions || '') + '</td>' +
+          '<td>' + (r.clicks || '') + '</td>' +
+          '<td>' + (r.ctr || '') + '%</td>' +
+          '<td>' + (r.leads || 0) + '</td>' +
+          '<td>$' + (r.cpl || 0).toLocaleString() + '</td>' +
+          '<td class="' + lcClass + '">' + (r.leads_change || '') + '</td>' +
+          '<td><span class="badge ' + statusBadge + '">' + (r.status || '') + '</span></td>';
+        tbody.appendChild(tr);
+      });
+      // Update insight text
+      var insightEl = tab.querySelector('.table-insight');
+      if (insightEl && region.insight) insightEl.innerHTML = region.insight;
+    });
+  }
+
+  // ── v2.0 Render: Channel Cards ──
+  function renderChannelCards(channels) {
+    if (!channels || !channels.length) return;
+    var grid = document.querySelector('.channel-grid');
+    grid.innerHTML = '';
+    var fmt = function(n) {
+      if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+      if (n >= 1000) return Math.round(n/1000) + 'K';
+      return n.toLocaleString();
+    };
+    var fmtD = function(n) { return '$' + n.toLocaleString(undefined, {maximumFractionDigits:2}); };
+    channels.forEach(function(ch) {
+      var status = (ch.status || 'Mixed').toLowerCase();
+      var badgeClass = status === 'strong' ? 'badge-strong' : status === 'watch-out' ? 'badge-watch' : 'badge-mixed';
+      var badgeEmoji = status === 'strong' ? '✅' : status === 'watch-out' ? '🔴' : '⚠️';
+      var badgeLabel = ch.status || 'Mixed';
+      var card = document.createElement('div');
+      card.className = 'card channel-card';
+      card.innerHTML =
+        '<div class="channel-header">' +
+          '<div class="channel-name">' + ch.name + '</div>' +
+          '<span class="badge ' + badgeClass + '">' + badgeEmoji + ' ' + badgeLabel + '</span>' +
+        '</div>' +
+        '<div class="channel-metrics">' +
+          '<div class="metric"><div class="metric-value">' + fmtD(ch.spend) + '</div><div class="metric-label">Spend</div></div>' +
+          '<div class="metric"><div class="metric-value">' + fmt(ch.impressions) + '</div><div class="metric-label">Impressions</div></div>' +
+          '<div class="metric"><div class="metric-value">' + fmt(ch.clicks) + '</div><div class="metric-label">Clicks</div></div>' +
+          '<div class="metric"><div class="metric-value">' + ch.ctr + '%</div><div class="metric-label">CTR</div></div>' +
+          '<div class="metric"><div class="metric-value">' + ch.leads.toLocaleString() + '</div><div class="metric-label">Leads</div></div>' +
+          '<div class="metric"><div class="metric-value">' + fmtD(ch.cpl) + '</div><div class="metric-label">CPL</div></div>' +
+        '</div>' +
+        '<div class="channel-insight">' + (ch.insight || '') + '</div>';
+      grid.appendChild(card);
+    });
+  }
+
+  // ── v2.0 Render: Spend Donut (new section) ──
+  function renderSpendDonut(channels) {
+    if (!channels || !channels.length) return;
+    var section = document.getElementById('spendDonutSection');
+    if (!section) {
+      // Create the section if it doesn't exist yet
+      section = document.createElement('div');
+      section.id = 'spendDonutSection';
+      section.className = 'spend-donut-section';
+      // Insert after channel grid
+      var channelSection = document.querySelector('.channel-grid');
+      if (channelSection && channelSection.parentElement) {
+        channelSection.parentElement.after(section);
+      }
+    }
+    var total = channels.reduce(function(s,c){return s+c.spend},0);
+    var colors = ['var(--mint)','var(--yellow)','var(--green)'];
+    var rawColors = ['#B2FCE4','#F59E0B','#10B981'];
+    if (currentTheme === 'light') rawColors = ['#0D9488','#D97706','#059669'];
+
+    section.innerHTML =
+      '<div class="section-title">💰 Spend Allocation</div>' +
+      '<div class="card"><div class="spend-donut-wrap">' +
+      '<canvas id="spendDonutCanvas" class="spend-donut-canvas" width="220" height="220"></canvas>' +
+      '<div class="spend-donut-legend" id="spendDonutLegend"></div>' +
+      '</div></div>';
+
+    var canvas = document.getElementById('spendDonutCanvas');
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio||1;
+    canvas.width = 220*dpr; canvas.height = 220*dpr;
+    canvas.style.width = '220px'; canvas.style.height = '220px';
+    ctx.scale(dpr,dpr);
+    var cx=110,cy=110,outerR=95,innerR=55;
+    var start = -Math.PI/2;
+    channels.forEach(function(ch,i){
+      var slice = (ch.spend/total)*Math.PI*2;
+      ctx.beginPath();
+      ctx.arc(cx,cy,outerR,start,start+slice);
+      ctx.arc(cx,cy,innerR,start+slice,start,true);
+      ctx.closePath();
+      ctx.fillStyle = rawColors[i%rawColors.length];
+      ctx.fill();
+      if(ch.spend/total>0.08){
+        var mid=start+slice/2,lr=(outerR+innerR)/2;
+        ctx.fillStyle='#fff';ctx.font='bold 12px Inter,sans-serif';
+        ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText(Math.round(ch.spend/total*100)+'%',cx+Math.cos(mid)*lr,cy+Math.sin(mid)*lr);
+      }
+      start+=slice;
+    });
+    ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+    ctx.font='bold 13px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('$'+Math.round(total/1000)+'K',cx,cy);
+
+    var legend = document.getElementById('spendDonutLegend');
+    legend.innerHTML = channels.map(function(ch,i){
+      return '<div class="spend-legend-item">' +
+        '<div class="spend-legend-dot" style="background:'+rawColors[i%rawColors.length]+'"></div>' +
+        ch.name +
+        '<span class="spend-legend-value">$'+ch.spend.toLocaleString()+'</span></div>';
+    }).join('');
+  }
+
+  // ── v2.0 Render: Regional Heatmap (new section) ──
+  function renderHeatmap(regions) {
+    if (!regions) return;
+    var section = document.getElementById('heatmapSection');
+    if (!section) {
+      section = document.createElement('div');
+      section.id = 'heatmapSection';
+      section.className = 'heatmap-section';
+      var regional = document.querySelector('.regional-section');
+      if (regional) regional.after(section);
+    }
+    var regionKeys = [{key:'us',label:'🇺🇸 US'},{key:'uk',label:'🇬🇧 UK'},{key:'anz',label:'🇦🇺 ANZ'}];
+    var chNames = ['Paid Social','Programmatic','Search'];
+    var html = '<div class="section-title">🗺️ Regional Performance Heatmap</div>' +
+      '<div class="card"><div class="heatmap-grid">' +
+      '<div class="heatmap-header"></div>' +
+      chNames.map(function(c){return '<div class="heatmap-header">'+c+'</div>'}).join('');
+
+    regionKeys.forEach(function(r){
+      var region = regions[r.key];
+      if(!region) return;
+      html += '<div class="heatmap-row-label">'+r.label+'</div>';
+      chNames.forEach(function(chName){
+        var row = (region.rows||[]).find(function(x){return x.channel===chName});
+        if(row){
+          var cls = row.status==='Win'?'win':row.status==='Watch-out'?'watchout':'mixed';
+          html += '<div class="heatmap-cell '+cls+'">' +
+            '<div class="cell-leads">'+row.leads+' leads</div>' +
+            '<div class="cell-cpl">$'+(row.cpl||0).toLocaleString()+' CPL</div></div>';
+        } else {
+          html += '<div class="heatmap-cell">—</div>';
+        }
+      });
+    });
+    html += '</div></div>';
+    section.innerHTML = html;
+  }
+
+  // ── v2.0 Master Render ──
+  function renderMonksAll(payload) {
+    var data = payload.data || {};
+    renderExecSummary(payload.exec_summary || data.exec_summary);
+    renderChannelCards(data.channels);
+    renderRegionalTables(data.regions);
+    renderAlerts(payload.alerts || data.alerts);
+    renderSpendDonut(data.channels);
+    renderHeatmap(data.regions);
+  }
+
+  // Initial load attempt + auto-refresh
+  setTimeout(function() { loadMonksData(); }, 200);
+  setInterval(function() { loadMonksData(); }, REFRESH_MS);
 })();
 </script>
 

@@ -1,83 +1,237 @@
 # Afterpay Marketing Dashboards 📊
 
-Two self-contained HTML dashboards built for the Afterpay SMB marketing team. No frameworks, no dependencies, no build steps — just open in any browser and go.
+**v2.0 — Live Dashboards with Python Backend**
+
+Two interactive HTML dashboards for the Afterpay SMB marketing team, now powered by a Python backend that connects to Snowflake, auto-refreshes daily, and sends Slack/email alerts when red flags pop up.
+
+> **What changed in v2.0?** These dashboards evolved from static, read-only HTML prototypes into live tools that pull data from Snowflake, refresh their visualizations automatically, generate commentary on the fly, and notify you when something needs attention.
 
 ---
 
-## 📁 Files
+## 📁 Project Structure
 
-### `afterpay-b2b-demand-gen.html`
-
-**Afterpay B2B Demand Gen Dashboard**
-
-A YoY performance dashboard tracking B2B demand generation across merchant segments (Small, Medium, Premium, Mid-Market).
-
-**What's inside:**
-- **KPI Summary** — 6 top-level cards (Total Leads, MQLs, Addressable Leads, Addressability Rate, 28D Close Won Rate, Total Addressable aGPV) with YoY comparisons
-- **Big Wins & Watchouts** — At-a-glance insights highlighting what's working and what needs attention
-- **Lead Volume by Segment** — Horizontal bar chart (Canvas 2D) comparing TY vs LY across all segments, plus a detailed breakdown table
-- **Funnel Visualization** — Side-by-side TY vs LY funnel showing Leads → MQLs → Addressable Leads → 28D Close Won Rate
-- **Segment Deep Dive** — Tabbed interface with per-segment metrics, mini bar charts, and YoY change indicators
-- **Segment Mix Donuts** — Two donut charts showing Lead Distribution vs Addressable aGPV Distribution (reveals that Mid-Market is 1% of leads but 71% of value)
-
-**Data period:** Jan 1–5, 2026 vs Jan 1–5, 2025
+```
+block/
+├── afterpay-b2b-demand-gen.html    ← B2B Demand Gen Dashboard (v2.0)
+├── afterpay-monks-lite.html        ← Monks Biweekly Dashboard (v2.0)
+├── README.md                       ← You are here
+└── backend/                        ← Python backend (API + scheduler + notifications)
+    ├── config.py                   ← Environment variables & alert thresholds
+    ├── snowflake_connector.py      ← Snowflake client with context manager
+    ├── server.py                   ← FastAPI server (JSON endpoints)
+    ├── scheduler.py                ← Daily refresh job + uvicorn launcher
+    ├── requirements.txt            ← pip dependencies
+    ├── env.example                 ← Template for .env configuration
+    ├── engines/
+    │   ├── b2b_demand_gen.py       ← B2B data engine (Snowflake queries + YoY calcs)
+    │   ├── monks_biweekly.py       ← Monks data engine (channel × region queries)
+    │   └── insight_engine.py       ← Shared formatting & narrative generation
+    └── notifications/
+        ├── slack_notifier.py       ← Slack webhook alerts & summaries
+        └── email_notifier.py       ← SMTP email digests & staleness warnings
+```
 
 ---
 
-### `afterpay-monks-lite.html`
+## 📊 Dashboard 1: B2B Demand Gen
 
-**Afterpay × Monks Biweekly Lite Dashboard** 🍺
+**`afterpay-b2b-demand-gen.html`** — YoY performance tracking across merchant segments
 
-A cross-channel performance dashboard designed for biweekly reviews with Monks (agency partner). Covers Paid Social, Programmatic, and Search across US, UK, and ANZ regions.
+### What's Inside
+- **KPI Summary** — 6 top-level cards with YoY comparisons + sparkline trend indicators
+- **Dynamic Wins & Watchouts** — Auto-generated insights based on data thresholds (not hardcoded)
+- **Lead Volume by Segment** — Horizontal bar chart (Canvas 2D) comparing TY vs LY
+- **Detailed Breakdown Table** — Segment-level metrics with color-coded YoY changes
+- **Funnel Visualization** — Side-by-side TY vs LY funnel (Leads → MQLs → Addressable → Close Won)
+- **Segment Deep Dive** — Tabbed interface with per-segment metrics and mini bar charts
+- **Segment Mix Donuts** — Lead Distribution vs Addressable aGPV Distribution
 
-**What's inside:**
-- **Executive Summary** — High-level narrative of the period's performance
-- **Channel Temp-Check** — 3 channel cards (Paid Social, Programmatic, Search) with key metrics (Spend, Impressions, Clicks, CTR, Leads, CPL) and status badges (Strong / Mixed / Watch-out)
-- **Regional Breakdown** — Tabbed tables for 🇺🇸 US, 🇬🇧 UK, and 🇦🇺 ANZ with per-channel data, YoY changes, and contextual insights
-- **Watch-Outs & Action Items** — Prioritized alert cards (Critical / Monitor / Opportunity) with specific recommended actions
+### v2.0 Features
+| Feature | Details |
+|---|---|
+| 🔄 **Refresh Button** | Click to pull latest data from the API. Spinning animation while loading. |
+| 🟢/🟡 **Source Badge** | Shows "Live" (green) when connected to Snowflake, "Fallback" (amber) when using static data. |
+| 🕐 **Last Refreshed** | Timestamp showing when data was last pulled. |
+| 📈 **KPI Sparklines** | Tiny trend charts on each KPI card showing directional momentum. |
+| 📅 **Date Range Picker** | Click the Date Range filter to select custom start/end dates. |
+| ⏰ **Auto-Refresh** | Refreshes every 24 hours automatically. |
+| 🛡️ **Graceful Fallback** | If the API is down, dashboard renders with the last known static data — never breaks. |
+
+**Default data period:** Jan 1–5, 2026 vs Jan 1–5, 2025
+
+---
+
+## 📡 Dashboard 2: Monks Biweekly Lite
+
+**`afterpay-monks-lite.html`** — Cross-channel performance for biweekly agency reviews
+
+### What's Inside
+- **Executive Summary** — Auto-generated narrative paragraph from the data
+- **Channel Temp-Check** — 3 channel cards (Paid Social, Programmatic, Search) with status badges
+- **💰 Spend Allocation Donut** *(NEW in v2.0)* — Visual breakdown of where budget is going
+- **Regional Breakdown** — Tabbed tables for 🇺🇸 US, 🇬🇧 UK, and 🇦🇺 ANZ
+- **🗺️ Regional Performance Heatmap** *(NEW in v2.0)* — 3×3 grid color-coded by Win/Mixed/Watch-out
+- **Watch-Outs & Action Items** — Auto-prioritized alert cards (Critical → Monitor → Opportunity)
 - **Share Modal** — Quick-share link for Blockcell-hosted version
-- **Staleness Tracker** — 🔔 Bell icon tracks data freshness with a configurable threshold; includes a drag-and-drop file upload zone for updating data
+- **Staleness Tracker** — 🔔 Bell icon now auto-detects freshness from API data
 
-**Data period:** February 1–15, 2026
+### v2.0 Features
+| Feature | Details |
+|---|---|
+| 🔄 **Refresh Button** | Manual data refresh with spinning animation. |
+| 🟢/🟡 **Source Badge** | Live vs Fallback indicator. |
+| 🕐 **Last Refreshed** | Auto-updating timestamp. |
+| 🍩 **Spend Donut** | NEW — Canvas 2D donut showing spend allocation across channels. |
+| 🗺️ **Heatmap** | NEW — 3×3 region × channel grid with color-coded performance status. |
+| 📝 **Dynamic Rendering** | Exec summary, channel cards, regional tables, and alert cards all render from API data. |
+| 🔔 **Smart Staleness** | Staleness tracker now reads from API timestamp instead of hardcoded date. |
+| ⏰ **Auto-Refresh** | 24-hour refresh cycle. |
+
+**Default data period:** February 1–15, 2026
 
 ---
 
-## ✨ Features (Both Dashboards)
+## 🐍 Python Backend
+
+The backend is the brain that makes everything live. It connects to Snowflake, computes metrics, generates insights, serves data via API, and sends notifications.
+
+### Architecture
+
+```
+┌─────────────┐     ┌──────────────────┐     ┌──────────────┐
+│  Snowflake   │────▶│  Python Backend   │────▶│ Notifications │
+│  (tables)    │     │  (FastAPI + APSch)│     │ (Slack/Email) │
+└─────────────┘     └────────┬─────────┘     └──────────────┘
+                             │
+                    ┌────────▼─────────┐
+                    │  HTML Dashboards  │
+                    │  (fetch JSON API) │
+                    └──────────────────┘
+```
+
+### API Endpoints
+
+| Endpoint | Method | Description |
+|---|---|---|
+| `/api/health` | GET | Health check + cache status |
+| `/api/b2b-demand-gen` | GET | Full B2B dashboard payload (KPIs, segments, insights) |
+| `/api/monks-biweekly` | GET | Full Monks dashboard payload (channels, regions, alerts) |
+| `/api/b2b-demand-gen/alerts` | GET | B2B insights only |
+| `/api/monks-biweekly/alerts` | GET | Monks alerts only |
+| `/api/refresh` | POST | Trigger manual refresh of both dashboards |
+
+### Alert Engine
+
+The backend auto-generates alerts based on configurable thresholds:
+
+| Alert | Trigger | Severity |
+|---|---|---|
+| Lead volume collapse | Any region×channel leads drop > 40% | 🔴 Critical |
+| CPL explosion | CPL exceeds $1,000 | 🔴 Critical |
+| Close-won rate drop | Rate drops > 30% WoW | 🔴 Critical |
+| Form drop-off | Form start → lead conversion > 70% drop | 🔴 Critical |
+| CPL doubling | CPL increases > 80% vs prior | 🟡 Monitor |
+| Global CPL drift | Overall CPL trending up | 🟡 Monitor |
+| Efficient CPL | CPL < $50 with 100+ leads | 🟢 Opportunity |
+| Lead surge | Leads up > 50% with stable CPL | 🟢 Opportunity |
+
+### Notifications
+
+- **Slack** — Rich Block Kit messages for critical/monitor alerts + daily summaries
+- **Email** — HTML digest tables for critical alerts + staleness warnings
+- **Staleness** — Auto-warns when data hasn't refreshed beyond the threshold (default: 14 days)
+
+---
+
+## 🚀 Getting Started
+
+### Quick Start (Dashboards Only)
+
+Just open either `.html` file in your browser. They work standalone with fallback data — no backend required.
+
+### Full Setup (Live Data)
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/npetrillo-block/block.git
+cd block/backend
+
+# 2. Configure environment
+cp env.example .env
+# Edit .env with your Snowflake credentials, Slack webhook, SMTP settings
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Run the backend
+python scheduler.py              # Starts API server + daily scheduler at 7 AM
+# OR
+python scheduler.py --once       # One-time refresh (good for testing)
+
+# 5. Update API_BASE in both HTML files
+# Change 'http://localhost:8000' to your server URL if deploying remotely
+```
+
+### Configuration (env.example)
+
+| Variable | Description |
+|---|---|
+| `SNOWFLAKE_ACCOUNT` | Your Snowflake account identifier |
+| `SNOWFLAKE_USER` / `PASSWORD` | Snowflake credentials |
+| `SNOWFLAKE_WAREHOUSE` / `DATABASE` / `SCHEMA` | Snowflake connection details |
+| `B2B_LEADS_TABLE` | Table for B2B lead data |
+| `MONKS_CHANNEL_TABLE` | Table for channel performance data |
+| `SLACK_WEBHOOK_URL` | Slack incoming webhook for notifications |
+| `SMTP_HOST` / `SMTP_USER` / `SMTP_PASSWORD` | Email SMTP settings |
+| `EMAIL_RECIPIENTS` | Comma-separated alert recipients |
+| `REFRESH_HOUR` / `REFRESH_MINUTE` | Daily refresh time (default: 7:00 AM) |
+| `STALENESS_THRESHOLD_DAYS` | Days before data is flagged stale (default: 14) |
+
+---
+
+## ✨ Shared Features (Both Dashboards)
 
 | Feature | Details |
 |---|---|
-| **💡 Light/Dark Mode** | Lightbulb toggle in the top-right corner. Auto-defaults to **light mode** between 9 AM–5 PM and **dark mode** all other hours. Click to manually override anytime. |
-| **Zero Dependencies** | Fully self-contained single-file HTMLs. No npm, no build tools, no external JS libraries. Just HTML + CSS + vanilla JS. |
-| **Portable** | Open locally in any browser, email to colleagues, host on Blockcell, push to GitHub — works everywhere. |
-| **Responsive** | Adapts to different screen sizes with CSS grid breakpoints. |
-| **Smooth Animations** | Scroll-triggered fade-ins, hover effects, and 0.3s theme transitions. |
-
----
-
-## 🚀 How to Use
-
-1. **Open locally** — Double-click either `.html` file to open in your default browser
-2. **Share with others** — Send the file directly via Slack, email, or Google Drive. Recipients just open it in their browser.
-3. **Host internally** — Push to Blockcell for a persistent internal URL
-4. **Toggle theme** — Click the 💡 lightbulb in the top-right to switch between light and dark mode
+| **💡 Light/Dark Mode** | Lightbulb toggle. Auto-defaults to light (9 AM–5 PM) and dark (all other hours). |
+| **Zero Dependencies** | Self-contained HTML files. No npm, no build tools. |
+| **Portable** | Open locally, email, host on Blockcell, push to GitHub. |
+| **Responsive** | CSS grid breakpoints for different screen sizes. |
+| **Smooth Animations** | Scroll-triggered fade-ins, hover effects, 0.3s theme transitions. |
+| **Graceful Degradation** | Dashboards always render — with live data when available, fallback data when not. |
 
 ---
 
 ## 🛠 Built With
 
-- **HTML5 / CSS3 / Vanilla JavaScript**
-- **Canvas 2D API** for charts (no Chart.js or D3 needed)
-- **Google Fonts** — Inter (the only external dependency; degrades gracefully to system fonts)
+- **HTML5 / CSS3 / Vanilla JavaScript** — Zero-dependency frontend
+- **Canvas 2D API** — Charts, donuts, sparklines (no Chart.js or D3)
+- **Python 3.10+** — Backend runtime
+- **FastAPI** — REST API server
+- **APScheduler** — Daily refresh scheduling
+- **snowflake-connector-python** — Snowflake data access
+- **Google Fonts** — Inter (degrades gracefully to system fonts)
 - **Goose** 🪿 — AI-assisted development
 
 ---
 
-## 📝 Notes
+## 📝 Status & Notes
 
-- All data is **static/hardcoded** — these are prototype dashboards for presentation and review purposes
-- The B2B Demand Gen dashboard is tagged as `Prototype — Static Data`
-- The Monks Biweekly dashboard includes a file upload zone (staleness tracker) designed to work with Goose for future data refresh workflows
-- Date ranges are small sample sizes — interpret trends with caution
+- **WIP** — Snowflake table names and credentials are placeholders (`TODO_*`). Fill in your `.env` to go live.
+- The backend gracefully falls back to static data when Snowflake is unavailable — dashboards never break.
+- Alert thresholds are configurable in `backend/config.py`.
+- Date ranges in the fallback data are small sample sizes — interpret trends with caution.
+
+---
+
+## 📋 Version History
+
+| Version | Date | What Changed |
+|---|---|---|
+| **v2.0** | Mar 2026 | 🚀 Live data layer — Python backend, Snowflake integration, API endpoints, auto-refresh, dynamic rendering, sparklines, spend donut, regional heatmap, Slack/email alerts, staleness auto-detection |
+| v1.3–1.4 | Mar 2026 | Light/dark mode toggle, staleness tracker, share modal, file upload zone |
+| v0.2 | Mar 2026 | Initial B2B dashboard with Canvas 2D charts |
+| v0.1 | Mar 2026 | First Monks Biweekly prototype |
 
 ---
 
