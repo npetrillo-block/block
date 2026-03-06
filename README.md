@@ -1,4 +1,4 @@
-# Afterpay Marketing Dashboards 📊
+# Afterpay B2B Growth Marketing Dashboards 📊
 
 **v2.0 — Live Dashboards with Python Backend**
 
