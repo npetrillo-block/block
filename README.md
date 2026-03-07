@@ -1,7 +1,5 @@
 # Afterpay B2B Growth Marketing Dashboards 📊
 
-**v2.1 — Live Dashboards Powered by Real Snowflake Data**
-
 Two interactive HTML dashboards for the Afterpay B2B Growth Marketing team, powered by a Python backend connected to Snowflake. The B2B Demand Gen dashboard now runs on **real production data** from `FIVETRAN.MARKETO.LEAD` — 11.3M rows of Afterpay lead data with full funnel tracking.
 
 > **What changed in v2.1?** The B2B dashboard is now powered by **real Snowflake data** (15 months, Jan 2025 – Mar 2026). It shifted from segment-based analytics (Small/Medium/Premium) to **channel-based analytics** (Paid Search, Paid Social, Paid Display, Non-Paid) with full funnel tracking from Lead → MQL → SQL → Opportunity → Merchant.
