@@ -14,7 +14,7 @@
 
 ---
 
-## 🔴 TODO
+## 🔴 To-Do
 
 - [ ] **Data automation** — Currently manual .xlsx handoff every 2 weeks
   - If Monks can drop files to a shared location (GDrive, S3, Snowflake stage), we can automate ingestion
