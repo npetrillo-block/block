@@ -125,22 +125,24 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 - [x] **Donut charts** — ✅ Lead Distribution + MQL Distribution canvas donuts with center totals, legends, theme-aware, retina.
 - [x] **Region filter interactivity** — ✅ Client-side dropdown (US/UK/AU/NZ) filters SEM Regional Breakdown table rows. Region order standardized to US/UK/AU/NZ everywhere.
 
-### P5: Email Alerts
-
-- [ ] **Configure SMTP** — Add credentials to `.env` (SMTP_HOST, SMTP_USER, SMTP_PASSWORD, EMAIL_RECIPIENTS)
-- [ ] **Test email digest** — Run scheduler once, verify HTML email arrives
-- [ ] **Customize recipients** — Set up distribution list for the team
-
-### P6: External Sharing
+### P5: External Sharing
 
 - [ ] **Ask IT/security about external sharing** — Can agency vendors access Blockcell?
 
-### P7: Future / Nice-to-Have
+### P6: Future / Nice-to-Have
 
+- [ ] **"Ask Me Anything" chat** — 🧠 NL → SQL interface built into the dashboard
+  - Button in top-right opens a text input panel
+  - User types a question (e.g. "Which channel had the highest MQL rate in Q4?")
+  - Backend sends question + table schema to LLM → generates SQL
+  - Runs query against Snowflake → returns answer in natural language
+  - Needs: P2 (Snowflake creds) + LLM API key (OpenAI/Anthropic)
+  - Could start simple (pre-defined queries) and evolve to full NL→SQL
 - [ ] **Cohort analysis** — Time-to-convert tracking by channel
 - [ ] **First-touch vs last-touch attribution** — Compare attribution models
 - [ ] **Regional heatmaps** — Geographic performance visualization
 - [x] **Export to PDF** — ✅ 📄 Export button in filter bar. Print stylesheet shows all tabs, hides controls, clean white layout.
+- ~~**Email alerts**~~ — Removed from scope per user
 - ~~**Mobile optimization**~~ — Removed from scope per user
 
 ---
