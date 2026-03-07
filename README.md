@@ -1,10 +1,10 @@
 # Afterpay B2B Growth Marketing Dashboards 📊
 
-**v2.0 — Live Dashboards with Python Backend**
+**v2.1 — Live Dashboards Powered by Real Snowflake Data**
 
-Two interactive HTML dashboards for the Afterpay B2B Growth Marketing team, now powered by a Python backend that connects to Snowflake, auto-refreshes daily, and sends Slack/email alerts when red flags pop up.
+Two interactive HTML dashboards for the Afterpay B2B Growth Marketing team, powered by a Python backend connected to Snowflake. The B2B Demand Gen dashboard now runs on **real production data** from `FIVETRAN.MARKETO.LEAD` — 11.3M rows of Afterpay lead data with full funnel tracking.
 
-> **What changed in v2.0?** These dashboards evolved from static, read-only HTML prototypes into live tools that pull data from Snowflake, refresh their visualizations automatically, generate commentary on the fly, and notify you when something needs attention.
+> **What changed in v2.1?** The B2B dashboard is now powered by **real Snowflake data** (15 months, Jan 2025 – Mar 2026). It shifted from segment-based analytics (Small/Medium/Premium) to **channel-based analytics** (Paid Search, Paid Social, Paid Display, Non-Paid) with full funnel tracking from Lead → MQL → SQL → Opportunity → Merchant.
 
 ---
 
@@ -12,7 +12,7 @@ Two interactive HTML dashboards for the Afterpay B2B Growth Marketing team, now 
 
 ```
 block/
-├── afterpay-b2b-demand-gen.html    ← B2B Demand Gen Dashboard (v2.0)
+├── afterpay-b2b-demand-gen.html    ← B2B Demand Gen Dashboard (v2.1 — LIVE DATA)
 ├── afterpay-monks-lite.html        ← Monks Biweekly Dashboard (v2.0)
 ├── README.md                       ← You are here
 └── backend/                        ← Python backend (API + scheduler + notifications)
@@ -35,29 +35,43 @@ block/
 
 ## 📊 Dashboard 1: B2B Demand Gen
 
-**`afterpay-b2b-demand-gen.html`** — YoY performance tracking across merchant segments
+**`afterpay-b2b-demand-gen.html`** — YoY performance tracking by marketing channel
+
+> 🟢 **Now powered by real Snowflake data** from `FIVETRAN.MARKETO.LEAD` (11.3M rows)
 
 ### What's Inside
-- **KPI Summary** — 6 top-level cards with YoY comparisons + sparkline trend indicators
-- **Dynamic Wins & Watchouts** — Auto-generated insights based on data thresholds (not hardcoded)
-- **Lead Volume by Segment** — Horizontal bar chart (Canvas 2D) comparing TY vs LY
-- **Detailed Breakdown Table** — Segment-level metrics with color-coded YoY changes
-- **Funnel Visualization** — Side-by-side TY vs LY funnel (Leads → MQLs → Addressable → Close Won)
-- **Segment Deep Dive** — Tabbed interface with per-segment metrics and mini bar charts
-- **Segment Mix Donuts** — Lead Distribution vs Addressable aGPV Distribution
+- **KPI Summary** — 6 cards: Total Leads, MQLs, MQL Rate, Open Opps, Merchants Won, Conversion Rate
+- **Dynamic Wins & Watchouts** — Auto-generated insights from real data (MQL surge, conversion bottlenecks, channel efficiency)
+- **Lead Volume by Channel** — Horizontal bar chart (Canvas 2D) comparing Feb 2026 vs Feb 2025
+- **Detailed Breakdown Table** — Channel-level metrics: Leads, MQLs, Opps, Won with YoY changes
+- **Funnel Visualization** — Side-by-side YoY funnel (Leads → MQLs → Opportunities → Merchants Won)
+- **Channel Deep Dive** — Tabbed interface: Paid Search, Paid Social, Paid Display, Non-Paid, All Channels
+- **Channel Mix Donuts** — Lead Distribution vs MQL Distribution by channel
 
-### v2.0 Features
+### v2.1 Features (NEW — Real Data!)
 | Feature | Details |
 |---|---|
-| 🔄 **Refresh Button** | Click to pull latest data from the API. Spinning animation while loading. |
-| 🟢/🟡 **Source Badge** | Shows "Live" (green) when connected to Snowflake, "Fallback" (amber) when using static data. |
-| 🕐 **Last Refreshed** | Timestamp showing when data was last pulled. |
-| 📈 **KPI Sparklines** | Tiny trend charts on each KPI card showing directional momentum. |
-| 📅 **Date Range Picker** | Click the Date Range filter to select custom start/end dates. |
-| ⏰ **Auto-Refresh** | Refreshes every 24 hours automatically. |
-| 🛡️ **Graceful Fallback** | If the API is down, dashboard renders with the last known static data — never breaks. |
+| 🔥 **Real Snowflake Data** | 15 months of live Afterpay lead data (Jan 2025 – Mar 2026) from `FIVETRAN.MARKETO.LEAD` |
+| 📊 **Channel-Based Analytics** | Shifted from segments (Small/Medium/Premium) to channels (Paid Search, Paid Social, Paid Display, Non-Paid) |
+| 🔻 **Full Funnel Tracking** | Leads → MQL → SQL → Open Opportunity → Merchant Won |
+| 🎯 **Real Insights** | MQLs +142% YoY, Paid Social +650%, MQL rate 5.3% → 16.0%, conversion bottleneck detected |
+| 🔄 **Refresh Button** | Pull latest data from the API with spinning animation |
+| 🟢/🟡 **Source Badge** | "Live" (green) when connected to Snowflake, "Fallback" (amber) when offline |
+| 📈 **KPI Sparklines** | Trend indicators on each KPI card |
+| 📅 **Date Range Picker** | Custom start/end date selection |
+| ⏰ **Auto-Refresh** | 24-hour refresh cycle |
+| 🛡️ **Graceful Fallback** | Real data baked in — dashboard works standalone without the backend |
 
-**Default data period:** Jan 1–5, 2026 vs Jan 1–5, 2025
+### Data Source
+| Field | Value |
+|---|---|
+| **Table** | `FIVETRAN.MARKETO.LEAD` |
+| **Filter** | `AFTERPAY_BU = 'Afterpay'` |
+| **Date Column** | `CREATED_AT` |
+| **Channel Logic** | `LAST_TOUCH_UTM_MEDIUM_C`: cpc → Paid Search, p-social → Paid Social, disp → Paid Display, else → Non-Paid |
+| **Funnel Column** | `PROSPECT_LIFECYCLE_STATUS_C`: MQL, SQL, Open Opportunity, Merchant, Disqualified, Closed Lost |
+
+**Default data period:** Feb 2026 vs Feb 2025
 
 ---
 
@@ -217,10 +231,12 @@ python scheduler.py --once       # One-time refresh (good for testing)
 
 ## 📝 Status & Notes
 
-- **WIP** — Snowflake table names and credentials are placeholders (`TODO_*`). Fill in your `.env` to go live.
-- The backend gracefully falls back to static data when Snowflake is unavailable — dashboards never break.
+- **B2B Dashboard** — ✅ Live! Powered by real data from `FIVETRAN.MARKETO.LEAD`. Works standalone (real data baked into fallback) or with the Python backend for auto-refresh.
+- **Monks Dashboard** — Still uses fallback data. Needs manual .xlsx handoff from agency partner.
+- **Backend** — Snowflake credentials still need to be configured in `.env` for automated daily refresh. The confirmed working table is `FIVETRAN.MARKETO.LEAD`.
+- **Slack/Email Notifications** — Code is built and ready. Just needs Slack webhook URL and SMTP credentials in `.env`.
+- **Next up (v3.0)** — Full dashboard redesign: live funnel visualization, cohort analysis, first-touch vs last-touch attribution, time-to-convert tracking, regional heatmaps.
 - Alert thresholds are configurable in `backend/config.py`.
-- Date ranges in the fallback data are small sample sizes — interpret trends with caution.
 
 ---
 
@@ -228,7 +244,8 @@ python scheduler.py --once       # One-time refresh (good for testing)
 
 | Version | Date | What Changed |
 |---|---|---|
-| **v2.0** | Mar 5, 2026 | 🚀 Live data layer — Python backend, Snowflake integration, API endpoints, auto-refresh, dynamic rendering, sparklines, spend donut, regional heatmap, Slack/email alerts, staleness auto-detection |
+| **v2.1** | Mar 6, 2026 | 🔥 **Real Snowflake data!** B2B dashboard powered by `FIVETRAN.MARKETO.LEAD` (11.3M rows). Channel-based analytics (Paid Search/Social/Display/Non-Paid). Full funnel tracking (Lead → MQL → SQL → Opp → Merchant). 15 months of live data. Real auto-generated insights. |
+| v2.0 | Mar 5, 2026 | 🚀 Live data layer — Python backend, Snowflake integration, API endpoints, auto-refresh, dynamic rendering, sparklines, spend donut, regional heatmap, Slack/email alerts, staleness auto-detection |
 | v1.3–1.4 | Mar 4, 2026 | Light/dark mode toggle, staleness tracker, share modal, file upload zone |
 | v0.2 | Feb 26, 2026 | Initial B2B dashboard with Canvas 2D charts |
 | v0.1 | Feb 25, 2026 | First Monks Biweekly prototype |
