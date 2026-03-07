@@ -13,9 +13,11 @@ Interactive HTML dashboards for the Afterpay B2B Growth Marketing team, backed b
 ```
 block/
 ├── b2b-dg-dashboard/                   ← B2B Demand Gen Dashboard
-│   └── afterpay-b2b-demand-gen-v3.html ← v3.0 — LATEST
+│   ├── afterpay-b2b-demand-gen-v3.html ← v3.0 — LATEST
+│   └── TODO.md                         ← B2B task list & project context
 ├── monks-lite/                         ← Monks Biweekly Dashboard
-│   └── afterpay-monks-lite.html        ← v2.0
+│   ├── afterpay-monks-lite.html        ← v2.0
+│   └── TODO.md                         ← Monks task list
 ├── backend/                            ← Shared Python backend (API + scheduler + notifications)
 │   ├── config.py                       ← Environment variables & alert thresholds
 │   ├── snowflake_connector.py          ← Snowflake client with context manager
@@ -30,8 +32,7 @@ block/
 │   └── notifications/
 │       ├── slack_notifier.py           ← Slack webhook alerts & summaries
 │       └── email_notifier.py           ← SMTP email digests & staleness warnings
-├── README.md                           ← You are here
-└── TODO.md                             ← Master task list & project context
+└── README.md                           ← You are here
 ```
 
 ---
@@ -116,7 +117,7 @@ python scheduler.py    # Starts API + daily scheduler
 
 ## 📝 Status & Roadmap
 
-See **[TODO.md](TODO.md)** for the full task list.
+See **[b2b-dg-dashboard/TODO.md](b2b-dg-dashboard/TODO.md)** and **[monks-lite/TODO.md](monks-lite/TODO.md)** for project-specific task lists.
 
 | Item | Status |
 |---|---|
