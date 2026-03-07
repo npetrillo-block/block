@@ -12,7 +12,7 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 
 | Asset | File | Status |
 |---|---|---|
-| B2B Demand Gen Dashboard v3.0 | `afterpay-b2b-demand-gen-v3.html` | ✅ Complete (1,905 lines) |
+| B2B Demand Gen Dashboard v3.0 | `afterpay-b2b-demand-gen-v3.html` | ✅ Complete (2,129 lines) |
 | Python Backend (shared) | `../backend/` | ✅ Built, needs Snowflake creds to go live |
 | Blockcell (hosted) | https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ | ✅ v3.0 live (w/ sparklines) |
 | GitHub | https://github.com/npetrillo-block/block.git | ✅ `main` branch |
@@ -129,11 +129,8 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
   - `drawSparkline()` with retina support, hex→rgba gradient fill, theme-aware colors, end dot
   - Wired into theme toggle + resize callbacks
   - Data: Leads (↓), MQLs (↑), MQL Rate (↑), Merchants (↓), Conv Rate (↓)
-- [ ] **vs. Target section** — Replace dashed placeholder in Overview tab
-  - Needs: annual target numbers (leads, MQLs, merchants per month)
-  - Once loaded: show actual vs plan bars, % to target, pace indicator
-- [ ] **Donut charts** — CSS for `.donut-grid`, `.donut-card` exists but unused
-  - Could add: Lead Distribution by Channel donut, MQL Distribution donut
+- [x] **vs. Target section** — ✅ 6 progress bar cards with color-coded pace indicators (✅/⚠️/🔴). Placeholder targets — one-line swap when real numbers available.
+- [x] **Donut charts** — ✅ Lead Distribution + MQL Distribution canvas donuts with center totals, legends, theme-aware, retina.
 - [ ] **Region filter interactivity** — Make filter pills actually filter data
   - Would need backend to support query params: `/api/b2b-demand-gen?region=US&channel=all`
 
@@ -266,7 +263,7 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 ### v3.0 Dashboard Architecture
 - **CSS:** ~340 lines, dark/light theme vars, 30+ component classes
 - **HTML:** ~1,300 lines across 5 tab panels
-- **JS:** ~270 lines in single IIFE with 9 modules:
+- **JS:** ~400 lines in single IIFE with 14 functions:
   1. Main tab switching (pill buttons)
   2. Theme toggle (localStorage + auto-detect + themeChangeCallbacks array)
   3. IntersectionObserver for .animate-in
@@ -276,6 +273,10 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
   7. drawTrendsLeadChart() — vertical bars + MQL line overlay (Trends)
   8. drawTrendsMerchantChart() — green-to-red gradient bars (Trends)
   9. drawChannelMixChart() — stacked vertical bars (Trends)
+  10. renderTargetCards() — vs. Target progress bars with pace indicators
+  11. drawDonut() / drawAllDonuts() — Lead + MQL distribution donuts
+  12. drawSparkline() / drawAllSparklines() — KPI trend sparklines
+  13. hexToRgba() — color utility for gradient fills
 - **All charts:** retina (devicePixelRatio), theme-aware (getComputedStyle), resize-debounced
 
 ### Backend API Endpoints
@@ -312,4 +313,4 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 
 ---
 
-*Last updated: March 7, 2026 — v3.0 + sparklines deployed to Blockcell. Repo reorganized into b2b-dg-dashboard/ and monks-lite/ folders.*
+*Last updated: March 7, 2026 — v3.0 deployed to Blockcell with sparklines, vs. Target cards, donut charts, source badge. 2,129 lines, 14 JS functions.*
