@@ -80,7 +80,7 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 
 ---
 
-## 🔴 TODO — Priority Order
+## 🔴 To-Do — Priority Order
 
 ### P0: Immediate (Do Next Session)
 
