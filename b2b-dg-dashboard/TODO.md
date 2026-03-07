@@ -12,9 +12,9 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 
 | Asset | File | Status |
 |---|---|---|
-| B2B Demand Gen Dashboard v3.1 | `afterpay-b2b-demand-gen.html` | ✅ Complete (2,385 lines) |
+| B2B Demand Gen Dashboard v3.2 | `afterpay-b2b-demand-gen.html` | ✅ Complete (2,417 lines) |
 | Python Backend (shared) | `../backend/` | ✅ Built, needs Snowflake creds to go live |
-| Blockcell (hosted) | https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ | ✅ v3.0 live (w/ sparklines) |
+| Blockcell (hosted) | https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ | ✅ v3.2 live |
 | GitHub | https://github.com/npetrillo-block/block.git | ✅ `main` branch |
 
 ---
@@ -132,6 +132,13 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
   - Enhanced chart container hover — subtle lift + shadow on all chart boxes
   - Re-animation on tab switch — counters + staggers replay when returning to Overview
   - All animations use cubic-bezier(0.4,0,0.2,1) for premium feel
+- [x] **v3.2 Code Refactor + Polish** — ✅ Added Mar 7, 2026:
+  - CSS reorganized into 3 major section banners (THEME VARIABLES, LAYOUT & COMPONENTS, ANIMATIONS & POLISH)
+  - Smooth tab panel transitions — opacity + translateY fade between tabs
+  - Enhanced table row hover — first-child turns accent color on hover
+  - Active filter pill styling — accent border + tint when region filter is not "All"
+  - Section dividers — subtle border-top between Overview sections for visual rhythm
+  - 2,385 → 2,417 lines (+32 lines)
 
 ### P5: External Sharing
 
@@ -261,7 +268,7 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 └── README.md
 ```
 
-### v3.1 Dashboard Architecture (2,385 lines)
+### v3.2 Dashboard Architecture (2,417 lines)
 - **CSS:** ~360 lines, dark/light theme vars, 30+ component classes, v3.1 animation classes
 - **HTML:** ~1,300 lines across 5 tab panels
 - **JS:** ~620 lines in single IIFE with 19+ functions:
@@ -321,4 +328,4 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 
 ---
 
-*Last updated: March 7, 2026 — v3.1 UI polish pass: animated KPI counters, staggered card/WW entrance, enhanced hover effects, re-animation on tab switch. 2,385 lines. P0–P4 complete. Channels tab reordered (PSoc/Prog/SEM). Regions standardized US/UK/AU/NZ.*
+*Last updated: March 7, 2026 — v3.2 code refactor + polish: CSS section banners, smooth tab transitions, enhanced table hovers, active filter pill highlights, section dividers. 2,417 lines. P0–P4 complete.*
