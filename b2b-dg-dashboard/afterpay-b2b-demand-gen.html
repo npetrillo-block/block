@@ -8,6 +8,10 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
+/* ═══════════════════════════════════════════════════════════
+   THEME VARIABLES
+   ═══════════════════════════════════════════════════════════ */
+
 /* ── Dark Theme (default) ── */
 :root, [data-theme="dark"] {
 --bg:#0f0f1a;--bg2:#161625;--card:#1c1c30;--card-hover:#22223a;
@@ -85,6 +89,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 ::-webkit-scrollbar-thumb:hover{background:var(--text-dim)}
 
 .container{max-width:1400px;margin:0 auto;padding:0 24px 60px}
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT & COMPONENTS
+   ═══════════════════════════════════════════════════════════ */
 
 /* Header */
 .header{padding:28px 0 20px;border-bottom:1px solid var(--border);margin-bottom:28px}
@@ -386,7 +394,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .insight-callout strong{color:var(--text);font-weight:600}
 .channel-note{font-size:0.78rem;color:var(--text-dim);margin-top:8px;font-style:italic}
 
-/* Animations */
+/* ═══════════════════════════════════════════════════════════
+   ANIMATIONS & POLISH
+   ═══════════════════════════════════════════════════════════ */
+
+/* Section entrance */
 .animate-in{opacity:0;transform:translateY(16px);transition:all 0.5s cubic-bezier(0.4,0,0.2,1)}
 .animate-in.visible{opacity:1;transform:translateY(0)}
 
@@ -414,6 +426,23 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .ww-item:nth-child(4){transition-delay:0.15s}
 .ww-item:nth-child(5){transition-delay:0.2s}
 .ww-item:nth-child(6){transition-delay:0.25s}
+
+/* v3.2 — Smooth tab panel transitions */
+.tab-panel{display:none;opacity:0;transform:translateY(8px);transition:opacity 0.35s ease,transform 0.35s ease}
+.tab-panel.active{display:block;opacity:1;transform:translateY(0)}
+
+/* v3.2 — Active filter pill highlight */
+.filter-pill.filter-active{border-color:var(--accent);background:rgba(78,205,196,0.06)}
+.filter-pill.filter-active .filter-value{color:var(--accent)}
+[data-theme="light"] .filter-pill.filter-active{background:rgba(47,184,173,0.06)}
+
+/* v3.2 — Enhanced table row hover */
+.compact-table tr{transition:background-color 0.15s ease}
+.compact-table tbody tr:hover td{background:var(--table-hover);color:var(--text);transition:all 0.15s ease}
+.compact-table tbody tr:hover td:first-child{color:var(--accent)}
+
+/* v3.2 — Section dividers (subtle gradient lines between Overview sections) */
+#tab-overview .section + .section{border-top:1px solid var(--border);padding-top:32px}
 
 /* Canvas sizing */
 canvas{max-width:100%}
@@ -444,7 +473,7 @@ canvas{max-width:100%}
       <div class="header-top">
         <div class="header-left">
           <h1 class="gradient-title">AFTERPAY B2B DEMAND GEN DASHBOARD</h1>
-          <div class="subtitle">v3.1 — Powered by Snowflake · FIVETRAN.MARKETO.LEAD</div>
+          <div class="subtitle">v3.2 — Powered by Snowflake · FIVETRAN.MARKETO.LEAD</div>
         </div>
         <div class="header-right">
           <div style="text-align:right">
@@ -1460,7 +1489,7 @@ canvas{max-width:100%}
 
     <!-- ═══ Footer ═══ -->
     <footer class="footer">
-      (v3.1) Live Dashboard — Powered by Snowflake · Made with ❤️ by Nick and Goose 🪿
+      (v3.2) Live Dashboard — Powered by Snowflake · Made with ❤️ by Nick and Goose 🪿
     </footer>
 
   </div>
@@ -2316,6 +2345,9 @@ canvas{max-width:100%}
         e.target.classList.add('active');
         document.getElementById('regionFilterValue').textContent = selected === 'All' ? 'All' : regionMap[selected] || selected;
         regionDropdown.classList.remove('open');
+        // v3.2: Toggle active filter pill highlight
+        if (selected === 'All') { regionFilter.classList.remove('filter-active'); }
+        else { regionFilter.classList.add('filter-active'); }
 
         // Filter SEM Regional Breakdown table rows
         const semTable = document.querySelector('.section-title + .chart-container table');
