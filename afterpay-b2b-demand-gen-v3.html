@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Afterpay B2B Demand Gen Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ── Dark Theme (default) ── */
+:root, [data-theme="dark"] {
+--bg:#0f0f1a;--bg2:#161625;--card:#1c1c30;--card-hover:#22223a;
+--border:#2a2a45;--text:#e8e8f0;--text-muted:#8888a8;--text-dim:#5a5a78;
+--accent:#4ecdc4;--accent2:#45b7aa;--green:#34d399;--green-bg:rgba(52,211,153,0.08);--green-border:rgba(52,211,153,0.2);
+--red:#f87171;--red-bg:rgba(248,113,113,0.08);--red-border:rgba(248,113,113,0.2);
+--amber:#fbbf24;--amber-bg:rgba(251,191,36,0.08);--amber-border:rgba(251,191,36,0.2);
+--purple:#a78bfa;--blue:#60a5fa;--pink:#f472b6;
+--small-color:#4ecdc4;--medium-color:#a78bfa;--premium-color:#fbbf24;--midmarket-color:#f472b6;
+--card-shadow:0 2px 8px rgba(0,0,0,0.2);
+--kpi-hover-shadow:0 8px 30px rgba(0,0,0,0.3);
+--chart-grid:rgba(42,42,69,0.6);
+--chart-ly-bar:rgba(78,205,196,0.25);
+--chart-label:#e8e8f0;
+--chart-label-muted:#8888a8;
+--chart-axis:#5a5a78;
+--donut-label:#fff;
+--donut-center:#e8e8f0;
+--funnel-ty-bg:rgba(78,205,196,0.15);--funnel-ty-bg2:rgba(78,205,196,0.12);--funnel-ty-bg3:rgba(78,205,196,0.09);
+--funnel-won-bg:rgba(52,211,153,0.15);--funnel-won-border:rgba(52,211,153,0.3);
+--funnel-ly-bg:rgba(136,136,168,0.1);--funnel-ly-bg2:rgba(136,136,168,0.08);--funnel-ly-bg3:rgba(136,136,168,0.06);--funnel-ly-bg4:rgba(136,136,168,0.05);
+--wins-text:#a7f3d0;--watchouts-text:#fca5a5;--watchouts-amber-text:#fde68a;
+--scrollbar-track:#161625;--scrollbar-thumb:#2a2a45;
+--table-hover:rgba(78,205,196,0.03);
+--proto-badge-bg:rgba(78,205,196,0.1);--proto-badge-border:rgba(78,205,196,0.25);
+--toggle-bg:#1c1c30;--toggle-border:#2a2a45;--toggle-hover-border:rgba(78,205,196,0.4);
+--minibar-ly:rgba(136,136,168,0.3);
+}
+
+/* ── Light Theme ── */
+[data-theme="light"] {
+--bg:#f0f2f5;--bg2:#e4e7ec;--card:#ffffff;--card-hover:#f8f9fb;
+--border:#d1d5db;--text:#1a1a2e;--text-muted:#5a5f72;--text-dim:#8b90a0;
+--accent:#2fb8ad;--accent2:#28a89e;--green:#059669;--green-bg:rgba(5,150,105,0.08);--green-border:rgba(5,150,105,0.2);
+--red:#dc2626;--red-bg:rgba(220,38,38,0.06);--red-border:rgba(220,38,38,0.18);
+--amber:#d97706;--amber-bg:rgba(217,119,6,0.06);--amber-border:rgba(217,119,6,0.18);
+--purple:#7c3aed;--blue:#2563eb;--pink:#db2777;
+--small-color:#2fb8ad;--medium-color:#7c3aed;--premium-color:#d97706;--midmarket-color:#db2777;
+--card-shadow:0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+--kpi-hover-shadow:0 8px 24px rgba(0,0,0,0.08);
+--chart-grid:rgba(0,0,0,0.06);
+--chart-ly-bar:rgba(47,184,173,0.2);
+--chart-label:#1a1a2e;
+--chart-label-muted:#5a5f72;
+--chart-axis:#8b90a0;
+--donut-label:#1a1a2e;
+--donut-center:#1a1a2e;
+--funnel-ty-bg:rgba(47,184,173,0.12);--funnel-ty-bg2:rgba(47,184,173,0.09);--funnel-ty-bg3:rgba(47,184,173,0.06);
+--funnel-won-bg:rgba(5,150,105,0.1);--funnel-won-border:rgba(5,150,105,0.3);
+--funnel-ly-bg:rgba(0,0,0,0.04);--funnel-ly-bg2:rgba(0,0,0,0.03);--funnel-ly-bg3:rgba(0,0,0,0.025);--funnel-ly-bg4:rgba(0,0,0,0.02);
+--wins-text:#065f46;--watchouts-text:#991b1b;--watchouts-amber-text:#92400e;
+--scrollbar-track:#e4e7ec;--scrollbar-thumb:#c4c8d2;
+--table-hover:rgba(47,184,173,0.04);
+--proto-badge-bg:rgba(47,184,173,0.08);--proto-badge-border:rgba(47,184,173,0.25);
+--toggle-bg:#ffffff;--toggle-border:#d1d5db;--toggle-hover-border:rgba(47,184,173,0.5);
+--minibar-ly:rgba(0,0,0,0.12);
+}
+
+/* ── Smooth Transitions ── */
+body, .kpi-card, .chart-container, .tabs-container, .tab-btn, .donut-card,
+.ww-item, .funnel-col, .funnel-step, .filter-pill, .compact-table th,
+.compact-table td, .seg-metric, .footer, .header, .ww-column h3,
+.section-title, .kpi-label, .kpi-value, .kpi-change, .kpi-prior,
+.proto-badge, .tab-bar, .tab-content, .chart-title, .legend-item,
+.donut-legend-item, .seg-metric-label, .seg-metric-value, .seg-metric-change,
+.seg-metric-prior, .donut-card h4, .donut-card .donut-sub, .chart-header {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;overflow-x:hidden}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--scrollbar-track)}
+::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-dim)}
+
+.container{max-width:1400px;margin:0 auto;padding:0 24px 60px}
+
+/* Header */
+.header{padding:28px 0 20px;border-bottom:1px solid var(--border);margin-bottom:28px}
+.header-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.header-left{flex:1;min-width:0}
+.header-right{display:flex;align-items:center;gap:12px}
+.header h1{font-size:1.6rem;font-weight:800;letter-spacing:2px;color:var(--accent);margin-bottom:4px}
+.header .subtitle{font-size:0.92rem;color:var(--text-muted);font-weight:400}
+.proto-badge{display:inline-block;background:var(--proto-badge-bg);border:1px solid var(--proto-badge-border);color:var(--accent);font-size:0.7rem;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase}
+.filters-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.filter-pill{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:default;transition:border-color 0.2s, background-color 0.3s ease;box-shadow:var(--card-shadow)}
+.filter-pill:hover{border-color:var(--accent)}
+.filter-label{color:var(--text-dim);font-weight:500;text-transform:uppercase;font-size:0.65rem;letter-spacing:0.5px}
+.filter-value{color:var(--text);font-weight:500}
+.filter-arrow{color:var(--text-dim);font-size:0.6rem}
+
+/* Theme Toggle */
+.theme-toggle{
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--toggle-border);
+  background:var(--toggle-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;transition:all 0.3s ease;position:relative;box-shadow:var(--card-shadow);
+  flex-shrink:0;
+}
+.theme-toggle:hover{border-color:var(--toggle-hover-border);transform:scale(1.08)}
+.theme-toggle:active{transform:scale(0.95)}
+.theme-toggle .bulb{transition:all 0.3s ease;filter:saturate(0.3) brightness(0.7)}
+[data-theme="light"] .theme-toggle .bulb{filter:saturate(1) brightness(1);text-shadow:0 0 8px rgba(251,191,36,0.6)}
+.theme-toggle::after{
+  content:'';position:absolute;inset:-3px;border-radius:50%;
+  background:transparent;transition:all 0.3s ease;pointer-events:none;
+}
+[data-theme="light"] .theme-toggle::after{
+  box-shadow:0 0 12px rgba(251,191,36,0.15);
+}
+
+/* Section titles */
+.section-title{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.section-title .icon{font-size:1.2rem}
+.section{margin-bottom:32px}
+
+/* KPI Cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:32px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;transition:all 0.3s ease;position:relative;overflow:hidden;box-shadow:var(--card-shadow)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:0;transition:opacity 0.3s}
+.kpi-card:hover{transform:translateY(-2px);border-color:rgba(78,205,196,0.3);box-shadow:var(--kpi-hover-shadow)}
+.kpi-card:hover::before{opacity:1}
+.kpi-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);font-weight:600;margin-bottom:8px}
+.kpi-value{font-size:1.7rem;font-weight:800;color:var(--text);line-height:1.1;margin-bottom:6px}
+.kpi-change{display:inline-flex;align-items:center;gap:4px;font-size:0.78rem;font-weight:600;padding:2px 8px;border-radius:6px;margin-bottom:4px}
+.kpi-change.up{color:var(--green);background:var(--green-bg)}
+.kpi-change.down{color:var(--red);background:var(--red-bg)}
+.kpi-prior{font-size:0.72rem;color:var(--text-dim)}
+
+/* Wins & Watchouts */
+.ww-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.ww-column h3{font-size:0.95rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.ww-column.wins h3{color:var(--green)}
+.ww-column.watchouts h3{color:var(--red)}
+.ww-item{padding:12px 16px;border-radius:10px;margin-bottom:8px;font-size:0.82rem;line-height:1.5;font-weight:500;transition:transform 0.2s, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;cursor:default}
+.ww-item:hover{transform:translateX(4px)}
+.wins .ww-item{background:var(--green-bg);border:1px solid var(--green-border);color:var(--wins-text)}
+.watchouts .ww-item{background:var(--red-bg);border:1px solid var(--red-border);color:var(--watchouts-text)}
+.watchouts .ww-item.amber{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--watchouts-amber-text)}
+
+/* Chart containers */
+.chart-container{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:var(--card-shadow)}
+.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.chart-title{font-size:0.95rem;font-weight:700;color:var(--text)}
+.chart-legend{display:flex;gap:16px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted)}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+
+/* Funnel */
+.funnel-wrapper{display:flex;gap:24px;align-items:stretch}
+.funnel-col{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:var(--card-shadow)}
+.funnel-col h4{font-size:0.85rem;font-weight:700;margin-bottom:16px;color:var(--text);text-align:center}
+.funnel-col .year-label{text-align:center;font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.funnel-step{position:relative;margin:0 auto 12px;text-align:center;padding:14px 10px;border-radius:10px;transition:transform 0.2s, background-color 0.3s ease}
+.funnel-step:hover{transform:scale(1.02)}
+.funnel-step .step-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);font-weight:600}
+.funnel-step .step-value{font-size:1.4rem;font-weight:800;color:var(--text)}
+.funnel-step .step-rate{font-size:0.75rem;color:var(--accent);font-weight:600;margin-top:2px}
+.funnel-arrow{text-align:center;color:var(--text-dim);font-size:1rem;margin:-4px 0}
+
+/* Tabs */
+.tabs-container{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--card-shadow)}
+.tab-bar{display:flex;border-bottom:1px solid var(--border);overflow-x:auto}
+.tab-btn{padding:12px 24px;font-size:0.82rem;font-weight:600;color:var(--text-muted);background:transparent;border:none;cursor:pointer;position:relative;white-space:nowrap;transition:color 0.2s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--accent)}
+.tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent)}
+.tab-content{display:none;padding:24px;animation:fadeIn 0.3s ease}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.segment-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.seg-metric{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;transition:background-color 0.3s ease, border-color 0.3s ease}
+.seg-metric-label{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);font-weight:600;margin-bottom:6px}
+.seg-metric-value{font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:4px}
+.seg-metric-change{font-size:0.75rem;font-weight:600}
+.seg-metric-change.up{color:var(--green)}
+.seg-metric-change.down{color:var(--red)}
+.seg-metric-change.neutral{color:var(--text-muted)}
+.seg-metric-prior{font-size:0.68rem;color:var(--text-dim);margin-top:2px}
+.seg-mini-bar{display:flex;gap:4px;align-items:flex-end;height:30px;margin-top:8px}
+.seg-mini-bar .bar{border-radius:3px 3px 0 0;min-width:14px;transition:height 0.5s ease, background-color 0.3s ease}
+
+/* Donut section */
+.donut-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.donut-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;box-shadow:var(--card-shadow)}
+.donut-card h4{font-size:0.9rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.donut-card .donut-sub{font-size:0.75rem;color:var(--text-muted);margin-bottom:16px}
+.donut-canvas-wrap{position:relative;max-width:240px;margin:0 auto 16px}
+.donut-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.donut-legend-item{display:flex;align-items:center;gap:5px;font-size:0.75rem;color:var(--text-muted)}
+.donut-legend-dot{width:8px;height:8px;border-radius:2px}
+
+/* Compact table */
+.compact-table{width:100%;border-collapse:collapse;font-size:0.78rem;margin-top:12px}
+.compact-table th{text-align:left;padding:8px 12px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;font-size:0.68rem;border-bottom:1px solid var(--border)}
+.compact-table td{padding:8px 12px;border-bottom:1px solid rgba(42,42,69,0.5);color:var(--text-muted)}
+[data-theme="light"] .compact-table td{border-bottom-color:rgba(0,0,0,0.06)}
+.compact-table tr:hover td{background:var(--table-hover);color:var(--text)}
+.compact-table .num{text-align:right;font-variant-numeric:tabular-nums}
+.compact-table .highlight{color:var(--text);font-weight:600}
+
+/* Footer */
+.footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;color:var(--text-dim);font-size:0.75rem;margin-top:20px}
+
+/* v2.0 — Refresh Button */
+.refresh-btn{
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--toggle-border);
+  background:var(--toggle-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;transition:all 0.3s ease;box-shadow:var(--card-shadow);flex-shrink:0;
+}
+.refresh-btn:hover{border-color:var(--toggle-hover-border);transform:scale(1.08)}
+.refresh-btn:active{transform:scale(0.95)}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.refresh-btn.spinning .refresh-icon{animation:spin 1s linear infinite}
+
+/* v2.0 — Source Badge */
+.source-badge{display:inline-flex;align-items:center;gap:5px;font-size:0.7rem;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:0.5px}
+.source-badge.live{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
+.source-badge.fallback{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber)}
+
+/* v2.0 — Last Refreshed */
+.last-refreshed{font-size:0.75rem;color:var(--text-dim);margin-top:4px;transition:color 0.3s ease}
+
+/* v2.0 — Sparkline */
+.kpi-sparkline{margin-top:8px;display:block;width:100%;height:35px}
+
+/* v2.0 — Date Picker Dropdown */
+.date-picker-dropdown{
+  display:none;position:absolute;top:100%;left:0;margin-top:8px;z-index:100;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;
+  box-shadow:var(--kpi-hover-shadow);min-width:280px;transition:background-color 0.3s ease,border-color 0.3s ease;
+}
+.date-picker-dropdown.open{display:block}
+.date-picker-dropdown label{font-size:0.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px}
+.date-picker-dropdown input[type="date"]{
+  width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;
+  background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font-size:0.82rem;margin-bottom:10px;
+}
+.date-picker-dropdown input[type="date"]:focus{outline:none;border-color:var(--accent)}
+.date-picker-apply{
+  width:100%;padding:8px;border:none;border-radius:6px;background:var(--accent);color:#0f0f1a;
+  font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;transition:opacity 0.2s;
+}
+.date-picker-apply:hover{opacity:0.85}
+.filter-pill.date-filter{position:relative;cursor:pointer}
+
+/* v3.0 — Gradient Title */
+.header h1.gradient-title{
+  background:linear-gradient(135deg,#4ecdc4,#a78bfa);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+[data-theme="light"] .header h1.gradient-title{
+  background:linear-gradient(135deg,#2fb8ad,#7c3aed);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+/* v3.0 — Pulsing Live Dot */
+.pulse-dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:pulse-glow 2s ease-in-out infinite;
+}
+@keyframes pulse-glow{
+  0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,0.5);opacity:1}
+  50%{box-shadow:0 0 0 6px rgba(52,211,153,0);opacity:0.7}
+}
+[data-theme="light"] .pulse-dot{
+  animation:pulse-glow-light 2s ease-in-out infinite;
+}
+@keyframes pulse-glow-light{
+  0%,100%{box-shadow:0 0 0 0 rgba(5,150,105,0.5);opacity:1}
+  50%{box-shadow:0 0 0 6px rgba(5,150,105,0);opacity:0.7}
+}
+
+/* v3.0 — Main Tab Pills */
+.main-tab-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.main-tab{
+  padding:7px 18px;border-radius:20px;font-size:0.8rem;font-weight:600;
+  cursor:pointer;border:1px solid var(--border);background:var(--card);
+  color:var(--text-muted);transition:all 0.25s ease;white-space:nowrap;
+}
+.main-tab:hover{border-color:var(--accent);color:var(--text)}
+.main-tab.active{background:var(--accent);color:#0f0f1a;border-color:var(--accent)}
+[data-theme="light"] .main-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* v3.0 — Tab Panels */
+.tab-panel{display:none;animation:fadeIn 0.3s ease}
+.tab-panel.active{display:block}
+
+/* v3.0 — Vertical Funnel */
+.v-funnel{display:flex;flex-direction:column;align-items:center;gap:0;padding:20px 0}
+.v-funnel-step{text-align:center;padding:16px 20px;border-radius:10px;transition:transform 0.2s,background-color 0.3s ease}
+.v-funnel-step:hover{transform:scale(1.02)}
+.v-funnel-step .step-name{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);font-weight:600}
+.v-funnel-step .step-count{font-size:1.4rem;font-weight:800;color:var(--text);line-height:1.2}
+.v-funnel-step .step-pct{font-size:0.75rem;color:var(--accent);font-weight:600}
+.v-funnel-arrow{text-align:center;color:var(--text-dim);font-size:0.85rem;padding:4px 0;line-height:1.3}
+.v-funnel-arrow .rate-label{font-size:0.7rem;color:var(--text-muted);font-weight:500}
+
+/* v3.0 — Exit Paths Grid */
+.exit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.exit-card{border-radius:10px;padding:16px;text-align:center;transition:transform 0.2s,background-color 0.3s ease,border-color 0.3s ease}
+.exit-card:hover{transform:translateY(-2px)}
+.exit-card .exit-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-bottom:4px}
+.exit-card .exit-value{font-size:1.2rem;font-weight:800;color:var(--text)}
+.exit-card .exit-pct{font-size:0.72rem;margin-top:2px}
+
+/* v3.0 — Post-Conversion Journey */
+.journey-row{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap}
+.journey-card{border-radius:12px;padding:20px;text-align:center;min-width:140px;flex:1;transition:transform 0.2s,background-color 0.3s ease,border-color 0.3s ease}
+.journey-card:hover{transform:translateY(-2px)}
+.journey-card .journey-stage{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--green);font-weight:700;margin-bottom:4px}
+.journey-card .journey-count{font-size:1.3rem;font-weight:800;color:var(--text)}
+.journey-arrow{font-size:1.5rem;color:var(--accent);font-weight:700;padding:0 12px;flex-shrink:0}
+
+/* v3.0 — Source Cards */
+.source-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px;margin-bottom:28px}
+.source-card{position:relative}
+.source-card h4{font-size:0.92rem;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.source-badge-pill{display:inline-block;font-size:0.65rem;font-weight:600;padding:2px 9px;border-radius:12px;letter-spacing:0.3px;white-space:nowrap}
+.source-big-num{font-size:1.6rem;font-weight:800;color:var(--text);line-height:1.1;margin-bottom:6px}
+.source-meta{font-size:0.78rem;color:var(--text-muted);line-height:1.6}
+.source-meta strong{color:var(--text);font-weight:600}
+.source-note{font-size:0.72rem;color:var(--text-dim);margin-top:6px;font-style:italic}
+.source-mini-funnel{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.source-mini-funnel .funnel-bar{height:6px;border-radius:3px;transition:width 0.5s ease,background-color 0.3s ease}
+
+/* v3.0 — Channel Cards */
+.channel-card{position:relative;border-top-width:3px;border-top-style:solid}
+.channel-card h3{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.channel-card .channel-stats{font-size:0.78rem;color:var(--text-muted);margin-bottom:16px}
+.channel-mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.channel-mini{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;transition:background-color 0.3s ease,border-color 0.3s ease}
+.channel-mini-label{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);font-weight:600;margin-bottom:4px}
+.channel-mini-value{font-size:1.15rem;font-weight:800;color:var(--text)}
+.channel-mini-pct{font-size:0.72rem;color:var(--text-muted);margin-top:2px}
+.channel-sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.channel-sub-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;transition:background-color 0.3s ease,border-color 0.3s ease}
+.channel-sub-card h4{font-size:0.85rem;font-weight:700;color:var(--text);margin-bottom:8px}
+.channel-sub-stat{font-size:0.78rem;color:var(--text-muted);line-height:1.7}
+.channel-sub-stat strong{color:var(--text);font-weight:600}
+.insight-callout{border-left:3px solid var(--accent);padding:12px 16px;font-size:0.82rem;color:var(--text-muted);line-height:1.5;background:var(--bg2);border-radius:0 8px 8px 0;margin-top:14px;transition:background-color 0.3s ease,border-color 0.3s ease}
+.insight-callout strong{color:var(--text);font-weight:600}
+.channel-note{font-size:0.78rem;color:var(--text-dim);margin-top:8px;font-style:italic}
+
+/* Animations */
+.animate-in{opacity:0;transform:translateY(16px);transition:all 0.5s ease}
+.animate-in.visible{opacity:1;transform:translateY(0)}
+
+/* Canvas sizing */
+canvas{max-width:100%}
+
+@media(max-width:1100px){
+.kpi-grid{grid-template-columns:repeat(3,1fr)}
+.ww-grid,.donut-grid{grid-template-columns:1fr}
+.funnel-wrapper{flex-direction:column}
+.channel-sub-grid{grid-template-columns:1fr}
+.exit-grid{grid-template-columns:repeat(2,1fr)}
+.journey-row{flex-direction:column;gap:8px}
+.journey-arrow{transform:rotate(90deg);padding:4px 0}
+}
+@media(max-width:700px){
+.kpi-grid{grid-template-columns:repeat(2,1fr)}
+.segment-grid{grid-template-columns:1fr 1fr}
+.channel-mini-grid{grid-template-columns:1fr 1fr}
+.exit-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ═══ Header ═══ -->
+    <header class="header">
+      <div class="header-top">
+        <div class="header-left">
+          <h1 class="gradient-title">AFTERPAY B2B DEMAND GEN DASHBOARD</h1>
+          <div class="subtitle">v3.0 — Powered by Snowflake · FIVETRAN.MARKETO.LEAD</div>
+        </div>
+        <div class="header-right">
+          <span class="source-badge live"><span class="pulse-dot"></span> Live</span>
+          <button class="theme-toggle" aria-label="Toggle theme"><span class="bulb">💡</span></button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-row">
+        <div class="filter-pill">
+          <span class="filter-label">Region</span>
+          <span class="filter-value">All</span>
+          <span class="filter-arrow">▾</span>
+        </div>
+        <div class="filter-pill">
+          <span class="filter-label">Channel</span>
+          <span class="filter-value">All</span>
+          <span class="filter-arrow">▾</span>
+        </div>
+        <div class="filter-pill">
+          <span class="filter-label">Segment</span>
+          <span class="filter-value">All</span>
+          <span class="filter-arrow">▾</span>
+        </div>
+        <div class="filter-pill">
+          <span class="filter-label">Date Range</span>
+          <span class="filter-value">Feb 1–28, 2026</span>
+          <span class="filter-arrow">▾</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ═══ Main Tab Bar ═══ -->
+    <div class="main-tab-bar">
+      <button class="main-tab active" data-tab="overview">Overview</button>
+      <button class="main-tab" data-tab="channels">Channels</button>
+      <button class="main-tab" data-tab="sources">Lead Sources</button>
+      <button class="main-tab" data-tab="funnel">Funnel</button>
+      <button class="main-tab" data-tab="trends">Trends</button>
+    </div>
+
+    <!-- ═══ Tab Panels ═══ -->
+    <div class="tab-panel active" id="tab-overview">
+
+      <!-- KPI Summary -->
+      <section class="section animate-in">
+        <div class="section-title">📊 KPI Summary</div>
+        <div class="kpi-grid">
+
+          <div class="kpi-card">
+            <div class="kpi-label">Total Leads</div>
+            <div class="kpi-value">10,232</div>
+            <span class="kpi-change down">↓ -20%</span>
+            <div class="kpi-prior">12,789 last year</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Total MQLs</div>
+            <div class="kpi-value">1,635</div>
+            <span class="kpi-change up">↑ +142%</span>
+            <div class="kpi-prior">676 last year</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">MQL Rate</div>
+            <div class="kpi-value">16.0%</div>
+            <span class="kpi-change up">↑ +10.7pp</span>
+            <div class="kpi-prior">5.3% last year</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Open Opportunities</div>
+            <div class="kpi-value">2,793</div>
+            <span class="kpi-change down">↓ -2%</span>
+            <div class="kpi-prior">2,847 last year</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Merchants Won</div>
+            <div class="kpi-value">529</div>
+            <span class="kpi-change down">↓ -68%</span>
+            <div class="kpi-prior">1,671 last year</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Conversion Rate</div>
+            <div class="kpi-value">5.2%</div>
+            <span class="kpi-change down">↓ -7.9pp</span>
+            <div class="kpi-prior">13.1% last year</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Insights at a Glance -->
+      <section class="section animate-in">
+        <div class="section-title">💡 Insights at a Glance</div>
+        <div class="ww-grid">
+
+          <div class="ww-column wins">
+            <h3>🏆 Big Wins</h3>
+            <div class="ww-item">MQL Rate surged to <strong>16.0%</strong> — up from 5.3% last year (+10.7pp)</div>
+            <div class="ww-item">Paid Social leads exploded <strong>+650% YoY</strong> (127 → 953)</div>
+            <div class="ww-item">Paid Display MQLs up <strong>+3,160%</strong> (5 → 163) with 67.9% MQL rate</div>
+            <div class="ww-item">Total MQLs up <strong>+142% YoY</strong> (676 → 1,635) across all channels</div>
+            <div class="ww-item">Non-Paid MQL rate jumped from 0.8% to <strong>8.4%</strong> (+511% more MQLs)</div>
+            <div class="ww-item">Paid Search Opps up <strong>+55%</strong> (326 → 507) — pipeline growing</div>
+          </div>
+
+          <div class="ww-column watchouts">
+            <h3>🚨 Watchouts</h3>
+            <div class="ww-item amber">Total leads down <strong>-20% YoY</strong> (12,789 → 10,232) — volume declining</div>
+            <div class="ww-item">Merchants Won dropped <strong>-68%</strong> (1,671 → 529) — conversion bottleneck?</div>
+            <div class="ww-item">Non-Paid leads fell <strong>-39%</strong> (10,816 → 6,602) — organic pipeline shrinking</div>
+            <div class="ww-item">Paid Search merchants down <strong>-55%</strong> despite +33% more leads — funnel leak</div>
+            <div class="ww-item amber">Conversion rate dropped from 13.1% to <strong>5.2%</strong> — quality or process issue?</div>
+            <div class="ww-item amber">Paid Display has 240 leads but <strong>0 merchants</strong> — no conversions yet</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Lead Volume by Channel -->
+      <section class="section animate-in">
+        <div class="section-title">📈 Lead Volume by Channel</div>
+
+        <!-- Bar Chart -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <span class="chart-title">Leads — Feb 2026 vs Feb 2025</span>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:rgba(78,205,196,0.3)"></span> Feb 2025</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#4ecdc4"></span> Feb 2026</div>
+            </div>
+          </div>
+          <canvas id="leadChart" height="220"></canvas>
+        </div>
+
+        <!-- Detailed Breakdown Table -->
+        <div class="chart-container">
+          <span class="chart-title">Detailed Breakdown</span>
+          <table class="compact-table">
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th class="num">Leads LY</th>
+                <th class="num">Leads TY</th>
+                <th class="num">YoY %</th>
+                <th class="num">MQLs TY</th>
+                <th class="num">MQL Rate</th>
+                <th class="num">Merchants TY</th>
+                <th class="num">Conv Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Paid Search</td>
+                <td class="num">1,833</td>
+                <td class="num">2,437</td>
+                <td class="num" style="color:var(--green)">+33%</td>
+                <td class="num">463</td>
+                <td class="num">19.0%</td>
+                <td class="num">97</td>
+                <td class="num">4.0%</td>
+              </tr>
+              <tr>
+                <td>Paid Social</td>
+                <td class="num">127</td>
+                <td class="num">953</td>
+                <td class="num" style="color:var(--green)">+650%</td>
+                <td class="num">280</td>
+                <td class="num">29.3%</td>
+                <td class="num">2</td>
+                <td class="num">0.2%</td>
+              </tr>
+              <tr>
+                <td>Paid Display</td>
+                <td class="num">13</td>
+                <td class="num">240</td>
+                <td class="num" style="color:var(--green)">+1,746%</td>
+                <td class="num">163</td>
+                <td class="num">67.9%</td>
+                <td class="num">0</td>
+                <td class="num">0%</td>
+              </tr>
+              <tr>
+                <td>Non-Paid</td>
+                <td class="num">10,816</td>
+                <td class="num">6,602</td>
+                <td class="num" style="color:var(--red)">-39%</td>
+                <td class="num">729</td>
+                <td class="num">11.0%</td>
+                <td class="num">430</td>
+                <td class="num">6.5%</td>
+              </tr>
+              <tr style="border-top:2px solid var(--border)">
+                <td style="color:var(--accent);font-weight:700">Total</td>
+                <td class="num highlight">12,789</td>
+                <td class="num highlight">10,232</td>
+                <td class="num highlight" style="color:var(--red)">-20%</td>
+                <td class="num highlight">1,635</td>
+                <td class="num highlight">16.0%</td>
+                <td class="num highlight">529</td>
+                <td class="num highlight">5.2%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- Channel Deep Dive -->
+      <section class="section animate-in">
+        <div class="section-title">🔍 Channel Deep Dive</div>
+
+        <div class="tabs-container">
+          <div class="tab-bar">
+            <button class="tab-btn active" data-dd-tab="dd-paid-search">Paid Search</button>
+            <button class="tab-btn" data-dd-tab="dd-paid-social">Paid Social</button>
+            <button class="tab-btn" data-dd-tab="dd-paid-display">Paid Display</button>
+            <button class="tab-btn" data-dd-tab="dd-non-paid">Non-Paid</button>
+            <button class="tab-btn" data-dd-tab="dd-grand-total">Grand Total</button>
+          </div>
+
+          <!-- Paid Search -->
+          <div class="tab-content active" id="dd-paid-search">
+            <div class="segment-grid">
+              <div class="seg-metric">
+                <div class="seg-metric-label">Leads</div>
+                <div class="seg-metric-value">2,437</div>
+                <div class="seg-metric-change up">↑ +33%</div>
+                <div class="seg-metric-prior">1,833 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:75%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">MQLs</div>
+                <div class="seg-metric-value">463</div>
+                <div class="seg-metric-change up">↑ +166%</div>
+                <div class="seg-metric-prior">174 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:38%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">MQL Rate</div>
+                <div class="seg-metric-value">19.0%</div>
+                <div class="seg-metric-change up">↑ +100%</div>
+                <div class="seg-metric-prior">9.5% last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:50%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Open Opps</div>
+                <div class="seg-metric-value">507</div>
+                <div class="seg-metric-change up">↑ +55%</div>
+                <div class="seg-metric-prior">326 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:64%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Merchants</div>
+                <div class="seg-metric-value">97</div>
+                <div class="seg-metric-change down">↓ -55%</div>
+                <div class="seg-metric-prior">216 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:100%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:45%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Conv Rate</div>
+                <div class="seg-metric-value">4.0%</div>
+                <div class="seg-metric-change down">↓ -66%</div>
+                <div class="seg-metric-prior">11.8% last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:100%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:34%;width:14px;background:var(--accent)"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paid Social -->
+          <div class="tab-content" id="dd-paid-social">
+            <div class="segment-grid">
+              <div class="seg-metric">
+                <div class="seg-metric-label">Leads</div>
+                <div class="seg-metric-value">953</div>
+                <div class="seg-metric-change up">↑ +650%</div>
+                <div class="seg-metric-prior">127 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:13%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">MQLs</div>
+                <div class="seg-metric-value">280</div>
+                <div class="seg-metric-change up">↑ +2,700%</div>
+                <div class="seg-metric-prior">10 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:4%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">MQL Rate</div>
+                <div class="seg-metric-value">29.3%</div>
+                <div class="seg-metric-change up">↑ +271%</div>
+                <div class="seg-metric-prior">7.9% last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:27%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Merchants</div>
+                <div class="seg-metric-value">2</div>
+                <div class="seg-metric-change up">New</div>
+                <div class="seg-metric-prior">0 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:0%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Meta Leads</div>
+                <div class="seg-metric-value">914</div>
+                <div class="seg-metric-change up">↑ +3,556%</div>
+                <div class="seg-metric-prior">25 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:3%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">LinkedIn Leads</div>
+                <div class="seg-metric-value">39</div>
+                <div class="seg-metric-change up">↑ +77%</div>
+                <div class="seg-metric-prior">22 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:56%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paid Display -->
+          <div class="tab-content" id="dd-paid-display">
+            <div class="segment-grid">
+              <div class="seg-metric">
+                <div class="seg-metric-label">Leads</div>
+                <div class="seg-metric-value">240</div>
+                <div class="seg-metric-change up">↑ +1,746%</div>
+                <div class="seg-metric-prior">13 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:5%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">MQLs</div>
+                <div class="seg-metric-value">163</div>
+                <div class="seg-metric-change up">↑ +3,160%</div>
+                <div class="seg-metric-prior">5 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:3%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">MQL Rate</div>
+                <div class="seg-metric-value">67.9%</div>
+                <div class="seg-metric-change up">↑ +76%</div>
+                <div class="seg-metric-prior">38.5% last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:57%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Merchants</div>
+                <div class="seg-metric-value">0</div>
+                <div class="seg-metric-change neutral">—</div>
+                <div class="seg-metric-prior">0 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:0%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:0%;width:14px;background:var(--accent)"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Non-Paid -->
+          <div class="tab-content" id="dd-non-paid">
+            <div class="segment-grid">
+              <div class="seg-metric">
+                <div class="seg-metric-label">Leads</div>
+                <div class="seg-metric-value">6,602</div>
+                <div class="seg-metric-change down">↓ -39%</div>
+                <div class="seg-metric-prior">10,816 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:100%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:61%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">MQLs</div>
+                <div class="seg-metric-value">729</div>
+                <div class="seg-metric-change up">↑ +738%</div>
+                <div class="seg-metric-prior">87 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:12%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">MQL Rate</div>
+                <div class="seg-metric-value">11.0%</div>
+                <div class="seg-metric-change up">↑ +1,275%</div>
+                <div class="seg-metric-prior">0.8% last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:7%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Open Opps</div>
+                <div class="seg-metric-value">1,779</div>
+                <div class="seg-metric-change down">↓ -29%</div>
+                <div class="seg-metric-prior">2,521 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:100%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:71%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Merchants</div>
+                <div class="seg-metric-value">430</div>
+                <div class="seg-metric-change down">↓ -70%</div>
+                <div class="seg-metric-prior">1,455 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:100%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:30%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Conv Rate</div>
+                <div class="seg-metric-value">6.5%</div>
+                <div class="seg-metric-change down">↓ -52%</div>
+                <div class="seg-metric-prior">13.5% last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:100%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:48%;width:14px;background:var(--accent)"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grand Total -->
+          <div class="tab-content" id="dd-grand-total">
+            <div class="segment-grid">
+              <div class="seg-metric">
+                <div class="seg-metric-label">Leads</div>
+                <div class="seg-metric-value">10,232</div>
+                <div class="seg-metric-change down">↓ -20%</div>
+                <div class="seg-metric-prior">12,789 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:100%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:80%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">MQLs</div>
+                <div class="seg-metric-value">1,635</div>
+                <div class="seg-metric-change up">↑ +142%</div>
+                <div class="seg-metric-prior">676 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:41%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">MQL Rate</div>
+                <div class="seg-metric-value">16.0%</div>
+                <div class="seg-metric-change up">↑ +10.7pp</div>
+                <div class="seg-metric-prior">5.3% last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:33%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:100%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Open Opps</div>
+                <div class="seg-metric-value">2,793</div>
+                <div class="seg-metric-change down">↓ -2%</div>
+                <div class="seg-metric-prior">2,847 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:100%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:98%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Merchants</div>
+                <div class="seg-metric-value">529</div>
+                <div class="seg-metric-change down">↓ -68%</div>
+                <div class="seg-metric-prior">1,671 last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:100%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:32%;width:14px;background:var(--accent)"></div></div>
+              </div>
+              <div class="seg-metric">
+                <div class="seg-metric-label">Conv Rate</div>
+                <div class="seg-metric-value">5.2%</div>
+                <div class="seg-metric-change down">↓ -7.9pp</div>
+                <div class="seg-metric-prior">13.1% last year</div>
+                <div class="seg-mini-bar"><div class="bar" style="height:100%;width:14px;background:var(--minibar-ly)"></div><div class="bar" style="height:40%;width:14px;background:var(--accent)"></div></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Channel Performance Summary (All-Time) -->
+      <section class="section animate-in">
+        <div class="section-title">📋 Channel Performance Summary (All-Time)</div>
+        <div class="chart-container">
+          <table class="compact-table">
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th class="num">Leads</th>
+                <th class="num">MQLs</th>
+                <th class="num">MQL Rate</th>
+                <th class="num">Merchants</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SEM</td>
+                <td class="num">32,881</td>
+                <td class="num">6,242</td>
+                <td class="num">19.0%</td>
+                <td class="num">2,458</td>
+              </tr>
+              <tr>
+                <td>Paid Social</td>
+                <td class="num">6,558</td>
+                <td class="num">1,923</td>
+                <td class="num">29.3%</td>
+                <td class="num">29</td>
+              </tr>
+              <tr>
+                <td>Programmatic</td>
+                <td class="num">1,085</td>
+                <td class="num">~730</td>
+                <td class="num">~67%</td>
+                <td class="num">1</td>
+              </tr>
+              <tr>
+                <td>ABM</td>
+                <td class="num">54</td>
+                <td class="num">~48</td>
+                <td class="num">~89%</td>
+                <td class="num">0</td>
+              </tr>
+              <tr>
+                <td>Non-Paid</td>
+                <td class="num">157,989</td>
+                <td class="num">3,509</td>
+                <td class="num">2.2%</td>
+                <td class="num">17,636</td>
+              </tr>
+              <tr style="border-top:2px solid var(--border)">
+                <td style="color:var(--accent);font-weight:700">Total</td>
+                <td class="num highlight">198,567</td>
+                <td class="num highlight">12,452</td>
+                <td class="num highlight">6.3%</td>
+                <td class="num highlight">20,124</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEM Regional Breakdown -->
+      <section class="section animate-in">
+        <div class="section-title">🌏 SEM Regional Breakdown</div>
+        <div class="chart-container">
+          <table class="compact-table">
+            <thead>
+              <tr>
+                <th>Region</th>
+                <th class="num">Branded</th>
+                <th class="num">Non-Brand</th>
+                <th class="num">Competitor</th>
+                <th class="num">PMax</th>
+                <th class="num">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🇺🇸 US</td>
+                <td class="num">6,549</td>
+                <td class="num">2,175</td>
+                <td class="num">59</td>
+                <td class="num">8,281</td>
+                <td class="num highlight">17,264</td>
+              </tr>
+              <tr>
+                <td>🇦🇺 AU</td>
+                <td class="num">4,118</td>
+                <td class="num">179</td>
+                <td class="num">0</td>
+                <td class="num">2,376</td>
+                <td class="num highlight">6,812</td>
+              </tr>
+              <tr>
+                <td>🇬🇧 UK</td>
+                <td class="num">2,407</td>
+                <td class="num">0</td>
+                <td class="num">928</td>
+                <td class="num">2,369</td>
+                <td class="num highlight">5,795</td>
+              </tr>
+              <tr>
+                <td>🇳🇿 NZ</td>
+                <td class="num">1,413</td>
+                <td class="num">27</td>
+                <td class="num">0</td>
+                <td class="num">1,260</td>
+                <td class="num highlight">2,797</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- vs. Target Placeholder -->
+      <section class="section animate-in">
+        <div style="border:2px dashed var(--border);border-radius:12px;padding:40px;text-align:center;color:var(--text-dim)">
+          📊 vs. Target — Coming soon. Actuals vs. plan will appear here when annual targets are loaded.
+        </div>
+      </section>
+
+    </div>
+
+    <div class="tab-panel" id="tab-channels">
+
+      <!-- SEM -->
+      <div class="chart-container channel-card animate-in" style="border-top-color:#4ecdc4">
+        <h3>SEM (Search Engine Marketing)</h3>
+        <div class="channel-stats">32,881 leads · 6,242 MQLs · 19.0% MQL Rate · 2,458 merchants</div>
+        <div class="channel-mini-grid">
+          <div class="channel-mini">
+            <div class="channel-mini-label">Branded</div>
+            <div class="channel-mini-value">14,779</div>
+            <div class="channel-mini-pct">44.9%</div>
+          </div>
+          <div class="channel-mini">
+            <div class="channel-mini-label">Performance Max</div>
+            <div class="channel-mini-value">14,286</div>
+            <div class="channel-mini-pct">43.4%</div>
+          </div>
+          <div class="channel-mini">
+            <div class="channel-mini-label">Non-Brand</div>
+            <div class="channel-mini-value">2,401</div>
+            <div class="channel-mini-pct">7.3%</div>
+          </div>
+          <div class="channel-mini">
+            <div class="channel-mini-label">Competitor</div>
+            <div class="channel-mini-value">928</div>
+            <div class="channel-mini-pct">2.8%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paid Social -->
+      <div class="chart-container channel-card animate-in" style="border-top-color:#a78bfa">
+        <h3>Paid Social</h3>
+        <div class="channel-stats">6,558 leads · 1,923 MQLs · 29.3% MQL Rate · 29 merchants</div>
+        <div class="channel-sub-grid">
+          <div class="channel-sub-card">
+            <h4>Meta</h4>
+            <div class="channel-sub-stat"><strong>5,849</strong> leads</div>
+            <div class="channel-sub-stat"><strong>1,596</strong> MQLs</div>
+            <div class="channel-sub-stat"><strong>27.3%</strong> MQL rate</div>
+            <div class="channel-sub-stat">Growth: 25 → 914/mo</div>
+          </div>
+          <div class="channel-sub-card">
+            <h4>LinkedIn</h4>
+            <div class="channel-sub-stat"><strong>687</strong> leads</div>
+            <div class="channel-sub-stat"><strong>315</strong> MQLs</div>
+            <div class="channel-sub-stat"><strong>45.9%</strong> MQL rate</div>
+            <div class="channel-sub-stat">Growth: 22 → 39/mo</div>
+          </div>
+        </div>
+        <div class="insight-callout">LinkedIn's MQL rate (<strong>45.9%</strong>) is nearly double Meta's (<strong>27.3%</strong>) — quality vs volume tradeoff</div>
+      </div>
+
+      <!-- Programmatic -->
+      <div class="chart-container channel-card animate-in" style="border-top-color:#fbbf24">
+        <h3>Programmatic (DV360)</h3>
+        <div class="channel-stats">1,085 leads</div>
+        <div class="channel-note">DV360 programmatic display campaigns</div>
+      </div>
+
+      <!-- ABM -->
+      <div class="chart-container channel-card animate-in" style="border-top-color:#f472b6">
+        <h3>ABM (Account-Based Marketing)</h3>
+        <div class="channel-stats">54 leads</div>
+        <div class="channel-mini-grid" style="grid-template-columns:repeat(2,1fr)">
+          <div class="channel-mini">
+            <div class="channel-mini-label">6sense</div>
+            <div class="channel-mini-value">48</div>
+            <div class="channel-mini-pct">leads</div>
+          </div>
+          <div class="channel-mini">
+            <div class="channel-mini-label">Demandbase</div>
+            <div class="channel-mini-value">6</div>
+            <div class="channel-mini-pct">leads</div>
+          </div>
+        </div>
+        <div class="channel-note">Small but highly targeted — ABM leads typically have highest intent</div>
+      </div>
+
+      <!-- Non-Paid -->
+      <div class="chart-container channel-card animate-in" style="border-top-color:#60a5fa">
+        <h3>Non-Paid / Organic</h3>
+        <div class="channel-stats">157,989 leads · 3,509 MQLs · 2.2% MQL Rate · 17,636 merchants</div>
+        <div class="channel-mini-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="channel-mini">
+            <div class="channel-mini-label">Direct</div>
+            <div class="channel-mini-value">92,368</div>
+            <div class="channel-mini-pct">58.5%</div>
+          </div>
+          <div class="channel-mini">
+            <div class="channel-mini-label">Unknown</div>
+            <div class="channel-mini-value">57,178</div>
+            <div class="channel-mini-pct">36.2%</div>
+          </div>
+          <div class="channel-mini">
+            <div class="channel-mini-label">None / Organic</div>
+            <div class="channel-mini-value">7,793</div>
+            <div class="channel-mini-pct">4.9%</div>
+          </div>
+        </div>
+        <div class="insight-callout">Non-Paid drives <strong>88.5%</strong> of merchant conversions despite only <strong>2.2%</strong> MQL rate — Self-Serve signups convert directly</div>
+      </div>
+
+    </div>
+
+    <div class="tab-panel" id="tab-sources">
+
+      <!-- Source Cards Grid -->
+      <section class="section animate-in">
+        <div class="section-title">🔗 Lead Sources</div>
+        <div class="source-grid">
+
+          <!-- 1. Self-Serve -->
+          <div class="chart-container source-card">
+            <h4>Webform: Self-Serve <span class="source-badge-pill" style="background:var(--proto-badge-bg);color:var(--accent)">Volume Engine 🏭</span></h4>
+            <div class="source-big-num">95,326</div>
+            <div class="source-meta"><strong>13,093</strong> merchants · <strong>13.7%</strong> conv rate</div>
+            <div class="source-mini-funnel">
+              <div class="funnel-bar" style="width:100%;background:var(--accent)"></div>
+              <div class="funnel-bar" style="width:13.7%;background:var(--green)"></div>
+            </div>
+          </div>
+
+          <!-- 2. Contact Us -->
+          <div class="chart-container source-card">
+            <h4>Webform: Contact Us <span class="source-badge-pill" style="background:var(--amber-bg);color:var(--amber)">Quality Problem ⚠️</span></h4>
+            <div class="source-big-num">42,712</div>
+            <div class="source-meta"><strong>2,575</strong> merchants · <strong>6.0%</strong> conv rate</div>
+            <div class="source-note">46.3% DQ rate</div>
+            <div class="source-mini-funnel">
+              <div class="funnel-bar" style="width:44.8%;background:var(--amber)"></div>
+              <div class="funnel-bar" style="width:6%;background:var(--green)"></div>
+            </div>
+          </div>
+
+          <!-- 3. Historical -->
+          <div class="chart-container source-card">
+            <h4>Historical <span class="source-badge-pill" style="background:var(--bg2);color:var(--text-dim);border:1px solid var(--border)">Legacy Data 📁</span></h4>
+            <div class="source-big-num">10,394</div>
+            <div class="source-meta"><strong>0</strong> merchants · <strong>0%</strong> conv rate</div>
+            <div class="source-mini-funnel">
+              <div class="funnel-bar" style="width:10.9%;background:var(--text-dim)"></div>
+              <div class="funnel-bar" style="width:0%;background:var(--text-dim)"></div>
+            </div>
+          </div>
+
+          <!-- 4. Prospecting Tool -->
+          <div class="chart-container source-card">
+            <h4>Prospecting Tool <span class="source-badge-pill" style="background:rgba(96,165,250,0.1);color:var(--blue)">Outbound 📞</span></h4>
+            <div class="source-big-num">9,702</div>
+            <div class="source-meta"><strong>181</strong> merchants · <strong>1.9%</strong> conv rate</div>
+            <div class="source-mini-funnel">
+              <div class="funnel-bar" style="width:10.2%;background:var(--blue)"></div>
+              <div class="funnel-bar" style="width:1.9%;background:var(--green)"></div>
+            </div>
+          </div>
+
+          <!-- 5. Brand Expansion -->
+          <div class="chart-container source-card">
+            <h4>Webform: Brand Expansion <span class="source-badge-pill" style="background:var(--green-bg);color:var(--green)">Hidden Gem 💎</span></h4>
+            <div class="source-big-num">1,832</div>
+            <div class="source-meta"><strong>702</strong> merchants · <strong>38.3%</strong> conv rate</div>
+            <div class="source-mini-funnel">
+              <div class="funnel-bar" style="width:1.9%;background:var(--green)"></div>
+              <div class="funnel-bar" style="width:38.3%;background:var(--green)"></div>
+            </div>
+          </div>
+
+          <!-- 6. Content -->
+          <div class="chart-container source-card">
+            <h4>Webform: Content <span class="source-badge-pill" style="background:rgba(167,139,250,0.1);color:var(--purple)">Top of Funnel 📝</span></h4>
+            <div class="source-big-num">1,230</div>
+            <div class="source-meta"><strong>4</strong> merchants · <strong>0.3%</strong> conv rate</div>
+            <div class="source-mini-funnel">
+              <div class="funnel-bar" style="width:1.3%;background:var(--purple)"></div>
+              <div class="funnel-bar" style="width:0.3%;background:var(--green)"></div>
+            </div>
+          </div>
+
+          <!-- 7. Partner -->
+          <div class="chart-container source-card">
+            <h4>Webform: Partner <span class="source-badge-pill" style="background:rgba(244,114,182,0.1);color:var(--pink)">Partner Referral 🤝</span></h4>
+            <div class="source-big-num">685</div>
+            <div class="source-meta"><strong>12</strong> merchants · <strong>1.8%</strong> conv rate</div>
+            <div class="source-mini-funnel">
+              <div class="funnel-bar" style="width:0.7%;background:var(--pink)"></div>
+              <div class="funnel-bar" style="width:1.8%;background:var(--green)"></div>
+            </div>
+          </div>
+
+          <!-- 8. Physical Event -->
+          <div class="chart-container source-card">
+            <h4>Physical Event <span class="source-badge-pill" style="background:var(--amber-bg);color:var(--amber)">Events 🎪</span></h4>
+            <div class="source-big-num">626</div>
+            <div class="source-meta"><strong>2</strong> merchants · <strong>0.3%</strong> conv rate</div>
+            <div class="source-mini-funnel">
+              <div class="funnel-bar" style="width:0.7%;background:var(--amber)"></div>
+              <div class="funnel-bar" style="width:0.3%;background:var(--green)"></div>
+            </div>
+          </div>
+
+          <!-- 9. 1:1 Merchant Intro -->
+          <div class="chart-container source-card">
+            <h4>1:1 Merchant Intro <span class="source-badge-pill" style="background:var(--green-bg);color:var(--green)">Quality King 👑</span></h4>
+            <div class="source-big-num">288</div>
+            <div class="source-meta"><strong>115</strong> merchants · <strong>39.9%</strong> conv rate</div>
+            <div class="source-mini-funnel">
+              <div class="funnel-bar" style="width:0.3%;background:var(--green)"></div>
+              <div class="funnel-bar" style="width:39.9%;background:var(--green)"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Conversion Rate by Source Chart -->
+      <section class="section animate-in">
+        <div class="section-title">Conversion Rate by Source</div>
+        <div class="chart-container">
+          <canvas id="convRateChart" height="280"></canvas>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="tab-panel" id="tab-funnel">
+
+      <!-- Full Pipeline -->
+      <section class="section animate-in">
+        <div class="section-title">🔻 Full Pipeline</div>
+        <div class="chart-container">
+          <div class="v-funnel">
+
+            <div class="v-funnel-step" style="width:100%;background:var(--funnel-ty-bg)">
+              <div class="step-name">Prospect</div>
+              <div class="step-count">35,158</div>
+              <div class="step-pct">17.7%</div>
+            </div>
+            <div class="v-funnel-arrow">↓ <span class="rate-label">35.4% → MQL</span></div>
+
+            <div class="v-funnel-step" style="width:70%;background:var(--funnel-ty-bg2)">
+              <div class="step-name">MQL</div>
+              <div class="step-count">12,449</div>
+              <div class="step-pct">6.3%</div>
+            </div>
+            <div class="v-funnel-arrow">↓ <span class="rate-label">94.6% → SQL</span></div>
+
+            <div class="v-funnel-step" style="width:60%;background:var(--funnel-ty-bg3)">
+              <div class="step-name">SQL</div>
+              <div class="step-count">11,776</div>
+              <div class="step-pct">5.9%</div>
+            </div>
+            <div class="v-funnel-arrow">↓ <span class="rate-label">→ Opportunity</span></div>
+
+            <div class="v-funnel-step" style="width:80%;background:var(--funnel-ty-bg2)">
+              <div class="step-name">Open Opportunity</div>
+              <div class="step-count">44,044</div>
+              <div class="step-pct">22.2%</div>
+            </div>
+            <div class="v-funnel-arrow">↓ <span class="rate-label">41.4% → Won</span></div>
+
+            <div class="v-funnel-step" style="width:45%;background:var(--funnel-won-bg);border:1px solid var(--funnel-won-border)">
+              <div class="step-name">Merchant (Won)</div>
+              <div class="step-count">18,235</div>
+              <div class="step-pct">9.2%</div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Exit Paths -->
+      <section class="section animate-in">
+        <div class="section-title">Exit Paths</div>
+        <div class="exit-grid">
+          <div class="exit-card" style="background:var(--red-bg);border:1px solid var(--red-border)">
+            <div class="exit-label" style="color:var(--red)">Disqualified</div>
+            <div class="exit-value">26,767</div>
+            <div class="exit-pct" style="color:var(--red)">13.5%</div>
+          </div>
+          <div class="exit-card" style="background:var(--red-bg);border:1px solid var(--red-border)">
+            <div class="exit-label" style="color:var(--red)">Closed Lost</div>
+            <div class="exit-value">44,841</div>
+            <div class="exit-pct" style="color:var(--red)">22.6%</div>
+          </div>
+          <div class="exit-card" style="background:var(--amber-bg);border:1px solid var(--amber-border)">
+            <div class="exit-label" style="color:var(--amber)">Nurture</div>
+            <div class="exit-value">1,731</div>
+            <div class="exit-pct" style="color:var(--amber)">0.9%</div>
+          </div>
+          <div class="exit-card" style="background:var(--bg2);border:1px solid var(--border)">
+            <div class="exit-label" style="color:var(--text-dim)">Unknown</div>
+            <div class="exit-value">401</div>
+            <div class="exit-pct" style="color:var(--text-dim)">&nbsp;</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Insight Note -->
+      <section class="section animate-in">
+        <div class="chart-container" style="border-left:4px solid var(--accent)">
+          <strong style="color:var(--text)">Note:</strong> <span style="color:var(--text-muted)">Open Opportunities (44,044) exceeds MQL+SQL combined because many leads progress directly to Opportunity via Self-Serve signup without passing through MQL/SQL stages.</span>
+        </div>
+      </section>
+
+      <!-- Post-Conversion Journey -->
+      <section class="section animate-in">
+        <div class="section-title">🚀 Post-Conversion Journey</div>
+        <div class="journey-row">
+          <div class="journey-card" style="background:rgba(52,211,153,0.08);border:1px solid var(--green-border)">
+            <div class="journey-stage">Get Transacting</div>
+            <div class="journey-count">256</div>
+          </div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-card" style="background:rgba(52,211,153,0.12);border:1px solid var(--green-border)">
+            <div class="journey-stage">Adopt</div>
+            <div class="journey-count">107</div>
+          </div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-card" style="background:rgba(52,211,153,0.16);border:1px solid var(--green-border)">
+            <div class="journey-stage">Boost</div>
+            <div class="journey-count">587</div>
+          </div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-card" style="background:rgba(52,211,153,0.2);border:1px solid var(--green-border)">
+            <div class="journey-stage">Retain</div>
+            <div class="journey-count">939</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="tab-panel" id="tab-trends">
+
+      <!-- Monthly Leads & MQLs -->
+      <section class="section animate-in">
+        <div class="section-title">📈 Monthly Leads &amp; MQLs</div>
+        <div class="chart-container">
+          <div class="chart-header">
+            <span class="chart-title">Leads (bars) + MQLs (line)</span>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span> Leads</div>
+              <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span> MQLs</div>
+            </div>
+          </div>
+          <canvas id="trendsLeadChart" height="260"></canvas>
+        </div>
+      </section>
+
+      <!-- Monthly Merchants Won -->
+      <section class="section animate-in">
+        <div class="section-title">🏪 Monthly Merchants Won</div>
+        <div class="chart-container">
+          <canvas id="trendsMerchantChart" height="220"></canvas>
+        </div>
+      </section>
+
+      <!-- Channel Mix Over Time -->
+      <section class="section animate-in">
+        <div class="section-title">📊 Channel Mix Over Time</div>
+        <div class="chart-container">
+          <div class="chart-header">
+            <span class="chart-title">Stacked Lead Volume by Channel</span>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#4ecdc4"></span> Paid Search</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#a78bfa"></span> Paid Social</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#fbbf24"></span> Display</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#60a5fa"></span> Non-Paid</div>
+            </div>
+          </div>
+          <canvas id="channelMixChart" height="260"></canvas>
+        </div>
+      </section>
+
+      <!-- Trend Insights -->
+      <section class="section animate-in">
+        <div class="section-title">💡 Trend Insights</div>
+        <div class="chart-container" style="border-left:4px solid var(--accent);padding:16px">
+          Leads trending down (<strong>-20% YoY</strong>) while MQLs trending up (<strong>+142%</strong>) — quality improving, volume declining
+        </div>
+        <div class="chart-container" style="border-left:4px solid var(--accent);padding:16px">
+          Paid Social scaling rapidly: <strong>47 → 1,008 leads/mo</strong> over 14 months
+        </div>
+        <div class="chart-container" style="border-left:4px solid var(--accent);padding:16px">
+          Merchant conversions declining: <strong>1,671 → 529</strong> in Feb YoY — downstream bottleneck
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ═══ Footer ═══ -->
+    <footer class="footer">
+      (v3.0) Live Dashboard — Powered by Snowflake · Made with ❤️ by Nick and Goose 🪿
+    </footer>
+
+  </div>
+
+  <script>
+  (function(){
+    /* ── 1. Tab Switching ── */
+    const tabBtns = document.querySelectorAll('.main-tab');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabPanels.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const target = document.getElementById('tab-' + btn.dataset.tab);
+        if (target) target.classList.add('active');
+      });
+    });
+
+    /* ── 2. Theme Toggle ── */
+    const html = document.documentElement;
+    const toggleBtn = document.querySelector('.theme-toggle');
+
+    // Callbacks to run after every theme change
+    const themeChangeCallbacks = [];
+
+    function setTheme(theme) {
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('ap-dash-theme', theme);
+      requestAnimationFrame(() => themeChangeCallbacks.forEach(fn => fn()));
+    }
+
+    // On load: localStorage first, else auto-detect by hour
+    const saved = localStorage.getItem('ap-dash-theme');
+    if (saved) {
+      setTheme(saved);
+    } else {
+      const hour = new Date().getHours();
+      setTheme((hour >= 9 && hour <= 17) ? 'light' : 'dark');
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    /* ── 3. IntersectionObserver for .animate-in ── */
+    const animateEls = document.querySelectorAll('.animate-in');
+    if (animateEls.length) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      animateEls.forEach(el => observer.observe(el));
+    }
+
+    /* ── 4. Lead Volume Bar Chart ── */
+    function drawLeadChart() {
+      const canvas = document.getElementById('leadChart');
+      if (!canvas) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const W = rect.width - 48; // account for chart-container padding
+      const H = 220;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, W, H);
+
+      // Read theme-aware CSS vars
+      const cs = getComputedStyle(document.documentElement);
+      const lyColor = cs.getPropertyValue('--chart-ly-bar').trim();
+      const tyColor = cs.getPropertyValue('--accent').trim();
+      const labelColor = cs.getPropertyValue('--chart-label').trim();
+      const mutedColor = cs.getPropertyValue('--chart-label-muted').trim();
+      const gridColor = cs.getPropertyValue('--chart-grid').trim();
+      const axisColor = cs.getPropertyValue('--chart-axis').trim();
+
+      const data = [
+        { label: 'Paid Search',  ly: 1833,  ty: 2437  },
+        { label: 'Paid Social',  ly: 127,   ty: 953   },
+        { label: 'Paid Display', ly: 13,    ty: 240   },
+        { label: 'Non-Paid',     ly: 10816, ty: 6602  }
+      ];
+
+      const maxVal = Math.max(...data.map(d => Math.max(d.ly, d.ty)));
+      const labelAreaW = 110;
+      const valueAreaW = 60;
+      const chartLeft = labelAreaW;
+      const chartRight = W - valueAreaW;
+      const barAreaW = chartRight - chartLeft;
+      const groupCount = data.length;
+      const groupH = H / groupCount;
+      const barH = 12;
+      const gap = 4;
+
+      // Grid lines
+      ctx.strokeStyle = gridColor;
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i <= 4; i++) {
+        const x = chartLeft + (barAreaW * i / 4);
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, H);
+        ctx.stroke();
+      }
+
+      // Axis line
+      ctx.strokeStyle = axisColor;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(chartLeft, 0);
+      ctx.lineTo(chartLeft, H);
+      ctx.stroke();
+
+      data.forEach((d, i) => {
+        const groupY = i * groupH;
+        const centerY = groupY + groupH / 2;
+
+        // Channel label
+        ctx.fillStyle = labelColor;
+        ctx.font = '600 11px Inter, system-ui, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(d.label, chartLeft - 12, centerY);
+
+        // LY bar (top)
+        const lyW = Math.max(2, (d.ly / maxVal) * barAreaW);
+        const lyY = centerY - gap / 2 - barH;
+        ctx.fillStyle = lyColor;
+        ctx.beginPath();
+        ctx.roundRect(chartLeft, lyY, lyW, barH, 3);
+        ctx.fill();
+
+        // TY bar (bottom)
+        const tyW = Math.max(2, (d.ty / maxVal) * barAreaW);
+        const tyY = centerY + gap / 2;
+        ctx.fillStyle = tyColor;
+        ctx.beginPath();
+        ctx.roundRect(chartLeft, tyY, tyW, barH, 3);
+        ctx.fill();
+
+        // Value labels
+        ctx.font = '600 10px Inter, system-ui, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+
+        ctx.fillStyle = mutedColor;
+        ctx.fillText(d.ly.toLocaleString(), chartLeft + lyW + 6, lyY + barH / 2);
+
+        ctx.fillStyle = labelColor;
+        ctx.fillText(d.ty.toLocaleString(), chartLeft + tyW + 6, tyY + barH / 2);
+      });
+    }
+
+    // Draw on load
+    drawLeadChart();
+
+    // Redraw on theme toggle (via shared callback list)
+    themeChangeCallbacks.push(drawLeadChart);
+
+    // Resize redraw is consolidated after all chart functions are defined (section 6)
+
+    /* ── 5. Channel Deep Dive Inner Tabs ── */
+    const ddBtns = document.querySelectorAll('[data-dd-tab]');
+    const ddPanels = document.querySelectorAll('.tabs-container .tab-content');
+
+    ddBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Deactivate siblings within the same tab-bar
+        const bar = btn.closest('.tab-bar');
+        bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Toggle matching content panels within the same tabs-container
+        const container = btn.closest('.tabs-container');
+        container.querySelectorAll('.tab-content').forEach(p => p.classList.remove('active'));
+        const target = document.getElementById(btn.dataset.ddTab);
+        if (target) target.classList.add('active');
+      });
+    });
+
+    /* ── 6. Conversion Rate by Source Chart ── */
+    function drawConvRateChart() {
+      const canvas = document.getElementById('convRateChart');
+      if (!canvas) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const W = rect.width - 48;
+      const H = 280;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, W, H);
+
+      const cs = getComputedStyle(document.documentElement);
+      const labelColor = cs.getPropertyValue('--chart-label').trim();
+      const mutedColor = cs.getPropertyValue('--chart-label-muted').trim();
+      const gridColor = cs.getPropertyValue('--chart-grid').trim();
+      const axisColor = cs.getPropertyValue('--chart-axis').trim();
+      const greenColor = cs.getPropertyValue('--green').trim();
+      const accentColor = cs.getPropertyValue('--accent').trim();
+      const amberColor = cs.getPropertyValue('--amber').trim();
+      const redColor = cs.getPropertyValue('--red').trim();
+      const dimColor = cs.getPropertyValue('--text-dim').trim();
+
+      const data = [
+        { label: '1:1 Merchant Intro', rate: 39.9, color: greenColor },
+        { label: 'Brand Expansion',    rate: 38.3, color: greenColor },
+        { label: 'Self-Serve',         rate: 13.7, color: accentColor },
+        { label: 'Contact Us',         rate: 6.0,  color: amberColor },
+        { label: 'Prospecting',        rate: 1.9,  color: redColor },
+        { label: 'Partner',            rate: 1.8,  color: redColor },
+        { label: 'Content',            rate: 0.3,  color: redColor },
+        { label: 'Physical Event',     rate: 0.3,  color: redColor },
+        { label: 'Historical',         rate: 0,    color: dimColor }
+      ];
+
+      const maxRate = 45; // give headroom above 39.9%
+      const labelAreaW = 140;
+      const valueAreaW = 50;
+      const chartLeft = labelAreaW;
+      const chartRight = W - valueAreaW;
+      const barAreaW = chartRight - chartLeft;
+      const rowCount = data.length;
+      const rowH = H / rowCount;
+      const barH = 14;
+
+      // Grid lines
+      ctx.strokeStyle = gridColor;
+      ctx.lineWidth = 0.5;
+      const gridSteps = [0, 10, 20, 30, 40];
+      gridSteps.forEach(v => {
+        const x = chartLeft + (v / maxRate) * barAreaW;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, H);
+        ctx.stroke();
+        // Grid labels at top
+        ctx.fillStyle = mutedColor;
+        ctx.font = '500 9px Inter, system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        if (v > 0) ctx.fillText(v + '%', x, 2);
+      });
+
+      // Axis line
+      ctx.strokeStyle = axisColor;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(chartLeft, 0);
+      ctx.lineTo(chartLeft, H);
+      ctx.stroke();
+
+      data.forEach((d, i) => {
+        const centerY = i * rowH + rowH / 2;
+
+        // Label
+        ctx.fillStyle = labelColor;
+        ctx.font = '600 11px Inter, system-ui, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(d.label, chartLeft - 12, centerY);
+
+        // Bar
+        const barW = Math.max(d.rate > 0 ? 3 : 0, (d.rate / maxRate) * barAreaW);
+        const barY = centerY - barH / 2;
+        ctx.fillStyle = d.color;
+        ctx.beginPath();
+        ctx.roundRect(chartLeft, barY, barW, barH, 4);
+        ctx.fill();
+
+        // Value label
+        ctx.fillStyle = d.rate >= 10 ? labelColor : mutedColor;
+        ctx.font = '700 10px Inter, system-ui, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        const valText = d.rate === 0 ? '0%' : d.rate + '%';
+        ctx.fillText(valText, chartLeft + barW + 6, centerY);
+      });
+    }
+
+    // Draw on load
+    drawConvRateChart();
+
+    // Redraw on theme toggle
+    themeChangeCallbacks.push(drawConvRateChart);
+
+    /* ── 7. Trends — Monthly Leads & MQLs ── */
+    const trendLabels = ["Jan'25","Feb'25","Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"];
+    const trendLeads = [21186,12789,13731,21866,14308,12871,13194,12756,12586,12130,13576,12440,11979,10232];
+    const trendMQLs = [819,676,702,503,557,528,643,808,1138,1113,913,964,1116,1635];
+
+    function setupCanvas(id, h) {
+      const canvas = document.getElementById(id);
+      if (!canvas) return null;
+      const dpr = window.devicePixelRatio || 1;
+      const W = canvas.parentElement.getBoundingClientRect().width - 48;
+      canvas.width = W * dpr; canvas.height = h * dpr;
+      canvas.style.width = W + 'px'; canvas.style.height = h + 'px';
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr); ctx.clearRect(0, 0, W, h);
+      return { ctx, W, H: h, cs: getComputedStyle(document.documentElement) };
+    }
+
+    function drawTrendsLeadChart() {
+      const r = setupCanvas('trendsLeadChart', 260);
+      if (!r) return;
+      const { ctx, W, H, cs } = r;
+      const accent = cs.getPropertyValue('--accent').trim();
+      const green = cs.getPropertyValue('--green').trim();
+      const label = cs.getPropertyValue('--chart-label').trim();
+      const muted = cs.getPropertyValue('--chart-label-muted').trim();
+      const grid = cs.getPropertyValue('--chart-grid').trim();
+      const axis = cs.getPropertyValue('--chart-axis').trim();
+
+      const padL = 50, padR = 20, padT = 10, padB = 40;
+      const cW = W - padL - padR, cH = H - padT - padB;
+      const n = trendLabels.length;
+      const maxL = Math.max(...trendLeads) * 1.1;
+      const maxM = Math.max(...trendMQLs) * 1.2;
+      const barW = Math.max(8, (cW / n) * 0.6);
+      const gap = cW / n;
+
+      // Grid
+      ctx.strokeStyle = grid; ctx.lineWidth = 0.5;
+      for (let i = 0; i <= 4; i++) {
+        const y = padT + cH - (cH * i / 4);
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+        ctx.fillStyle = muted; ctx.font = '500 9px Inter,sans-serif';
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillText(Math.round(maxL * i / 4 / 1000) + 'k', padL - 6, y);
+      }
+
+      // Bars (leads)
+      trendLeads.forEach((v, i) => {
+        const x = padL + i * gap + (gap - barW) / 2;
+        const bH = (v / maxL) * cH;
+        const y = padT + cH - bH;
+        ctx.fillStyle = accent; ctx.globalAlpha = 0.6;
+        ctx.beginPath(); ctx.roundRect(x, y, barW, bH, 3); ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+
+      // MQL line
+      ctx.strokeStyle = green; ctx.lineWidth = 2;
+      ctx.beginPath();
+      trendMQLs.forEach((v, i) => {
+        const x = padL + i * gap + gap / 2;
+        const y = padT + cH - (v / maxM) * cH;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // MQL dots
+      ctx.fillStyle = green;
+      trendMQLs.forEach((v, i) => {
+        const x = padL + i * gap + gap / 2;
+        const y = padT + cH - (v / maxM) * cH;
+        ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill();
+      });
+
+      // X labels
+      ctx.fillStyle = muted; ctx.font = '500 9px Inter,sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      trendLabels.forEach((l, i) => {
+        ctx.fillText(l, padL + i * gap + gap / 2, padT + cH + 8);
+      });
+
+      // Axis
+      ctx.strokeStyle = axis; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + cH); ctx.lineTo(W - padR, padT + cH); ctx.stroke();
+    }
+
+    /* ── 8. Trends — Monthly Merchants Won ── */
+    const trendMerchants = [1522,1671,1754,1758,1898,1680,1794,1707,1395,1264,1100,1233,687,529];
+
+    function drawTrendsMerchantChart() {
+      const r = setupCanvas('trendsMerchantChart', 220);
+      if (!r) return;
+      const { ctx, W, H, cs } = r;
+      const green = cs.getPropertyValue('--green').trim();
+      const red = cs.getPropertyValue('--red').trim();
+      const label = cs.getPropertyValue('--chart-label').trim();
+      const muted = cs.getPropertyValue('--chart-label-muted').trim();
+      const grid = cs.getPropertyValue('--chart-grid').trim();
+      const axis = cs.getPropertyValue('--chart-axis').trim();
+
+      const padL = 50, padR = 20, padT = 20, padB = 40;
+      const cW = W - padL - padR, cH = H - padT - padB;
+      const n = trendLabels.length;
+      const maxV = Math.max(...trendMerchants) * 1.15;
+      const minV = Math.min(...trendMerchants);
+      const barW = Math.max(8, (cW / n) * 0.6);
+      const gap = cW / n;
+
+      // Grid
+      ctx.strokeStyle = grid; ctx.lineWidth = 0.5;
+      for (let i = 0; i <= 4; i++) {
+        const y = padT + cH - (cH * i / 4);
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+        ctx.fillStyle = muted; ctx.font = '500 9px Inter,sans-serif';
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillText(Math.round(maxV * i / 4).toLocaleString(), padL - 6, y);
+      }
+
+      // Bars with gradient color
+      trendMerchants.forEach((v, i) => {
+        const x = padL + i * gap + (gap - barW) / 2;
+        const bH = (v / maxV) * cH;
+        const y = padT + cH - bH;
+        const ratio = (v - minV) / (Math.max(...trendMerchants) - minV);
+        // Interpolate green to red
+        const r1 = parseInt(green.length > 4 ? green.slice(1,3) : green.slice(1,2).repeat(2), 16);
+        const g1 = parseInt(green.length > 4 ? green.slice(3,5) : green.slice(2,3).repeat(2), 16);
+        const b1 = parseInt(green.length > 4 ? green.slice(5,7) : green.slice(3,4).repeat(2), 16);
+        const r2 = parseInt(red.length > 4 ? red.slice(1,3) : red.slice(1,2).repeat(2), 16);
+        const g2 = parseInt(red.length > 4 ? red.slice(3,5) : red.slice(2,3).repeat(2), 16);
+        const b2 = parseInt(red.length > 4 ? red.slice(5,7) : red.slice(3,4).repeat(2), 16);
+        const cr = Math.round(r2 + (r1 - r2) * ratio);
+        const cg = Math.round(g2 + (g1 - g2) * ratio);
+        const cb = Math.round(b2 + (b1 - b2) * ratio);
+        ctx.fillStyle = `rgb(${cr},${cg},${cb})`;
+        ctx.beginPath(); ctx.roundRect(x, y, barW, bH, 3); ctx.fill();
+
+        // Value above bar
+        ctx.fillStyle = label; ctx.font = '600 9px Inter,sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        ctx.fillText(v.toLocaleString(), x + barW / 2, y - 3);
+      });
+
+      // X labels
+      ctx.fillStyle = muted; ctx.font = '500 9px Inter,sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      trendLabels.forEach((l, i) => {
+        ctx.fillText(l, padL + i * gap + gap / 2, padT + cH + 8);
+      });
+
+      // Axis
+      ctx.strokeStyle = axis; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + cH); ctx.lineTo(W - padR, padT + cH); ctx.stroke();
+    }
+
+    /* ── 9. Trends — Channel Mix Over Time ── */
+    const mixData = [
+      [2045,47,7,19087],[1833,127,13,10816],[2061,179,123,11368],[1971,200,34,19661],
+      [1897,281,23,12107],[1986,307,39,10539],[2400,434,52,10308],[2045,386,122,10203],
+      [2784,729,82,8991],[2724,615,89,8702],[2615,675,55,10231],[2748,321,74,9297],
+      [2778,1008,140,8053],[2437,953,240,6602]
+    ];
+    const mixColors = ['#4ecdc4','#a78bfa','#fbbf24','#60a5fa'];
+
+    function drawChannelMixChart() {
+      const r = setupCanvas('channelMixChart', 260);
+      if (!r) return;
+      const { ctx, W, H, cs } = r;
+      const muted = cs.getPropertyValue('--chart-label-muted').trim();
+      const grid = cs.getPropertyValue('--chart-grid').trim();
+      const axis = cs.getPropertyValue('--chart-axis').trim();
+
+      const padL = 50, padR = 20, padT = 10, padB = 40;
+      const cW = W - padL - padR, cH = H - padT - padB;
+      const n = trendLabels.length;
+      const totals = mixData.map(d => d.reduce((a, b) => a + b, 0));
+      const maxT = Math.max(...totals) * 1.05;
+      const barW = Math.max(8, (cW / n) * 0.65);
+      const gap = cW / n;
+
+      // Grid
+      ctx.strokeStyle = grid; ctx.lineWidth = 0.5;
+      for (let i = 0; i <= 4; i++) {
+        const y = padT + cH - (cH * i / 4);
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+        ctx.fillStyle = muted; ctx.font = '500 9px Inter,sans-serif';
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillText(Math.round(maxT * i / 4 / 1000) + 'k', padL - 6, y);
+      }
+
+      // Stacked bars
+      mixData.forEach((d, i) => {
+        const x = padL + i * gap + (gap - barW) / 2;
+        let cumY = padT + cH;
+        d.forEach((v, j) => {
+          const bH = (v / maxT) * cH;
+          cumY -= bH;
+          ctx.fillStyle = mixColors[j];
+          ctx.beginPath(); ctx.roundRect(x, cumY, barW, bH, j === d.length - 1 ? [3,3,0,0] : 0); ctx.fill();
+        });
+      });
+
+      // X labels
+      ctx.fillStyle = muted; ctx.font = '500 9px Inter,sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      trendLabels.forEach((l, i) => {
+        ctx.fillText(l, padL + i * gap + gap / 2, padT + cH + 8);
+      });
+
+      // Axis
+      ctx.strokeStyle = axis; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + cH); ctx.lineTo(W - padR, padT + cH); ctx.stroke();
+    }
+
+    // Draw trend charts on load
+    drawTrendsLeadChart();
+    drawTrendsMerchantChart();
+    drawChannelMixChart();
+
+    // Register for theme toggle
+    themeChangeCallbacks.push(drawTrendsLeadChart, drawTrendsMerchantChart, drawChannelMixChart);
+
+    // Consolidated resize handler for all charts (debounced)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        drawLeadChart();
+        drawConvRateChart();
+        drawTrendsLeadChart();
+        drawTrendsMerchantChart();
+        drawChannelMixChart();
+      }, 150);
+    });
+
+  })();
+  </script>
+</body>
+</html>
