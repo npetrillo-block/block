@@ -439,8 +439,8 @@ canvas{max-width:100%}
           <div class="filter-dropdown" id="regionDropdown">
             <div class="filter-option active" data-region="All">All Regions</div>
             <div class="filter-option" data-region="US">🇺🇸 US</div>
-            <div class="filter-option" data-region="AU">🇦🇺 AU</div>
             <div class="filter-option" data-region="UK">🇬🇧 UK</div>
+            <div class="filter-option" data-region="AU">🇦🇺 AU</div>
             <div class="filter-option" data-region="NZ">🇳🇿 NZ</div>
           </div>
         </div>
@@ -985,20 +985,20 @@ canvas{max-width:100%}
                 <td class="num highlight">17,264</td>
               </tr>
               <tr>
-                <td>🇦🇺 AU</td>
-                <td class="num">4,118</td>
-                <td class="num">179</td>
-                <td class="num">0</td>
-                <td class="num">2,376</td>
-                <td class="num highlight">6,812</td>
-              </tr>
-              <tr>
                 <td>🇬🇧 UK</td>
                 <td class="num">2,407</td>
                 <td class="num">0</td>
                 <td class="num">928</td>
                 <td class="num">2,369</td>
                 <td class="num highlight">5,795</td>
+              </tr>
+              <tr>
+                <td>🇦🇺 AU</td>
+                <td class="num">4,118</td>
+                <td class="num">179</td>
+                <td class="num">0</td>
+                <td class="num">2,376</td>
+                <td class="num highlight">6,812</td>
               </tr>
               <tr>
                 <td>🇳🇿 NZ</td>
@@ -1044,34 +1044,6 @@ canvas{max-width:100%}
 
     <div class="tab-panel" id="tab-channels">
 
-      <!-- SEM -->
-      <div class="chart-container channel-card animate-in" style="border-top-color:#4ecdc4">
-        <h3>SEM (Search Engine Marketing)</h3>
-        <div class="channel-stats">32,881 leads · 6,242 MQLs · 19.0% MQL Rate · 2,458 merchants</div>
-        <div class="channel-mini-grid">
-          <div class="channel-mini">
-            <div class="channel-mini-label">Branded</div>
-            <div class="channel-mini-value">14,779</div>
-            <div class="channel-mini-pct">44.9%</div>
-          </div>
-          <div class="channel-mini">
-            <div class="channel-mini-label">Performance Max</div>
-            <div class="channel-mini-value">14,286</div>
-            <div class="channel-mini-pct">43.4%</div>
-          </div>
-          <div class="channel-mini">
-            <div class="channel-mini-label">Non-Brand</div>
-            <div class="channel-mini-value">2,401</div>
-            <div class="channel-mini-pct">7.3%</div>
-          </div>
-          <div class="channel-mini">
-            <div class="channel-mini-label">Competitor</div>
-            <div class="channel-mini-value">928</div>
-            <div class="channel-mini-pct">2.8%</div>
-          </div>
-        </div>
-      </div>
-
       <!-- Paid Social -->
       <div class="chart-container channel-card animate-in" style="border-top-color:#a78bfa">
         <h3>Paid Social</h3>
@@ -1100,6 +1072,34 @@ canvas{max-width:100%}
         <h3>Programmatic (DV360)</h3>
         <div class="channel-stats">1,085 leads</div>
         <div class="channel-note">DV360 programmatic display campaigns</div>
+      </div>
+
+      <!-- SEM -->
+      <div class="chart-container channel-card animate-in" style="border-top-color:#4ecdc4">
+        <h3>SEM (Search Engine Marketing)</h3>
+        <div class="channel-stats">32,881 leads · 6,242 MQLs · 19.0% MQL Rate · 2,458 merchants</div>
+        <div class="channel-mini-grid">
+          <div class="channel-mini">
+            <div class="channel-mini-label">Branded</div>
+            <div class="channel-mini-value">14,779</div>
+            <div class="channel-mini-pct">44.9%</div>
+          </div>
+          <div class="channel-mini">
+            <div class="channel-mini-label">Performance Max</div>
+            <div class="channel-mini-value">14,286</div>
+            <div class="channel-mini-pct">43.4%</div>
+          </div>
+          <div class="channel-mini">
+            <div class="channel-mini-label">Non-Brand</div>
+            <div class="channel-mini-value">2,401</div>
+            <div class="channel-mini-pct">7.3%</div>
+          </div>
+          <div class="channel-mini">
+            <div class="channel-mini-label">Competitor</div>
+            <div class="channel-mini-value">928</div>
+            <div class="channel-mini-pct">2.8%</div>
+          </div>
+        </div>
       </div>
 
       <!-- ABM -->
@@ -1388,7 +1388,7 @@ canvas{max-width:100%}
               <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span> MQLs</div>
             </div>
           </div>
-          <canvas id="trendsLeadChart" height="260"></canvas>
+          <canvas id="trendsLeadChart" height="340"></canvas>
         </div>
       </section>
 
@@ -1396,7 +1396,7 @@ canvas{max-width:100%}
       <section class="section animate-in">
         <div class="section-title">🏪 Monthly Merchants Won</div>
         <div class="chart-container">
-          <canvas id="trendsMerchantChart" height="220"></canvas>
+          <canvas id="trendsMerchantChart" height="300"></canvas>
         </div>
       </section>
 
@@ -1413,7 +1413,7 @@ canvas{max-width:100%}
               <div class="legend-item"><span class="legend-dot" style="background:#60a5fa"></span> Non-Paid</div>
             </div>
           </div>
-          <canvas id="channelMixChart" height="260"></canvas>
+          <canvas id="channelMixChart" height="340"></canvas>
         </div>
       </section>
 
@@ -1838,7 +1838,7 @@ canvas{max-width:100%}
     }
 
     function drawTrendsLeadChart() {
-      const r = setupCanvas('trendsLeadChart', 260);
+      const r = setupCanvas('trendsLeadChart', 340);
       if (!r) return;
       const { ctx, W, H, cs } = r;
       const accent = cs.getPropertyValue('--accent').trim();
@@ -1910,7 +1910,7 @@ canvas{max-width:100%}
     const trendMerchants = [1522,1671,1754,1758,1898,1680,1794,1707,1395,1264,1100,1233,687,529];
 
     function drawTrendsMerchantChart() {
-      const r = setupCanvas('trendsMerchantChart', 220);
+      const r = setupCanvas('trendsMerchantChart', 300);
       if (!r) return;
       const { ctx, W, H, cs } = r;
       const green = cs.getPropertyValue('--green').trim();
@@ -1985,7 +1985,7 @@ canvas{max-width:100%}
     const mixColors = ['#4ecdc4','#a78bfa','#fbbf24','#60a5fa'];
 
     function drawChannelMixChart() {
-      const r = setupCanvas('channelMixChart', 260);
+      const r = setupCanvas('channelMixChart', 340);
       if (!r) return;
       const { ctx, W, H, cs } = r;
       const muted = cs.getPropertyValue('--chart-label-muted').trim();
@@ -2205,8 +2205,8 @@ canvas{max-width:100%}
     // SEM Regional data for client-side filtering
     const semRegionData = [
       { region: 'US', flag: '🇺🇸', branded: 6549, nonBrand: 2175, competitor: 59, pmax: 8281, total: 17264 },
-      { region: 'AU', flag: '🇦🇺', branded: 4118, nonBrand: 179, competitor: 0, pmax: 2376, total: 6812 },
       { region: 'UK', flag: '🇬🇧', branded: 2407, nonBrand: 0, competitor: 928, pmax: 2369, total: 5795 },
+      { region: 'AU', flag: '🇦🇺', branded: 4118, nonBrand: 179, competitor: 0, pmax: 2376, total: 6812 },
       { region: 'NZ', flag: '🇳🇿', branded: 1413, nonBrand: 27, competitor: 0, pmax: 1260, total: 2797 }
     ];
 
