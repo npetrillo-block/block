@@ -12,7 +12,7 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 
 | Asset | File | Status |
 |---|---|---|
-| B2B Demand Gen Dashboard v3.0 | `afterpay-b2b-demand-gen-v3.html` | ✅ Complete (2,292 lines) |
+| B2B Demand Gen Dashboard v3.0 | `afterpay-b2b-demand-gen.html` | ✅ Complete (2,292 lines) |
 | Python Backend (shared) | `../backend/` | ✅ Built, needs Snowflake creds to go live |
 | Blockcell (hosted) | https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ | ✅ v3.0 live (w/ sparklines) |
 | GitHub | https://github.com/npetrillo-block/block.git | ✅ `main` branch |
@@ -21,7 +21,7 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 
 ## ✅ What's Done
 
-### v3.0 Dashboard (afterpay-b2b-demand-gen-v3.html)
+### v3.0 Dashboard (afterpay-b2b-demand-gen.html)
 - [x] Full CSS design system (dark/light themes, 30+ component classes, responsive breakpoints)
 - [x] Header: gradient title, Live badge with pulsing dot, theme toggle (💡), 4 filter pills
 - [x] 5 main tab pills (Overview, Channels, Lead Sources, Funnel, Trends)
@@ -229,7 +229,7 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 ```
 /Users/npetrillo/repos/block/
 ├── b2b-dg-dashboard/
-│   ├── afterpay-b2b-demand-gen-v3.html   ← v3.0 dashboard (THE MAIN FILE)
+│   ├── afterpay-b2b-demand-gen.html      ← dashboard (THE MAIN FILE)
 │   └── TODO.md                           ← THIS FILE (single source of truth)
 ├── monks-lite/
 │   ├── afterpay-monks-lite.html          ← Monks v2.0
@@ -304,7 +304,7 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 3. **Update `b2b-dg-dashboard/TODO.md`** at the end of each session — check off completed items, add new ones
 4. **One section at a time** — don't try to rewrite the whole HTML file at once
 5. **Use str_replace** for targeted edits — don't rewrite entire files
-6. **Keep the v3.0 HTML file at its current path** — `/Users/npetrillo/repos/block/b2b-dg-dashboard/afterpay-b2b-demand-gen-v3.html`
+6. **Keep the HTML file at its current path** — `/Users/npetrillo/repos/block/b2b-dg-dashboard/afterpay-b2b-demand-gen.html`
 
 ---
 

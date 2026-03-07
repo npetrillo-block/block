@@ -13,7 +13,7 @@ Interactive HTML dashboards for the Afterpay B2B Growth Marketing team, backed b
 ```
 block/
 ├── b2b-dg-dashboard/                   ← B2B Demand Gen Dashboard
-│   ├── afterpay-b2b-demand-gen-v3.html ← v3.0 — LATEST
+│   ├── afterpay-b2b-demand-gen.html    ← dashboard (THE MAIN FILE)
 │   └── TODO.md                         ← B2B task list & project context
 ├── monks-lite/                         ← Monks Biweekly Dashboard
 │   ├── afterpay-monks-lite.html        ← v2.0
@@ -39,7 +39,7 @@ block/
 
 ## 📊 Dashboard 1: B2B Demand Gen (v3.0)
 
-**`afterpay-b2b-demand-gen-v3.html`** — 1,905-line multi-tab analytics dashboard
+**`afterpay-b2b-demand-gen.html`** — 2,292-line multi-tab analytics dashboard
 
 > 🟢 **Powered by real Snowflake data** from `FIVETRAN.MARKETO.LEAD` (11.3M rows, 15 months: Jan 2025 – Feb 2026)
 
@@ -102,7 +102,7 @@ Snowflake → Python Backend (FastAPI + APScheduler) → JSON API → HTML Dashb
 ## 🚀 Getting Started
 
 ### Quick Start (Dashboards Only)
-Open `b2b-dg-dashboard/afterpay-b2b-demand-gen-v3.html` in your browser. Works standalone — no backend required.
+Open `b2b-dg-dashboard/afterpay-b2b-demand-gen.html` in your browser. Works standalone — no backend required.
 
 ### Full Setup (Live Data)
 ```bash
@@ -121,10 +121,11 @@ See **[b2b-dg-dashboard/TODO.md](b2b-dg-dashboard/TODO.md)** and **[monks-lite/T
 
 | Item | Status |
 |---|---|
-| v3.0 Dashboard | ✅ Complete (1,905 lines, 5 tabs, 5 charts) |
+| v3.0 Dashboard | ✅ Complete (2,292 lines, 5 tabs, 8+ charts, filters, PDF export) |
+| Blockcell Deploy | ✅ Live at https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ |
 | Python Backend | ✅ Built, needs Snowflake creds |
+| API Wiring | ✅ fetch() + fallback pattern ready, set `API_BASE` to activate |
 | Slack Integration | 🔜 Code ready, needs webhook URL |
-| Blockcell Deploy | 🔜 v3.0 needs publishing |
 | Live Data Connection | 🔜 Needs Snowflake service account |
 
 ---
