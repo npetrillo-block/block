@@ -84,8 +84,7 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 
 ### P0: Immediate (Do Next Session)
 
-- [ ] **Deploy v3.0 to Blockcell** — Replace the v2.1 deployment with the new v3.0 dashboard
-  - Enable Blockcell extension, deploy `b2b-dg-dashboard/afterpay-b2b-demand-gen-v3.html`
+- [x] **Deploy v3.0 to Blockcell** — ✅ Deployed Mar 7, 2026 (version `XLaQYQKmaElsKOrArJyzMZhwwy7_cGSF`)
   - URL: https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/
 
 ### P1: Slack Integration (2 minutes once webhook exists)
