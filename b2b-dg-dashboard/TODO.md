@@ -1,4 +1,4 @@
-# Afterpay B2B Dashboard — Master TODO 📋
+# Afterpay B2B Dashboard — Master To-Do 📋
 
 > **This file is the single source of truth.** Start every new Goose session by reading this file instead of searching chat history. It replaces all prior conversation context.
 >
