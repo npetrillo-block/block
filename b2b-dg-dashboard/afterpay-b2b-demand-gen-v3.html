@@ -264,6 +264,27 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 }
 .date-picker-apply:hover{opacity:0.85}
 .filter-pill.date-filter{position:relative;cursor:pointer}
+.filter-dropdown{display:none;position:absolute;top:100%;left:0;margin-top:8px;z-index:100;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:6px 0;box-shadow:var(--kpi-hover-shadow);min-width:160px;transition:background-color 0.3s ease,border-color 0.3s ease}
+.filter-dropdown.open{display:block}
+.filter-option{padding:8px 16px;font-size:0.78rem;color:var(--text-muted);cursor:pointer;transition:all 0.15s}
+.filter-option:hover{background:var(--bg2);color:var(--text)}
+.filter-option.active{color:var(--accent);font-weight:600}
+.export-btn{cursor:pointer;border:1px solid var(--border);font-family:'Inter',sans-serif;font-size:0.78rem;font-weight:600}
+.export-btn:hover{border-color:var(--accent);color:var(--accent)}
+@media print{
+  body{background:#fff!important;color:#1a1a2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .header-right,.filters-row,.main-tab-bar,.theme-toggle,.export-btn,.filter-dropdown,.date-picker-dropdown{display:none!important}
+  .container{max-width:100%;padding:0}
+  .tab-panel{display:block!important;page-break-before:always}
+  .tab-panel:first-of-type{page-break-before:avoid}
+  .animate-in{opacity:1!important;transform:none!important}
+  .kpi-grid,.target-grid,.donut-grid,.ww-grid,.segment-grid,.exit-grid{grid-template-columns:repeat(3,1fr)}
+  .chart-container,.kpi-card,.target-card,.donut-card{break-inside:avoid}
+  canvas{max-width:100%!important}
+  .footer{page-break-before:avoid}
+  .header{border-bottom:2px solid #ddd;padding-bottom:12px;margin-bottom:20px}
+  .gradient-title{background:none!important;-webkit-text-fill-color:#1a1a2e!important;color:#1a1a2e!important}
+}
 
 /* v3.0 — Gradient Title */
 .header h1.gradient-title{
@@ -411,10 +432,17 @@ canvas{max-width:100%}
 
       <!-- Filters -->
       <div class="filters-row">
-        <div class="filter-pill">
+        <div class="filter-pill" id="regionFilter" style="position:relative;cursor:pointer">
           <span class="filter-label">Region</span>
-          <span class="filter-value">All</span>
+          <span class="filter-value" id="regionFilterValue">All</span>
           <span class="filter-arrow">▾</span>
+          <div class="filter-dropdown" id="regionDropdown">
+            <div class="filter-option active" data-region="All">All Regions</div>
+            <div class="filter-option" data-region="US">🇺🇸 US</div>
+            <div class="filter-option" data-region="AU">🇦🇺 AU</div>
+            <div class="filter-option" data-region="UK">🇬🇧 UK</div>
+            <div class="filter-option" data-region="NZ">🇳🇿 NZ</div>
+          </div>
         </div>
         <div class="filter-pill">
           <span class="filter-label">Channel</span>
@@ -426,11 +454,21 @@ canvas{max-width:100%}
           <span class="filter-value">All</span>
           <span class="filter-arrow">▾</span>
         </div>
-        <div class="filter-pill">
+        <div class="filter-pill date-filter" id="dateFilter">
           <span class="filter-label">Date Range</span>
-          <span class="filter-value">Feb 1–28, 2026</span>
+          <span class="filter-value" id="dateFilterValue">Feb 1–28, 2026</span>
           <span class="filter-arrow">▾</span>
+          <div class="date-picker-dropdown" id="dateDropdown">
+            <label>Start Date</label>
+            <input type="date" id="dateStart" value="2026-02-01">
+            <label>End Date</label>
+            <input type="date" id="dateEnd" value="2026-02-28">
+            <button class="date-picker-apply" id="dateApply">Apply</button>
+          </div>
         </div>
+        <button class="filter-pill export-btn" id="exportPdf" title="Export to PDF">
+          <span>📄 Export</span>
+        </button>
       </div>
     </header>
 
@@ -2098,6 +2136,131 @@ canvas{max-width:100%}
       ]);
     }
     drawAllDonuts();
+
+    /* ── 12. Backend API Wiring ── */
+    const API_BASE = ''; // Set to backend URL when available, e.g. 'http://localhost:8000'
+
+    async function loadDashboardData(startDate, endDate) {
+      if (!API_BASE) return; // No API configured yet
+      const badge = document.getElementById('sourceBadge');
+      const refreshEl = document.getElementById('lastRefreshed');
+      try {
+        const params = new URLSearchParams();
+        if (startDate) params.set('start', startDate);
+        if (endDate) params.set('end', endDate);
+        const url = API_BASE + '/api/b2b-demand-gen' + (params.toString() ? '?' + params : '');
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error('API returned ' + resp.status);
+        const data = await resp.json();
+        // TODO: re-render dashboard sections with data payload
+        // On success: flip badge to Live
+        if (badge) { badge.className = 'source-badge live'; badge.innerHTML = '<span class="pulse-dot"></span> Live'; }
+        if (refreshEl) refreshEl.textContent = 'Last refreshed: ' + new Date().toLocaleString();
+      } catch (e) {
+        console.warn('API fetch failed, using fallback data:', e.message);
+        if (badge) { badge.className = 'source-badge fallback'; badge.textContent = '🟡 Fallback (static data)'; }
+      }
+    }
+
+    // Auto-refresh every 24 hours (only if API is configured)
+    if (API_BASE) {
+      loadDashboardData();
+      setInterval(() => loadDashboardData(), 86400000);
+    }
+
+    /* ── 13. Date Filter Dropdown ── */
+    const dateFilter = document.getElementById('dateFilter');
+    const dateDropdown = document.getElementById('dateDropdown');
+    const dateApply = document.getElementById('dateApply');
+
+    if (dateFilter && dateDropdown) {
+      dateFilter.addEventListener('click', (e) => {
+        if (e.target.closest('.date-picker-dropdown')) return; // Don't toggle when clicking inside
+        dateDropdown.classList.toggle('open');
+      });
+
+      if (dateApply) {
+        dateApply.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const start = document.getElementById('dateStart').value;
+          const end = document.getElementById('dateEnd').value;
+          if (start && end) {
+            const s = new Date(start + 'T00:00:00');
+            const en = new Date(end + 'T00:00:00');
+            const fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const yr = en.getFullYear();
+            document.getElementById('dateFilterValue').textContent = fmt(s) + '–' + fmt(en) + ', ' + yr;
+            loadDashboardData(start, end);
+          }
+          dateDropdown.classList.remove('open');
+        });
+      }
+    }
+
+    /* ── 14. Region Filter ── */
+    const regionFilter = document.getElementById('regionFilter');
+    const regionDropdown = document.getElementById('regionDropdown');
+    const regionMap = { US: '🇺🇸 US', AU: '🇦🇺 AU', UK: '🇬🇧 UK', NZ: '🇳🇿 NZ' };
+
+    // SEM Regional data for client-side filtering
+    const semRegionData = [
+      { region: 'US', flag: '🇺🇸', branded: 6549, nonBrand: 2175, competitor: 59, pmax: 8281, total: 17264 },
+      { region: 'AU', flag: '🇦🇺', branded: 4118, nonBrand: 179, competitor: 0, pmax: 2376, total: 6812 },
+      { region: 'UK', flag: '🇬🇧', branded: 2407, nonBrand: 0, competitor: 928, pmax: 2369, total: 5795 },
+      { region: 'NZ', flag: '🇳🇿', branded: 1413, nonBrand: 27, competitor: 0, pmax: 1260, total: 2797 }
+    ];
+
+    if (regionFilter && regionDropdown) {
+      regionFilter.addEventListener('click', (e) => {
+        if (e.target.closest('.filter-dropdown') && !e.target.classList.contains('filter-option')) return;
+        if (!e.target.classList.contains('filter-option')) {
+          regionDropdown.classList.toggle('open');
+          return;
+        }
+        // Option clicked
+        const selected = e.target.dataset.region;
+        regionDropdown.querySelectorAll('.filter-option').forEach(o => o.classList.remove('active'));
+        e.target.classList.add('active');
+        document.getElementById('regionFilterValue').textContent = selected === 'All' ? 'All' : regionMap[selected] || selected;
+        regionDropdown.classList.remove('open');
+
+        // Filter SEM Regional Breakdown table rows
+        const semTable = document.querySelector('.section-title + .chart-container table');
+        // Find the SEM table by looking for rows with flag emojis
+        document.querySelectorAll('.compact-table tbody tr').forEach(row => {
+          const firstCell = row.querySelector('td');
+          if (!firstCell) return;
+          const text = firstCell.textContent;
+          // Only filter rows in the SEM Regional table (has flag emojis)
+          if (!text.match(/🇺🇸|🇦🇺|🇬🇧|🇳🇿/)) return;
+          if (selected === 'All') {
+            row.style.display = '';
+          } else {
+            const rowRegion = text.includes('🇺🇸') ? 'US' : text.includes('🇦🇺') ? 'AU' : text.includes('🇬🇧') ? 'UK' : text.includes('🇳🇿') ? 'NZ' : '';
+            row.style.display = rowRegion === selected ? '' : 'none';
+          }
+        });
+      });
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+      if (regionDropdown && !regionFilter.contains(e.target)) regionDropdown.classList.remove('open');
+      if (dateDropdown && !dateFilter.contains(e.target)) dateDropdown.classList.remove('open');
+    });
+
+    /* ── 15. Export to PDF ── */
+    document.getElementById('exportPdf').addEventListener('click', () => {
+      // Show all tab panels for print, then restore
+      const panels = document.querySelectorAll('.tab-panel');
+      panels.forEach(p => p.style.display = 'block');
+      document.querySelectorAll('.animate-in').forEach(el => el.classList.add('visible'));
+      window.print();
+      // Restore after print dialog closes
+      setTimeout(() => {
+        panels.forEach(p => p.style.display = '');
+      }, 500);
+    });
 
     // Draw all charts on load
     drawTrendsLeadChart();
