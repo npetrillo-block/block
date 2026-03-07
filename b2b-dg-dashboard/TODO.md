@@ -12,7 +12,7 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 
 | Asset | File | Status |
 |---|---|---|
-| B2B Demand Gen Dashboard v3.0 | `afterpay-b2b-demand-gen.html` | ✅ Complete (2,292 lines) |
+| B2B Demand Gen Dashboard v3.1 | `afterpay-b2b-demand-gen.html` | ✅ Complete (2,385 lines) |
 | Python Backend (shared) | `../backend/` | ✅ Built, needs Snowflake creds to go live |
 | Blockcell (hosted) | https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ | ✅ v3.0 live (w/ sparklines) |
 | GitHub | https://github.com/npetrillo-block/block.git | ✅ `main` branch |
@@ -124,6 +124,14 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 - [x] **vs. Target section** — ✅ 6 progress bar cards with color-coded pace indicators (✅/⚠️/🔴). Placeholder targets — one-line swap when real numbers available.
 - [x] **Donut charts** — ✅ Lead Distribution + MQL Distribution canvas donuts with center totals, legends, theme-aware, retina.
 - [x] **Region filter interactivity** — ✅ Client-side dropdown (US/UK/AU/NZ) filters SEM Regional Breakdown table rows. Region order standardized to US/UK/AU/NZ everywhere.
+- [x] **v3.1 UI Polish Pass** — ✅ Added Mar 7, 2026:
+  - Animated KPI counters — numbers count up from 0 with ease-out cubic (1.2s duration)
+  - Staggered KPI card entrance — cards cascade in with 80ms delays + scale(0.97→1) + translateY
+  - Staggered Wins/Watchouts reveal — items slide in from left with 60ms delays
+  - Enhanced KPI card hover — gradient top bar (accent→purple), deeper lift (-4px), cubic-bezier easing
+  - Enhanced chart container hover — subtle lift + shadow on all chart boxes
+  - Re-animation on tab switch — counters + staggers replay when returning to Overview
+  - All animations use cubic-bezier(0.4,0,0.2,1) for premium feel
 
 ### P5: External Sharing
 
@@ -253,13 +261,16 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 └── README.md
 ```
 
-### v3.0 Dashboard Architecture
-- **CSS:** ~340 lines, dark/light theme vars, 30+ component classes
+### v3.1 Dashboard Architecture (2,385 lines)
+- **CSS:** ~360 lines, dark/light theme vars, 30+ component classes, v3.1 animation classes
 - **HTML:** ~1,300 lines across 5 tab panels
-- **JS:** ~550 lines in single IIFE with 15+ functions:
+- **JS:** ~620 lines in single IIFE with 19+ functions:
   1. Main tab switching (pill buttons)
   2. Theme toggle (localStorage + auto-detect + themeChangeCallbacks array)
   3. IntersectionObserver for .animate-in
+  3.1. animateCounter() — requestAnimationFrame counter with ease-out cubic
+  3.2. triggerKPIAnimations() — staggered card entrance + counter launch
+  3.3. triggerWWAnimations() — staggered wins/watchouts slide-in
   4. drawLeadChart() — horizontal grouped bars (Overview)
   5. Channel Deep Dive inner tab switching (dd-tab, scoped to .tabs-container)
   6. drawConvRateChart() — horizontal sorted bars (Lead Sources)
@@ -310,4 +321,4 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 
 ---
 
-*Last updated: March 7, 2026 — v3.0 fully polished: sparklines, targets, donuts, API wiring, region/date filters, PDF export. 2,292 lines. P0–P4 complete, P7 export done. Channels tab reordered (PSoc/Prog/SEM). Regions standardized US/UK/AU/NZ.*
+*Last updated: March 7, 2026 — v3.1 UI polish pass: animated KPI counters, staggered card/WW entrance, enhanced hover effects, re-animation on tab switch. 2,385 lines. P0–P4 complete. Channels tab reordered (PSoc/Prog/SEM). Regions standardized US/UK/AU/NZ.*
