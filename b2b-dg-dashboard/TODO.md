@@ -14,7 +14,7 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 |---|---|---|
 | B2B Demand Gen Dashboard v3.0 | `afterpay-b2b-demand-gen-v3.html` | ✅ Complete (1,905 lines) |
 | Python Backend (shared) | `../backend/` | ✅ Built, needs Snowflake creds to go live |
-| Blockcell (hosted) | https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ | ✅ v2.1 live, needs v3.0 deploy |
+| Blockcell (hosted) | https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ | ✅ v3.0 live (w/ sparklines) |
 | GitHub | https://github.com/npetrillo-block/block.git | ✅ `main` branch |
 
 ---
@@ -312,4 +312,4 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 
 ---
 
-*Last updated: March 7, 2026 — v3.0 dashboard complete, all 5 tabs built. Repo reorganized into b2b-dg-dashboard/ and monks-lite/ folders.*
+*Last updated: March 7, 2026 — v3.0 + sparklines deployed to Blockcell. Repo reorganized into b2b-dg-dashboard/ and monks-lite/ folders.*
