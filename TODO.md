@@ -12,9 +12,8 @@ Two Afterpay B2B Growth Marketing dashboards + a Python backend, built by Nick P
 
 | Asset | File | Status |
 |---|---|---|
-| B2B Demand Gen Dashboard v3.0 | `afterpay-b2b-demand-gen-v3.html` | ✅ Complete (1,905 lines) |
-| B2B Demand Gen Dashboard v2.1 | `afterpay-b2b-demand-gen.html` | ✅ Live (legacy, being replaced by v3) |
-| Monks Biweekly Dashboard v2.0 | `afterpay-monks-lite.html` | ✅ Live (manual data refresh) |
+| B2B Demand Gen Dashboard v3.0 | `b2b-dg-dashboard/afterpay-b2b-demand-gen-v3.html` | ✅ Complete (1,905 lines) |
+| Monks Biweekly Dashboard v2.0 | `monks-lite/afterpay-monks-lite.html` | ✅ Live (manual data refresh) |
 | Python Backend | `backend/` | ✅ Built, needs Snowflake creds to go live |
 | Blockcell (hosted) | https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ | ✅ v2.1 live, needs v3.0 deploy |
 | GitHub | https://github.com/npetrillo-block/block.git | ✅ `main` branch |
@@ -87,7 +86,7 @@ Two Afterpay B2B Growth Marketing dashboards + a Python backend, built by Nick P
 ### P0: Immediate (Do Next Session)
 
 - [ ] **Deploy v3.0 to Blockcell** — Replace the v2.1 deployment with the new v3.0 dashboard
-  - Enable Blockcell extension, deploy `afterpay-b2b-demand-gen-v3.html`
+  - Enable Blockcell extension, deploy `b2b-dg-dashboard/afterpay-b2b-demand-gen-v3.html`
   - URL: https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/
 
 ### P1: Slack Integration (2 minutes once webhook exists)
@@ -246,25 +245,26 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 ### File Paths
 ```
 /Users/npetrillo/repos/block/
-├── afterpay-b2b-demand-gen-v3.html   ← v3.0 dashboard (THE MAIN FILE)
-├── afterpay-b2b-demand-gen.html      ← v2.1 legacy
-├── afterpay-monks-lite.html          ← Monks v2.0
+├── b2b-dg-dashboard/
+│   └── afterpay-b2b-demand-gen-v3.html   ← v3.0 dashboard (THE MAIN FILE)
+├── monks-lite/
+│   └── afterpay-monks-lite.html          ← Monks v2.0
+├── backend/                              ← Shared backend (serves both dashboards)
+│   ├── config.py
+│   ├── snowflake_connector.py
+│   ├── server.py
+│   ├── scheduler.py
+│   ├── requirements.txt
+│   ├── env.example
+│   ├── engines/
+│   │   ├── b2b_demand_gen.py
+│   │   ├── monks_biweekly.py
+│   │   └── insight_engine.py
+│   └── notifications/
+│       ├── slack_notifier.py
+│       └── email_notifier.py
 ├── README.md
-├── TODO.md                           ← THIS FILE (single source of truth)
-└── backend/
-    ├── config.py
-    ├── snowflake_connector.py
-    ├── server.py
-    ├── scheduler.py
-    ├── requirements.txt
-    ├── env.example
-    ├── engines/
-    │   ├── b2b_demand_gen.py
-    │   ├── monks_biweekly.py
-    │   └── insight_engine.py
-    └── notifications/
-        ├── slack_notifier.py
-        └── email_notifier.py
+└── TODO.md                               ← THIS FILE (single source of truth)
 ```
 
 ### v3.0 Dashboard Architecture
@@ -312,8 +312,8 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 3. **Update TODO.md** at the end of each session — check off completed items, add new ones
 4. **One section at a time** — don't try to rewrite the whole HTML file at once
 5. **Use str_replace** for targeted edits — don't rewrite entire files
-6. **Keep the v3.0 HTML file at its current path** — `/Users/npetrillo/repos/block/afterpay-b2b-demand-gen-v3.html`
+6. **Keep the v3.0 HTML file at its current path** — `/Users/npetrillo/repos/block/b2b-dg-dashboard/afterpay-b2b-demand-gen-v3.html`
 
 ---
 
-*Last updated: March 7, 2026 — v3.0 dashboard complete, all 5 tabs built*
+*Last updated: March 7, 2026 — v3.0 dashboard complete, all 5 tabs built. Repo reorganized into b2b-dg-dashboard/ and monks-lite/ folders.*

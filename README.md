@@ -12,25 +12,26 @@ Interactive HTML dashboards for the Afterpay B2B Growth Marketing team, backed b
 
 ```
 block/
-├── afterpay-b2b-demand-gen-v3.html ← B2B Demand Gen Dashboard (v3.0 — LATEST)
-├── afterpay-b2b-demand-gen.html    ← B2B Demand Gen Dashboard (v2.1 — legacy)
-├── afterpay-monks-lite.html        ← Monks Biweekly Dashboard (v2.0)
-├── README.md                       ← You are here
-├── TODO.md                         ← Master task list & project context
-└── backend/                        ← Python backend (API + scheduler + notifications)
-    ├── config.py                   ← Environment variables & alert thresholds
-    ├── snowflake_connector.py      ← Snowflake client with context manager
-    ├── server.py                   ← FastAPI server (JSON endpoints)
-    ├── scheduler.py                ← Daily refresh job + uvicorn launcher
-    ├── requirements.txt            ← pip dependencies
-    ├── env.example                 ← Template for .env configuration
-    ├── engines/
-    │   ├── b2b_demand_gen.py       ← B2B data engine (Snowflake queries + YoY calcs)
-    │   ├── monks_biweekly.py       ← Monks data engine (channel × region queries)
-    │   └── insight_engine.py       ← Shared formatting & narrative generation
-    └── notifications/
-        ├── slack_notifier.py       ← Slack webhook alerts & summaries
-        └── email_notifier.py       ← SMTP email digests & staleness warnings
+├── b2b-dg-dashboard/                   ← B2B Demand Gen Dashboard
+│   └── afterpay-b2b-demand-gen-v3.html ← v3.0 — LATEST
+├── monks-lite/                         ← Monks Biweekly Dashboard
+│   └── afterpay-monks-lite.html        ← v2.0
+├── backend/                            ← Shared Python backend (API + scheduler + notifications)
+│   ├── config.py                       ← Environment variables & alert thresholds
+│   ├── snowflake_connector.py          ← Snowflake client with context manager
+│   ├── server.py                       ← FastAPI server (JSON endpoints)
+│   ├── scheduler.py                    ← Daily refresh job + uvicorn launcher
+│   ├── requirements.txt                ← pip dependencies
+│   ├── env.example                     ← Template for .env configuration
+│   ├── engines/
+│   │   ├── b2b_demand_gen.py           ← B2B data engine (Snowflake queries + YoY calcs)
+│   │   ├── monks_biweekly.py           ← Monks data engine (channel × region queries)
+│   │   └── insight_engine.py           ← Shared formatting & narrative generation
+│   └── notifications/
+│       ├── slack_notifier.py           ← Slack webhook alerts & summaries
+│       └── email_notifier.py           ← SMTP email digests & staleness warnings
+├── README.md                           ← You are here
+└── TODO.md                             ← Master task list & project context
 ```
 
 ---
@@ -100,7 +101,7 @@ Snowflake → Python Backend (FastAPI + APScheduler) → JSON API → HTML Dashb
 ## 🚀 Getting Started
 
 ### Quick Start (Dashboards Only)
-Open `afterpay-b2b-demand-gen-v3.html` in your browser. Works standalone — no backend required.
+Open `b2b-dg-dashboard/afterpay-b2b-demand-gen-v3.html` in your browser. Works standalone — no backend required.
 
 ### Full Setup (Live Data)
 ```bash
