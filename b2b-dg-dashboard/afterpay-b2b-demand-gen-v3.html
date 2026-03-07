@@ -193,6 +193,15 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .seg-mini-bar .bar{border-radius:3px 3px 0 0;min-width:14px;transition:height 0.5s ease, background-color 0.3s ease}
 
 /* Donut section */
+.target-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.target-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:var(--card-shadow)}
+.target-card .t-label{font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.target-card .t-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.target-card .t-actual{font-size:1.4rem;font-weight:800;color:var(--text)}
+.target-card .t-target{font-size:0.8rem;color:var(--text-dim)}
+.target-card .t-bar-bg{width:100%;height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.target-card .t-bar-fill{height:100%;border-radius:4px;transition:width 0.6s ease}
+.target-card .t-pace{font-size:0.7rem;font-weight:600}
 .donut-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .donut-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;box-shadow:var(--card-shadow)}
 .donut-card h4{font-size:0.9rem;font-weight:700;margin-bottom:4px;color:var(--text)}
@@ -366,6 +375,7 @@ canvas{max-width:100%}
 @media(max-width:1100px){
 .kpi-grid{grid-template-columns:repeat(3,1fr)}
 .ww-grid,.donut-grid{grid-template-columns:1fr}
+.target-grid{grid-template-columns:repeat(2,1fr)}
 .funnel-wrapper{flex-direction:column}
 .channel-sub-grid{grid-template-columns:1fr}
 .exit-grid{grid-template-columns:repeat(2,1fr)}
@@ -391,7 +401,10 @@ canvas{max-width:100%}
           <div class="subtitle">v3.0 — Powered by Snowflake · FIVETRAN.MARKETO.LEAD</div>
         </div>
         <div class="header-right">
-          <span class="source-badge live"><span class="pulse-dot"></span> Live</span>
+          <div style="text-align:right">
+            <span class="source-badge fallback" id="sourceBadge">🟡 Fallback (static data)</span>
+            <div class="last-refreshed" id="lastRefreshed">Data as of Feb 28, 2026</div>
+          </div>
           <button class="theme-toggle" aria-label="Toggle theme"><span class="bulb">💡</span></button>
         </div>
       </div>
@@ -962,10 +975,30 @@ canvas{max-width:100%}
         </div>
       </section>
 
-      <!-- vs. Target Placeholder -->
+      <!-- vs. Target -->
       <section class="section animate-in">
-        <div style="border:2px dashed var(--border);border-radius:12px;padding:40px;text-align:center;color:var(--text-dim)">
-          📊 vs. Target — Coming soon. Actuals vs. plan will appear here when annual targets are loaded.
+        <div class="section-title">🎯 vs. Target <span style="font-size:0.7rem;font-weight:400;color:var(--text-dim);margin-left:8px">Placeholder targets — update when actuals available</span></div>
+        <div class="target-grid" id="targetGrid">
+          <!-- Filled by JS -->
+        </div>
+      </section>
+
+      <!-- Channel Distribution Donuts -->
+      <section class="section animate-in">
+        <div class="section-title">🍩 Channel Distribution (Feb 2026)</div>
+        <div class="donut-grid">
+          <div class="donut-card">
+            <h4>Lead Distribution</h4>
+            <div class="donut-sub">10,232 total leads</div>
+            <div class="donut-canvas-wrap"><canvas id="donutLeads" width="240" height="240"></canvas></div>
+            <div class="donut-legend" id="donutLeadsLegend"></div>
+          </div>
+          <div class="donut-card">
+            <h4>MQL Distribution</h4>
+            <div class="donut-sub">1,635 total MQLs</div>
+            <div class="donut-canvas-wrap"><canvas id="donutMQLs" width="240" height="240"></canvas></div>
+            <div class="donut-legend" id="donutMQLsLegend"></div>
+          </div>
         </div>
       </section>
 
@@ -1963,6 +1996,109 @@ canvas{max-width:100%}
       ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + cH); ctx.lineTo(W - padR, padT + cH); ctx.stroke();
     }
 
+    /* ── 10. vs. Target Cards ── */
+    function renderTargetCards() {
+      const cs = getComputedStyle(document.documentElement);
+      const green = cs.getPropertyValue('--green').trim();
+      const red = cs.getPropertyValue('--red').trim();
+      const amber = cs.getPropertyValue('--amber').trim();
+      const accent = cs.getPropertyValue('--accent').trim();
+
+      // Placeholder targets (swap with real numbers when available)
+      const targets = [
+        { label: 'Leads',          actual: 10232, target: 13000, fmt: v => v.toLocaleString() },
+        { label: 'MQLs',           actual: 1635,  target: 1200,  fmt: v => v.toLocaleString() },
+        { label: 'MQL Rate',       actual: 16.0,  target: 10.0,  fmt: v => v.toFixed(1) + '%' },
+        { label: 'Merchants Won',  actual: 529,   target: 1500,  fmt: v => v.toLocaleString() },
+        { label: 'Conv Rate',      actual: 5.2,   target: 8.0,   fmt: v => v.toFixed(1) + '%' },
+        { label: 'Open Opps',      actual: 2793,  target: 3000,  fmt: v => v.toLocaleString() }
+      ];
+
+      const grid = document.getElementById('targetGrid');
+      if (!grid) return;
+      grid.innerHTML = targets.map(t => {
+        const pct = Math.min((t.actual / t.target) * 100, 120);
+        const color = pct >= 100 ? green : pct >= 75 ? amber : red;
+        const paceLabel = pct >= 100 ? '✅ On track' : pct >= 75 ? '⚠️ Close' : '🔴 Behind';
+        return '<div class="target-card">' +
+          '<div class="t-label">' + t.label + '</div>' +
+          '<div class="t-row"><span class="t-actual">' + t.fmt(t.actual) + '</span><span class="t-target">/ ' + t.fmt(t.target) + ' target</span></div>' +
+          '<div class="t-bar-bg"><div class="t-bar-fill" style="width:' + Math.min(pct, 100) + '%;background:' + color + '"></div></div>' +
+          '<div class="t-pace" style="color:' + color + '">' + paceLabel + ' — ' + pct.toFixed(0) + '%</div>' +
+          '</div>';
+      }).join('');
+    }
+    renderTargetCards();
+
+    /* ── 11. Donut Charts ── */
+    function drawDonut(canvasId, legendId, slices) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const size = 200;
+      canvas.width = size * dpr; canvas.height = size * dpr;
+      canvas.style.width = size + 'px'; canvas.style.height = size + 'px';
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr); ctx.clearRect(0, 0, size, size);
+
+      const cs = getComputedStyle(document.documentElement);
+      const centerColor = cs.getPropertyValue('--card').trim();
+      const textColor = cs.getPropertyValue('--text').trim();
+
+      const total = slices.reduce((s, d) => s + d.value, 0);
+      const cx = size / 2, cy = size / 2, outerR = size / 2 - 4, innerR = outerR * 0.58;
+      let startAngle = -Math.PI / 2;
+
+      slices.forEach(d => {
+        const sweep = (d.value / total) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(cx + innerR * Math.cos(startAngle), cy + innerR * Math.sin(startAngle));
+        ctx.arc(cx, cy, outerR, startAngle, startAngle + sweep);
+        ctx.arc(cx, cy, innerR, startAngle + sweep, startAngle, true);
+        ctx.closePath();
+        ctx.fillStyle = d.color;
+        ctx.fill();
+        startAngle += sweep;
+      });
+
+      // Center hole
+      ctx.beginPath(); ctx.arc(cx, cy, innerR - 1, 0, Math.PI * 2);
+      ctx.fillStyle = centerColor; ctx.fill();
+
+      // Center text
+      ctx.fillStyle = textColor; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = '800 18px Inter,sans-serif';
+      ctx.fillText(total.toLocaleString(), cx, cy - 6);
+      ctx.font = '500 10px Inter,sans-serif';
+      ctx.fillStyle = cs.getPropertyValue('--text-muted').trim();
+      ctx.fillText('total', cx, cy + 12);
+
+      // Legend
+      const legend = document.getElementById(legendId);
+      if (legend) {
+        legend.innerHTML = slices.map(d => {
+          const pct = ((d.value / total) * 100).toFixed(1);
+          return '<div class="donut-legend-item"><span class="donut-legend-dot" style="background:' + d.color + '"></span>' + d.label + ' (' + pct + '%)</div>';
+        }).join('');
+      }
+    }
+
+    function drawAllDonuts() {
+      drawDonut('donutLeads', 'donutLeadsLegend', [
+        { label: 'Paid Search', value: 2437, color: '#4ecdc4' },
+        { label: 'Paid Social', value: 953,  color: '#a78bfa' },
+        { label: 'Paid Display', value: 240, color: '#fbbf24' },
+        { label: 'Non-Paid',    value: 6602, color: '#60a5fa' }
+      ]);
+      drawDonut('donutMQLs', 'donutMQLsLegend', [
+        { label: 'Paid Search', value: 463, color: '#4ecdc4' },
+        { label: 'Paid Social', value: 280, color: '#a78bfa' },
+        { label: 'Paid Display', value: 163, color: '#fbbf24' },
+        { label: 'Non-Paid',    value: 729, color: '#60a5fa' }
+      ]);
+    }
+    drawAllDonuts();
+
     // Draw all charts on load
     drawTrendsLeadChart();
     drawTrendsMerchantChart();
@@ -1970,7 +2106,7 @@ canvas{max-width:100%}
     drawAllSparklines();
 
     // Register for theme toggle
-    themeChangeCallbacks.push(drawTrendsLeadChart, drawTrendsMerchantChart, drawChannelMixChart, drawAllSparklines);
+    themeChangeCallbacks.push(drawTrendsLeadChart, drawTrendsMerchantChart, drawChannelMixChart, drawAllSparklines, drawAllDonuts, renderTargetCards);
 
     // Consolidated resize handler for all charts (debounced)
     let resizeTimer;
@@ -1983,6 +2119,7 @@ canvas{max-width:100%}
         drawTrendsMerchantChart();
         drawChannelMixChart();
         drawAllSparklines();
+        drawAllDonuts();
       }, 150);
     });
 
