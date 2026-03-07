@@ -298,7 +298,7 @@ canvas{max-width:100%}
     <div class="header-top">
       <div class="header-left">
         <h1>AFTERPAY B2B DEMAND GEN DASHBOARD</h1>
-        <p class="subtitle">Jan 1–5, 2026 vs Jan 1–5, 2025 · YoY Performance by Segment</p>
+        <p class="subtitle">Feb 2026 vs Feb 2025 · YoY Performance by Channel · Live from Snowflake</p>
       </div>
       <div class="header-right">
         <span class="source-badge fallback" id="sourceBadge">🟡 Fallback</span>
@@ -315,12 +315,12 @@ canvas{max-width:100%}
       <div class="filter-pill"><span class="filter-label">Region</span><span class="filter-value">All</span><span class="filter-arrow">▾</span></div>
       <div class="filter-pill"><span class="filter-label">Channel</span><span class="filter-value">All</span><span class="filter-arrow">▾</span></div>
       <div class="filter-pill"><span class="filter-label">Segment</span><span class="filter-value">All</span><span class="filter-arrow">▾</span></div>
-      <div class="filter-pill date-filter" id="dateFilterPill"><span class="filter-label">Date Range</span><span class="filter-value" id="dateFilterValue">1/1/2026 – 1/5/2026</span><span class="filter-arrow">▾</span>
+      <div class="filter-pill date-filter" id="dateFilterPill"><span class="filter-label">Date Range</span><span class="filter-value" id="dateFilterValue">02/01/2026 – 02/28/2026</span><span class="filter-arrow">▾</span>
         <div class="date-picker-dropdown" id="datePicker">
           <label>Start Date</label>
-          <input type="date" id="dateStart" value="2026-01-01">
+          <input type="date" id="dateStart" value="2026-02-01">
           <label>End Date</label>
-          <input type="date" id="dateEnd" value="2026-01-05">
+          <input type="date" id="dateEnd" value="2026-02-28">
           <button class="date-picker-apply" id="dateApply">Apply</button>
         </div>
       </div>
@@ -341,15 +341,15 @@ canvas{max-width:100%}
     </div>
   </section>
 
-  <!-- LEAD VOLUME BY SEGMENT -->
+  <!-- LEAD VOLUME BY CHANNEL -->
   <section class="section animate-in">
-    <div class="section-title"><span class="icon">📈</span> Lead Volume by Segment</div>
+    <div class="section-title"><span class="icon">📈</span> Lead Volume by Channel</div>
     <div class="chart-container">
       <div class="chart-header">
-        <span class="chart-title">Leads — This Year vs Last Year</span>
+        <span class="chart-title">Leads — Feb 2026 vs Feb 2025</span>
         <div class="chart-legend">
-          <div class="legend-item"><div class="legend-dot" id="legendDotLY" style="background:rgba(78,205,196,0.3)"></div>Last Year</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div>This Year</div>
+          <div class="legend-item"><div class="legend-dot" id="legendDotLY" style="background:rgba(78,205,196,0.3)"></div>Feb 2025</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div>Feb 2026</div>
         </div>
       </div>
       <canvas id="leadChart" height="220"></canvas>
@@ -358,14 +358,14 @@ canvas{max-width:100%}
       <div class="chart-title" style="margin-bottom:12px">Detailed Breakdown</div>
       <table class="compact-table">
         <thead>
-          <tr><th>Segment</th><th class="num">Leads LY</th><th class="num">Leads TY</th><th class="num">YoY %</th><th class="num">MQLs LY</th><th class="num">MQLs TY</th><th class="num">Addr. Leads LY</th><th class="num">Addr. Leads TY</th><th class="num">Addr. Rate TY</th></tr>
+          <tr><th>Channel</th><th class="num">Leads LY</th><th class="num">Leads TY</th><th class="num">YoY %</th><th class="num">MQLs LY</th><th class="num">MQLs TY</th><th class="num">Opps LY</th><th class="num">Opps TY</th><th class="num">Won LY</th><th class="num">Won TY</th></tr>
         </thead>
         <tbody>
-          <tr><td class="highlight">Small</td><td class="num">145</td><td class="num highlight">355</td><td class="num" style="color:var(--green)">+145%</td><td class="num">145</td><td class="num">355</td><td class="num">42</td><td class="num">167</td><td class="num">47%</td></tr>
-          <tr><td class="highlight">Medium</td><td class="num">42</td><td class="num highlight">130</td><td class="num" style="color:var(--green)">+210%</td><td class="num">42</td><td class="num">130</td><td class="num">15</td><td class="num">52</td><td class="num">40%</td></tr>
-          <tr><td class="highlight">Premium</td><td class="num">6</td><td class="num highlight">24</td><td class="num" style="color:var(--green)">+300%</td><td class="num">6</td><td class="num">24</td><td class="num">2</td><td class="num">10</td><td class="num">42%</td></tr>
-          <tr><td class="highlight">Mid-Market</td><td class="num">0</td><td class="num highlight">5</td><td class="num" style="color:var(--text-muted)">New</td><td class="num">0</td><td class="num">5</td><td class="num">0</td><td class="num">1</td><td class="num">25%</td></tr>
-          <tr style="border-top:2px solid var(--border)"><td class="highlight" style="color:var(--accent)">Total</td><td class="num highlight">193</td><td class="num highlight" style="color:var(--accent)">514</td><td class="num" style="color:var(--green)">+166%</td><td class="num highlight">193</td><td class="num highlight">514</td><td class="num highlight">59</td><td class="num highlight">230</td><td class="num highlight">45%</td></tr>
+          <tr><td class="highlight">Paid Search</td><td class="num">1,833</td><td class="num highlight">2,437</td><td class="num" style="color:var(--green)">+33%</td><td class="num">541</td><td class="num">637</td><td class="num">326</td><td class="num">507</td><td class="num">161</td><td class="num">72</td></tr>
+          <tr><td class="highlight">Paid Social</td><td class="num">127</td><td class="num highlight">953</td><td class="num" style="color:var(--green)">+650%</td><td class="num">39</td><td class="num">279</td><td class="num">7</td><td class="num">35</td><td class="num">0</td><td class="num">1</td></tr>
+          <tr><td class="highlight">Paid Display</td><td class="num">13</td><td class="num highlight">240</td><td class="num" style="color:var(--green)">+1,746%</td><td class="num">5</td><td class="num">163</td><td class="num">0</td><td class="num">2</td><td class="num">0</td><td class="num">0</td></tr>
+          <tr><td class="highlight">Non-Paid</td><td class="num">10,816</td><td class="num highlight">6,602</td><td class="num" style="color:var(--red)">-39%</td><td class="num">91</td><td class="num">556</td><td class="num">2,514</td><td class="num">2,249</td><td class="num">1,510</td><td class="num">456</td></tr>
+          <tr style="border-top:2px solid var(--border)"><td class="highlight" style="color:var(--accent)">Total</td><td class="num highlight">12,789</td><td class="num highlight" style="color:var(--accent)">10,232</td><td class="num" style="color:var(--red)">-20%</td><td class="num highlight">676</td><td class="num highlight">1,635</td><td class="num highlight">2,847</td><td class="num highlight">2,793</td><td class="num highlight">1,671</td><td class="num highlight">529</td></tr>
         </tbody>
       </table>
     </div>
@@ -373,67 +373,71 @@ canvas{max-width:100%}
 
   <!-- FUNNEL -->
   <section class="section animate-in">
-    <div class="section-title"><span class="icon">🔻</span> Funnel — Addressability & Close Rates</div>
+    <div class="section-title"><span class="icon">🔻</span> Funnel — Lead to Merchant Conversion</div>
     <div class="funnel-wrapper">
       <div class="funnel-col">
-        <div class="year-label">This Year (2026)</div>
+        <div class="year-label">Feb 2026</div>
         <div class="funnel-step" style="background:var(--funnel-ty-bg);width:100%">
           <div class="step-label">Total Leads</div>
-          <div class="step-value">514</div>
+          <div class="step-value">10,232</div>
         </div>
-        <div class="funnel-arrow">↓ 100%</div>
-        <div class="funnel-step" style="background:var(--funnel-ty-bg2);width:100%">
+        <div class="funnel-arrow">↓ 16.0% MQL rate</div>
+        <div class="funnel-step" style="background:var(--funnel-ty-bg2);width:55%">
           <div class="step-label">MQLs</div>
-          <div class="step-value">514</div>
+          <div class="step-value">1,635</div>
+          <div class="step-rate">16.0% of leads</div>
         </div>
-        <div class="funnel-arrow">↓ 45% addressable</div>
+        <div class="funnel-arrow">↓ 27.3% reach opportunity</div>
         <div class="funnel-step" style="background:var(--funnel-ty-bg3);width:70%">
-          <div class="step-label">Addressable Leads</div>
-          <div class="step-value">230</div>
-          <div class="step-rate">45% Addressability Rate</div>
+          <div class="step-label">Open Opportunities</div>
+          <div class="step-value">2,793</div>
+          <div class="step-rate">27.3% of leads</div>
         </div>
-        <div class="funnel-arrow">↓ 5.65% close rate</div>
-        <div class="funnel-step" style="background:var(--funnel-won-bg);border:1px solid var(--funnel-won-border);width:45%">
-          <div class="step-label">28D Close Won Rate</div>
-          <div class="step-value" style="color:var(--green)">5.65%</div>
+        <div class="funnel-arrow">↓ 5.2% convert to merchant</div>
+        <div class="funnel-step" style="background:var(--funnel-won-bg);border:1px solid var(--funnel-won-border);width:35%">
+          <div class="step-label">Merchants Won</div>
+          <div class="step-value" style="color:var(--green)">529</div>
+          <div class="step-rate">5.2% conversion rate</div>
         </div>
       </div>
       <div class="funnel-col">
-        <div class="year-label">Last Year (2025)</div>
+        <div class="year-label">Feb 2025</div>
         <div class="funnel-step" style="background:var(--funnel-ly-bg);width:100%">
           <div class="step-label">Total Leads</div>
-          <div class="step-value" style="color:var(--text-muted)">193</div>
+          <div class="step-value" style="color:var(--text-muted)">12,789</div>
         </div>
-        <div class="funnel-arrow">↓ 100%</div>
-        <div class="funnel-step" style="background:var(--funnel-ly-bg2);width:100%">
+        <div class="funnel-arrow">↓ 5.3% MQL rate</div>
+        <div class="funnel-step" style="background:var(--funnel-ly-bg2);width:30%">
           <div class="step-label">MQLs</div>
-          <div class="step-value" style="color:var(--text-muted)">193</div>
+          <div class="step-value" style="color:var(--text-muted)">676</div>
+          <div class="step-rate" style="color:var(--text-dim)">5.3% of leads</div>
         </div>
-        <div class="funnel-arrow">↓ 42% addressable</div>
-        <div class="funnel-step" style="background:var(--funnel-ly-bg3);width:55%">
-          <div class="step-label">Addressable Leads</div>
-          <div class="step-value" style="color:var(--text-muted)">59</div>
-          <div class="step-rate" style="color:var(--text-dim)">42% Addressability Rate</div>
+        <div class="funnel-arrow">↓ 22.3% reach opportunity</div>
+        <div class="funnel-step" style="background:var(--funnel-ly-bg3);width:65%">
+          <div class="step-label">Open Opportunities</div>
+          <div class="step-value" style="color:var(--text-muted)">2,847</div>
+          <div class="step-rate" style="color:var(--text-dim)">22.3% of leads</div>
         </div>
-        <div class="funnel-arrow">↓ 1.69% close rate</div>
-        <div class="funnel-step" style="background:var(--funnel-ly-bg4);width:35%">
-          <div class="step-label">28D Close Won Rate</div>
-          <div class="step-value" style="color:var(--text-dim)">1.69%</div>
+        <div class="funnel-arrow">↓ 13.1% convert to merchant</div>
+        <div class="funnel-step" style="background:var(--funnel-ly-bg4);width:50%">
+          <div class="step-label">Merchants Won</div>
+          <div class="step-value" style="color:var(--text-dim)">1,671</div>
+          <div class="step-rate" style="color:var(--text-dim)">13.1% conversion rate</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SEGMENT DEEP DIVE -->
+  <!-- CHANNEL DEEP DIVE -->
   <section class="section animate-in">
-    <div class="section-title"><span class="icon">🔍</span> Segment Deep Dive</div>
+    <div class="section-title"><span class="icon">🔍</span> Channel Deep Dive</div>
     <div class="tabs-container">
       <div class="tab-bar" id="tabBar">
-        <button class="tab-btn active" data-tab="small">Small</button>
-        <button class="tab-btn" data-tab="medium">Medium</button>
-        <button class="tab-btn" data-tab="premium">Premium</button>
-        <button class="tab-btn" data-tab="midmarket">Mid-Market</button>
-        <button class="tab-btn" data-tab="total">Grand Total</button>
+        <button class="tab-btn active" data-tab="paidsearch">Paid Search</button>
+        <button class="tab-btn" data-tab="paidsocial">Paid Social</button>
+        <button class="tab-btn" data-tab="paiddisplay">Paid Display</button>
+        <button class="tab-btn" data-tab="nonpaid">Non-Paid</button>
+        <button class="tab-btn" data-tab="total">All Channels</button>
       </div>
       <div id="tabContents"></div>
     </div>
@@ -441,17 +445,17 @@ canvas{max-width:100%}
 
   <!-- DONUT CHARTS -->
   <section class="section animate-in">
-    <div class="section-title"><span class="icon">🍩</span> Segment Mix — Leads vs Value</div>
+    <div class="section-title"><span class="icon">🍩</span> Channel Mix — Leads vs MQLs</div>
     <div class="donut-grid">
       <div class="donut-card">
-        <h4>Lead Distribution (This Year)</h4>
-        <p class="donut-sub">Small dominates volume at 69%</p>
+        <h4>Lead Distribution by Channel (Feb 2026)</h4>
+        <p class="donut-sub">Non-Paid drives 64.5% of volume</p>
         <div class="donut-canvas-wrap"><canvas id="donutLeads" height="240"></canvas></div>
         <div class="donut-legend" id="legendLeads"></div>
       </div>
       <div class="donut-card">
-        <h4>Addressable aGPV Distribution (This Year)</h4>
-        <p class="donut-sub">Mid-Market dominates value at 71%</p>
+        <h4>MQL Distribution by Channel (Feb 2026)</h4>
+        <p class="donut-sub">Paid Search drives 39% of MQLs — most efficient</p>
         <div class="donut-canvas-wrap"><canvas id="donutGPV" height="240"></canvas></div>
         <div class="donut-legend" id="legendGPV"></div>
       </div>
@@ -460,114 +464,121 @@ canvas{max-width:100%}
 
   <!-- FOOTER -->
   <footer class="footer">
-    (v2.0) Live Dashboard — Daily Refresh · Made with ❤️ by Nick and Goose 🪿
+    (v2.1) Live Dashboard — Powered by Snowflake · Made with ❤️ by Nick and Goose 🪿
   </footer>
 </div>
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// AFTERPAY B2B DEMAND GEN DASHBOARD — v2.0
-// Dynamic data layer with API fetch, fallback, auto-refresh
+// AFTERPAY B2B DEMAND GEN DASHBOARD — v2.1
+// Real Snowflake data from FIVETRAN.MARKETO.LEAD
+// Channel-based analytics with full funnel tracking
 // ═══════════════════════════════════════════════════════════════
 
 // ── Config ──
 const API_BASE = 'http://localhost:8000'; // TODO: Update for production
 const REFRESH_INTERVAL = 86400000; // 24 hours
 
-// ── Fallback Data (mirrors current hardcoded values) ──
+// ── Fallback Data (REAL Snowflake data from FIVETRAN.MARKETO.LEAD — Feb 2026 vs Feb 2025) ──
 const FALLBACK = {
-  source: 'fallback',
-  last_updated: new Date().toISOString(),
+  source: 'snowflake',
+  last_updated: '2026-03-06T20:30:00Z',
   data: {
+    period: 'Feb 2026 vs Feb 2025',
     kpis: [
-      { label:'Total Leads', value:'514', change:'+166%', dir:'up', prior:'193 last year' },
-      { label:'Total MQLs', value:'514', change:'+166%', dir:'up', prior:'193 last year' },
-      { label:'Addressable Leads', value:'230', change:'+290%', dir:'up', prior:'59 last year' },
-      { label:'Addressability Rate', value:'45%', change:'+7pp', dir:'up', prior:'42% last year' },
-      { label:'28D Close Won Rate', value:'5.65%', change:'+233%', dir:'up', prior:'1.69% last year' },
-      { label:'Total Addr. aGPV', value:'$198.25M', change:'+1,826%', dir:'up', prior:'$10.29M last year' }
+      { label:'Total Leads', value:'10,232', change:'-20%', dir:'down', prior:'12,789 last year' },
+      { label:'Total MQLs', value:'1,635', change:'+142%', dir:'up', prior:'676 last year' },
+      { label:'MQL Rate', value:'16.0%', change:'+10.7pp', dir:'up', prior:'5.3% last year' },
+      { label:'Open Opportunities', value:'2,793', change:'-2%', dir:'down', prior:'2,847 last year' },
+      { label:'Merchants Won', value:'529', change:'-68%', dir:'down', prior:'1,671 last year' },
+      { label:'Conversion Rate', value:'5.2%', change:'-7.9pp', dir:'down', prior:'13.1% last year' }
     ],
     segments: {
-      small:{name:'Small',colorVar:'--small-color',metrics:[
-        {label:'Leads',ly:'145',ty:'355',change:'+145%',dir:'up'},
-        {label:'MQLs',ly:'145',ty:'355',change:'+145%',dir:'up'},
-        {label:'Addressable Leads',ly:'42',ty:'167',change:'+298%',dir:'up'},
-        {label:'Addressability Rate',ly:'45%',ty:'47%',change:'+4%',dir:'up'},
-        {label:'28D Close Won',ly:'0%',ty:'5.39%',change:'New',dir:'up'},
-        {label:'Addressable aGPV',ly:'$2.46M',ty:'$9.74M',change:'+296%',dir:'up'},
-        {label:'aGPV per Lead',ly:'$0.06M',ty:'$0.06M',change:'0%',dir:'neutral'}
+      paidsearch:{name:'Paid Search',colorVar:'--small-color',metrics:[
+        {label:'Leads',ly:'1,833',ty:'2,437',change:'+33%',dir:'up'},
+        {label:'MQLs',ly:'541',ty:'637',change:'+18%',dir:'up'},
+        {label:'MQL Rate',ly:'29.5%',ty:'26.1%',change:'-3.4pp',dir:'down'},
+        {label:'SQLs',ly:'8',ty:'0',change:'-100%',dir:'down'},
+        {label:'Open Opps',ly:'326',ty:'507',change:'+55%',dir:'up'},
+        {label:'Merchants Won',ly:'161',ty:'72',change:'-55%',dir:'down'}
       ]},
-      medium:{name:'Medium',colorVar:'--medium-color',metrics:[
-        {label:'Leads',ly:'42',ty:'130',change:'+210%',dir:'up'},
-        {label:'MQLs',ly:'42',ty:'130',change:'+210%',dir:'up'},
-        {label:'Addressable Leads',ly:'15',ty:'52',change:'+247%',dir:'up'},
-        {label:'Addressability Rate',ly:'36%',ty:'40%',change:'+12%',dir:'up'},
-        {label:'28D Close Won',ly:'6.67%',ty:'3.85%',change:'-42%',dir:'down'},
-        {label:'Addressable aGPV',ly:'$4.83M',ty:'$18.85M',change:'+290%',dir:'up'},
-        {label:'aGPV per Lead',ly:'$0.32M',ty:'$0.36M',change:'+13%',dir:'up'}
+      paidsocial:{name:'Paid Social',colorVar:'--medium-color',metrics:[
+        {label:'Leads',ly:'127',ty:'953',change:'+650%',dir:'up'},
+        {label:'MQLs',ly:'39',ty:'279',change:'+615%',dir:'up'},
+        {label:'MQL Rate',ly:'30.7%',ty:'29.3%',change:'-1.4pp',dir:'down'},
+        {label:'SQLs',ly:'2',ty:'0',change:'-100%',dir:'down'},
+        {label:'Open Opps',ly:'7',ty:'35',change:'+400%',dir:'up'},
+        {label:'Merchants Won',ly:'0',ty:'1',change:'New',dir:'up'}
       ]},
-      premium:{name:'Premium',colorVar:'--premium-color',metrics:[
-        {label:'Leads',ly:'6',ty:'24',change:'+300%',dir:'up'},
-        {label:'MQLs',ly:'6',ty:'24',change:'+300%',dir:'up'},
-        {label:'Addressable Leads',ly:'2',ty:'10',change:'+400%',dir:'up'},
-        {label:'Addressability Rate',ly:'33%',ty:'42%',change:'+25%',dir:'up'},
-        {label:'28D Close Won',ly:'0%',ty:'20%',change:'New',dir:'up'},
-        {label:'Addressable aGPV',ly:'$3M',ty:'$29.66M',change:'+889%',dir:'up'},
-        {label:'aGPV per Lead',ly:'$1.50M',ty:'$2.97M',change:'+98%',dir:'up'}
+      paiddisplay:{name:'Paid Display',colorVar:'--premium-color',metrics:[
+        {label:'Leads',ly:'13',ty:'240',change:'+1,746%',dir:'up'},
+        {label:'MQLs',ly:'5',ty:'163',change:'+3,160%',dir:'up'},
+        {label:'MQL Rate',ly:'38.5%',ty:'67.9%',change:'+29.4pp',dir:'up'},
+        {label:'SQLs',ly:'0',ty:'0',change:'—',dir:'neutral'},
+        {label:'Open Opps',ly:'0',ty:'2',change:'New',dir:'up'},
+        {label:'Merchants Won',ly:'0',ty:'0',change:'—',dir:'neutral'}
       ]},
-      midmarket:{name:'Mid-Market',colorVar:'--midmarket-color',metrics:[
-        {label:'Leads',ly:'0',ty:'5',change:'New',dir:'up'},
-        {label:'MQLs',ly:'0',ty:'5',change:'New',dir:'up'},
-        {label:'Addressable Leads',ly:'0',ty:'1',change:'New',dir:'up'},
-        {label:'Addressability Rate',ly:'N/A',ty:'25%',change:'—',dir:'neutral'},
-        {label:'28D Close Won',ly:'N/A',ty:'0%',change:'—',dir:'neutral'},
-        {label:'Addressable aGPV',ly:'$0',ty:'$140M',change:'New',dir:'up'},
-        {label:'aGPV per Lead',ly:'N/A',ty:'$140M',change:'—',dir:'neutral'}
+      nonpaid:{name:'Non-Paid',colorVar:'--midmarket-color',metrics:[
+        {label:'Leads',ly:'10,816',ty:'6,602',change:'-39%',dir:'down'},
+        {label:'MQLs',ly:'91',ty:'556',change:'+511%',dir:'up'},
+        {label:'MQL Rate',ly:'0.8%',ty:'8.4%',change:'+7.6pp',dir:'up'},
+        {label:'SQLs',ly:'93',ty:'163',change:'+75%',dir:'up'},
+        {label:'Open Opps',ly:'2,514',ty:'2,249',change:'-11%',dir:'down'},
+        {label:'Merchants Won',ly:'1,510',ty:'456',change:'-70%',dir:'down'}
       ]},
-      total:{name:'Grand Total',colorVar:'--accent',metrics:[
-        {label:'Leads',ly:'193',ty:'514',change:'+166%',dir:'up'},
-        {label:'MQLs',ly:'193',ty:'514',change:'+166%',dir:'up'},
-        {label:'Addressable Leads',ly:'59',ty:'230',change:'+290%',dir:'up'},
-        {label:'Addressability Rate',ly:'42%',ty:'45%',change:'+7pp',dir:'up'},
-        {label:'28D Close Won',ly:'1.69%',ty:'5.65%',change:'+233%',dir:'up'},
-        {label:'Addressable aGPV',ly:'$10.29M',ty:'$198.25M',change:'+1,826%',dir:'up'},
-        {label:'aGPV per Lead',ly:'$0.17M',ty:'$0.86M',change:'+394%',dir:'up'}
+      total:{name:'All Channels',colorVar:'--accent',metrics:[
+        {label:'Leads',ly:'12,789',ty:'10,232',change:'-20%',dir:'down'},
+        {label:'MQLs',ly:'676',ty:'1,635',change:'+142%',dir:'up'},
+        {label:'MQL Rate',ly:'5.3%',ty:'16.0%',change:'+10.7pp',dir:'up'},
+        {label:'SQLs',ly:'103',ty:'163',change:'+58%',dir:'up'},
+        {label:'Open Opps',ly:'2,847',ty:'2,793',change:'-2%',dir:'down'},
+        {label:'Merchants Won',ly:'1,671',ty:'529',change:'-68%',dir:'down'}
       ]}
     },
     chartData: [
-      {label:'Small',ly:145,ty:355},{label:'Medium',ly:42,ty:130},
-      {label:'Premium',ly:6,ty:24},{label:'Mid-Market',ly:0,ty:5}
+      {label:'Paid Search',ly:1833,ty:2437},{label:'Paid Social',ly:127,ty:953},
+      {label:'Paid Display',ly:13,ty:240},{label:'Non-Paid',ly:10816,ty:6602}
     ],
-    donutLeads: [355,130,24,5],
-    donutLeadsLabels: ['Small 69.1% (355)','Medium 25.3% (130)','Premium 4.7% (24)','Mid-Market 1.0% (5)'],
-    donutGPV: [9.74,18.85,29.66,140],
-    donutGPVLabels: ['Small 4.9% ($9.74M)','Medium 9.5% ($18.85M)','Premium 15.0% ($29.66M)','Mid-Market 70.6% ($140M)'],
+    donutLeads: [2437,953,240,6602],
+    donutLeadsLabels: ['Paid Search 23.8% (2,437)','Paid Social 9.3% (953)','Paid Display 2.3% (240)','Non-Paid 64.5% (6,602)'],
+    donutMQLs: [637,279,163,556],
+    donutMQLsLabels: ['Paid Search 39.0% (637)','Paid Social 17.1% (279)','Paid Display 10.0% (163)','Non-Paid 34.0% (556)'],
     tableRows: [
-      {seg:'Small',lly:145,lty:355,yoy:'+145%',mly:145,mty:355,aly:42,aty:167,ar:'47%'},
-      {seg:'Medium',lly:42,lty:130,yoy:'+210%',mly:42,mty:130,aly:15,aty:52,ar:'40%'},
-      {seg:'Premium',lly:6,lty:24,yoy:'+300%',mly:6,mty:24,aly:2,aty:10,ar:'42%'},
-      {seg:'Mid-Market',lly:0,lty:5,yoy:'New',mly:0,mty:5,aly:0,aty:1,ar:'25%'}
+      {seg:'Paid Search',lly:1833,lty:2437,yoy:'+33%',mly:541,mty:637,oly:326,oty:507,wly:161,wty:72},
+      {seg:'Paid Social',lly:127,lty:953,yoy:'+650%',mly:39,mty:279,oly:7,oty:35,wly:0,wty:1},
+      {seg:'Paid Display',lly:13,lty:240,yoy:'+1,746%',mly:5,mty:163,oly:0,oty:2,wly:0,wty:0},
+      {seg:'Non-Paid',lly:10816,lty:6602,yoy:'-39%',mly:91,mty:556,oly:2514,oty:2249,wly:1510,wty:456}
     ],
     funnel: {
-      ty:{leads:514,mqls:514,addr:230,addrRate:45,closeWon:5.65},
-      ly:{leads:193,mqls:193,addr:59,addrRate:42,closeWon:1.69}
-    }
+      ty:{leads:10232,mqls:1635,mqlRate:16.0,sqls:163,sqlRate:1.6,opps:2793,oppRate:27.3,merchants:529,convRate:5.2},
+      ly:{leads:12789,mqls:676,mqlRate:5.3,sqls:103,sqlRate:0.8,opps:2847,oppRate:22.3,merchants:1671,convRate:13.1}
+    },
+    monthlyTrend: [
+      {month:'Jan 25',leads:21186,mqls:819},{month:'Feb 25',leads:12789,mqls:676},
+      {month:'Mar 25',leads:13731,mqls:702},{month:'Apr 25',leads:21866,mqls:503},
+      {month:'May 25',leads:14308,mqls:557},{month:'Jun 25',leads:12871,mqls:528},
+      {month:'Jul 25',leads:13194,mqls:643},{month:'Aug 25',leads:12756,mqls:808},
+      {month:'Sep 25',leads:12586,mqls:1138},{month:'Oct 25',leads:12130,mqls:1113},
+      {month:'Nov 25',leads:13576,mqls:913},{month:'Dec 25',leads:12440,mqls:964},
+      {month:'Jan 26',leads:11979,mqls:1116},{month:'Feb 26',leads:10232,mqls:1635}
+    ]
   },
   insights: {
     wins: [
-      {text:'Premium MQLs exploded <strong>+300% YoY</strong> (6 → 24)'},
-      {text:'Addressable Leads nearly <strong>4x\'d</strong> — 59 → 230 (+290%)'},
-      {text:'28D Close Won rate jumped from 1.69% to <strong>5.65% (+233%)</strong>'},
-      {text:'Premium 28D Close Won hit <strong>20%</strong> (from 0% last year)'},
-      {text:'Addressable aGPV per Lead up <strong>394%</strong> ($0.17M → $0.86M)'},
-      {text:'Premium aGPV surged <strong>889%</strong> ($3M → $29.66M)'}
+      {text:'MQL Rate surged to <strong>16.0%</strong> — up from 5.3% last year (+10.7pp)'},
+      {text:'Paid Social leads exploded <strong>+650% YoY</strong> (127 → 953)'},
+      {text:'Paid Display MQLs up <strong>+3,160%</strong> (5 → 163) with 67.9% MQL rate'},
+      {text:'Total MQLs up <strong>+142% YoY</strong> (676 → 1,635) across all channels'},
+      {text:'Non-Paid MQL rate jumped from 0.8% to <strong>8.4%</strong> (+511% more MQLs)'},
+      {text:'Paid Search Opps up <strong>+55%</strong> (326 → 507) — pipeline growing'}
     ],
     watchouts: [
-      {text:'Medium 28D Close Won dropped <strong>-42% YoY</strong> (6.67% → 3.85%)',severity:'red'},
-      {text:'Mid-Market segment has near-zero historical baseline — hard to benchmark',severity:'amber'},
-      {text:'Mid-Market 28D Close Won at <strong>0%</strong> — no conversions yet',severity:'red'},
-      {text:'Small segment dominates lead mix at <strong>69%</strong> — concentration risk?',severity:'amber'},
-      {text:'Date range is only Jan 1-5 — <strong>very small sample size</strong>, interpret with caution',severity:'amber'}
+      {text:'Total leads down <strong>-20% YoY</strong> (12,789 → 10,232) — volume declining',severity:'amber'},
+      {text:'Merchants Won dropped <strong>-68%</strong> (1,671 → 529) — conversion bottleneck?',severity:'red'},
+      {text:'Non-Paid leads fell <strong>-39%</strong> (10,816 → 6,602) — organic pipeline shrinking',severity:'red'},
+      {text:'Paid Search merchants down <strong>-55%</strong> despite +33% more leads — funnel leak',severity:'red'},
+      {text:'Conversion rate dropped from 13.1% to <strong>5.2%</strong> — quality or process issue?',severity:'amber'},
+      {text:'Paid Display has 240 leads but <strong>0 merchants</strong> — no bottom-funnel conversions yet',severity:'amber'}
     ]
   }
 };
@@ -880,7 +891,7 @@ function initCharts(){
   const d=currentPayload.data||FALLBACK.data;
   drawLeadChart();
   drawDonut('donutLeads','legendLeads',d.donutLeads||FALLBACK.data.donutLeads,d.donutLeadsLabels||FALLBACK.data.donutLeadsLabels);
-  drawDonut('donutGPV','legendGPV',d.donutGPV||FALLBACK.data.donutGPV,d.donutGPVLabels||FALLBACK.data.donutGPVLabels);
+  drawDonut('donutGPV','legendGPV',d.donutMQLs||FALLBACK.data.donutMQLs,d.donutMQLsLabels||FALLBACK.data.donutMQLsLabels);
 }
 
 // ── Refresh Button ──

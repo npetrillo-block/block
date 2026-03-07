@@ -73,27 +73,59 @@ FALLBACK_DATA: Dict[str, Any] = {
 }
 
 # ======================================================================
-# SQL template
-# TODO: Replace table reference with your actual Snowflake table
+# SQL template — confirmed working against FIVETRAN.MARKETO.LEAD
+# Queries Afterpay B2B leads by channel with full funnel metrics
+# Last validated: 2026-03-06
 # ======================================================================
 
 _FETCH_SQL = f"""
 SELECT
-    segment,
-    COUNT(*)                                              AS leads,
-    SUM(CASE WHEN is_mql THEN 1 ELSE 0 END)              AS mqls,
-    SUM(CASE WHEN is_addressable THEN 1 ELSE 0 END)      AS addr_leads,
-    ROUND(100.0 * SUM(CASE WHEN is_addressable THEN 1 ELSE 0 END)
-          / NULLIF(COUNT(*), 0), 2)                       AS addr_rate,
-    ROUND(100.0 * SUM(CASE WHEN close_won_28d THEN 1 ELSE 0 END)
-          / NULLIF(SUM(CASE WHEN is_addressable THEN 1 ELSE 0 END), 0), 2) AS close_won,
-    COALESCE(SUM(addressable_agpv), 0)                    AS agpv
+    CASE
+        WHEN LAST_TOUCH_UTM_MEDIUM_C IN ('cpc') THEN 'Paid Search'
+        WHEN LAST_TOUCH_UTM_MEDIUM_C IN ('p-social') THEN 'Paid Social'
+        WHEN LAST_TOUCH_UTM_MEDIUM_C IN ('disp') THEN 'Paid Display'
+        ELSE 'Non-Paid'
+    END                                                           AS channel,
+    COUNT(*)                                                      AS leads,
+    SUM(CASE WHEN PROSPECT_LIFECYCLE_STATUS_C = 'MQL' THEN 1 ELSE 0 END)            AS mqls,
+    SUM(CASE WHEN PROSPECT_LIFECYCLE_STATUS_C = 'SQL' THEN 1 ELSE 0 END)            AS sqls,
+    SUM(CASE WHEN PROSPECT_LIFECYCLE_STATUS_C = 'Open Opportunity' THEN 1 ELSE 0 END) AS open_opps,
+    SUM(CASE WHEN PROSPECT_LIFECYCLE_STATUS_C = 'Merchant' THEN 1 ELSE 0 END)       AS merchants_won,
+    ROUND(100.0 * SUM(CASE WHEN PROSPECT_LIFECYCLE_STATUS_C = 'MQL' THEN 1 ELSE 0 END)
+          / NULLIF(COUNT(*), 0), 2)                               AS mql_rate
 FROM
     {config.B2B_LEADS_TABLE}
 WHERE
-    lead_date BETWEEN %(start_date)s AND %(end_date)s
-GROUP BY segment
+    AFTERPAY_BU = 'Afterpay'
+    AND CREATED_AT BETWEEN %(start_date)s AND %(end_date)s
+GROUP BY 1
 ORDER BY leads DESC
+"""
+
+# Regional breakdown query (for future use)
+_FETCH_REGIONAL_SQL = f"""
+SELECT
+    COUNTRY_OF_OPERATIONS_C                                       AS region,
+    DATE_TRUNC('month', CREATED_AT)                               AS month,
+    CASE
+        WHEN LAST_TOUCH_UTM_MEDIUM_C IN ('cpc') THEN 'Paid Search'
+        WHEN LAST_TOUCH_UTM_MEDIUM_C IN ('p-social') THEN 'Paid Social'
+        WHEN LAST_TOUCH_UTM_MEDIUM_C IN ('disp') THEN 'Paid Display'
+        ELSE 'Non-Paid'
+    END                                                           AS channel,
+    COUNT(*)                                                      AS total_leads,
+    SUM(CASE WHEN PROSPECT_LIFECYCLE_STATUS_C = 'MQL' THEN 1 ELSE 0 END) AS current_mqls,
+    SUM(CASE WHEN PROSPECT_LIFECYCLE_STATUS_C = 'SQL' THEN 1 ELSE 0 END) AS current_sqls,
+    SUM(CASE WHEN PROSPECT_LIFECYCLE_STATUS_C = 'Open Opportunity' THEN 1 ELSE 0 END) AS open_opps,
+    SUM(CASE WHEN PROSPECT_LIFECYCLE_STATUS_C = 'Merchant' THEN 1 ELSE 0 END) AS merchants_won
+FROM
+    {config.B2B_LEADS_TABLE}
+WHERE
+    AFTERPAY_BU = 'Afterpay'
+    AND CREATED_AT >= %(start_date)s
+    AND CREATED_AT < %(end_date)s
+GROUP BY 1, 2, 3
+ORDER BY 1, 2, 3
 """
 
 
@@ -229,37 +261,74 @@ class B2BDemandGenEngine:
 
     @staticmethod
     def _build_payload(cy_rows, ly_rows, start, end, ly_start, ly_end) -> Dict[str, Any]:
-        """Transform raw Snowflake rows into structured dashboard dict."""
-        ly_map = {r["SEGMENT"]: r for r in ly_rows}
-        segments = {}
-        totals = {"leads": 0, "mqls": 0, "addr": 0, "agpv": 0, "leads_ly": 0, "mqls_ly": 0, "addr_ly": 0, "agpv_ly": 0}
+        """Transform raw Snowflake rows into structured dashboard dict.
+
+        Now uses channel-based data from FIVETRAN.MARKETO.LEAD instead of
+        the old segment-based structure.
+        """
+        ly_map = {r["CHANNEL"]: r for r in ly_rows}
+        channels = {}
+        totals = {"leads": 0, "mqls": 0, "sqls": 0, "opps": 0, "merchants": 0,
+                  "leads_ly": 0, "mqls_ly": 0, "sqls_ly": 0, "opps_ly": 0, "merchants_ly": 0}
+
+        color_map = {
+            "Paid Search": "--small-color",
+            "Paid Social": "--medium-color",
+            "Paid Display": "--premium-color",
+            "Non-Paid": "--midmarket-color",
+        }
 
         for row in cy_rows:
-            seg = row["SEGMENT"]
-            ly = ly_map.get(seg, {})
-            s = {
-                "name": seg, "leads": int(row.get("LEADS", 0)), "leads_ly": int(ly.get("LEADS", 0)),
-                "mqls": int(row.get("MQLS", 0)), "mqls_ly": int(ly.get("MQLS", 0)),
-                "addr_leads": int(row.get("ADDR_LEADS", 0)), "addr_leads_ly": int(ly.get("ADDR_LEADS", 0)),
-                "addr_rate": float(row.get("ADDR_RATE", 0) or 0),
-                "addr_rate_ly": float(ly.get("ADDR_RATE", 0) or 0) if ly else None,
-                "close_won": float(row.get("CLOSE_WON", 0) or 0),
-                "close_won_ly": float(ly.get("CLOSE_WON", 0) or 0) if ly else None,
-                "agpv": float(row.get("AGPV", 0) or 0), "agpv_ly": float(ly.get("AGPV", 0) or 0),
+            ch = row["CHANNEL"]
+            ly = ly_map.get(ch, {})
+            leads = int(row.get("LEADS", 0))
+            leads_ly = int(ly.get("LEADS", 0))
+            mqls = int(row.get("MQLS", 0))
+            mqls_ly = int(ly.get("MQLS", 0))
+            sqls = int(row.get("SQLS", 0))
+            sqls_ly = int(ly.get("SQLS", 0))
+            opps = int(row.get("OPEN_OPPS", 0))
+            opps_ly = int(ly.get("OPEN_OPPS", 0))
+            merchants = int(row.get("MERCHANTS_WON", 0))
+            merchants_ly = int(ly.get("MERCHANTS_WON", 0))
+            mql_rate = float(row.get("MQL_RATE", 0) or 0)
+            mql_rate_ly = float(ly.get("MQL_RATE", 0) or 0) if ly else 0
+
+            key = ch.lower().replace("-", "").replace(" ", "")
+            channels[key] = {
+                "name": ch,
+                "colorVar": color_map.get(ch, "--accent"),
+                "leads": leads, "leads_ly": leads_ly,
+                "mqls": mqls, "mqls_ly": mqls_ly,
+                "sqls": sqls, "sqls_ly": sqls_ly,
+                "opps": opps, "opps_ly": opps_ly,
+                "merchants": merchants, "merchants_ly": merchants_ly,
+                "mql_rate": mql_rate, "mql_rate_ly": mql_rate_ly,
             }
-            segments[seg.lower().replace("-", "").replace(" ", "")] = s
-            for k in ("leads", "mqls", "addr", "agpv"):
-                totals[k] += s.get(k if k != "addr" else "addr_leads", 0)
-                totals[f"{k}_ly"] += s.get(f"{k if k != 'addr' else 'addr_leads'}_ly", 0)
+
+            totals["leads"] += leads
+            totals["mqls"] += mqls
+            totals["sqls"] += sqls
+            totals["opps"] += opps
+            totals["merchants"] += merchants
+            totals["leads_ly"] += leads_ly
+            totals["mqls_ly"] += mqls_ly
+            totals["sqls_ly"] += sqls_ly
+            totals["opps_ly"] += opps_ly
+            totals["merchants_ly"] += merchants_ly
 
         kpis = [
             _make_kpi("Total Leads", totals["leads"], totals["leads_ly"]),
             _make_kpi("Total MQLs", totals["mqls"], totals["mqls_ly"]),
-            _make_kpi("Addressable Leads", totals["addr"], totals["addr_ly"]),
+            _make_kpi("Open Opportunities", totals["opps"], totals["opps_ly"]),
+            _make_kpi("Merchants Won", totals["merchants"], totals["merchants_ly"]),
         ]
 
-        return {"period": {"start": start, "end": end, "ly_start": ly_start, "ly_end": ly_end},
-                "kpis": kpis, "segments": segments}
+        return {
+            "period": {"start": start, "end": end, "ly_start": ly_start, "ly_end": ly_end},
+            "kpis": kpis,
+            "segments": channels,  # Keep key name "segments" for frontend compatibility
+        }
 
 
 def _make_kpi(label, val, ly_val, unit=""):

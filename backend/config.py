@@ -24,8 +24,8 @@ SNOWFLAKE_WAREHOUSE: str = os.getenv("SNOWFLAKE_WAREHOUSE", "TODO_WAREHOUSE")
 SNOWFLAKE_DATABASE: str = os.getenv("SNOWFLAKE_DATABASE", "TODO_DATABASE")
 SNOWFLAKE_SCHEMA: str = os.getenv("SNOWFLAKE_SCHEMA", "TODO_SCHEMA")
 
-# TODO: Replace with your actual Snowflake table references
-B2B_LEADS_TABLE: str = os.getenv("B2B_LEADS_TABLE", "TODO_DB.TODO_SCHEMA.TODO_B2B_LEADS")
+# Snowflake table references (confirmed working 2026-03-06)
+B2B_LEADS_TABLE: str = os.getenv("B2B_LEADS_TABLE", "FIVETRAN.MARKETO.LEAD")
 MONKS_CHANNEL_TABLE: str = os.getenv("MONKS_CHANNEL_TABLE", "TODO_DB.TODO_SCHEMA.TODO_CHANNEL_PERF")
 
 # =============================================================================
