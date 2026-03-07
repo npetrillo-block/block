@@ -125,10 +125,10 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 
 ### P4: Dashboard Polish
 
-- [ ] **KPI Sparklines** — Add 7-point trend lines to each KPI card
-  - CSS class `.kpi-sparkline` already exists
-  - v2.0 had `drawSparkline(canvasId, dir)` — port to v3.0
-  - Data: use the 14-month trend arrays already in the Trends tab JS
+- [x] **KPI Sparklines** — ✅ Added 14-month trend sparklines to 5 of 6 KPI cards (Open Opps skipped — no monthly data)
+  - `drawSparkline()` with retina support, hex→rgba gradient fill, theme-aware colors, end dot
+  - Wired into theme toggle + resize callbacks
+  - Data: Leads (↓), MQLs (↑), MQL Rate (↑), Merchants (↓), Conv Rate (↓)
 - [ ] **vs. Target section** — Replace dashed placeholder in Overview tab
   - Needs: annual target numbers (leads, MQLs, merchants per month)
   - Once loaded: show actual vs plan bars, % to target, pace indicator
