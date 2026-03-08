@@ -1,10 +1,10 @@
 # Afterpay B2B Growth Marketing Dashboards 📊
 
-**v3.0 — Multi-Tab Analytics Dashboard Powered by Real Snowflake Data**
+**v3.3 — Multi-Tab Analytics Dashboard Powered by Real Snowflake Data**
 
 Interactive HTML dashboards for the Afterpay B2B Growth Marketing team, backed by a Python backend connected to Snowflake. The B2B Demand Gen dashboard runs on **real production data** from `FIVETRAN.MARKETO.LEAD` — 11.3M rows of Afterpay lead data with full funnel tracking across 5 dedicated tabs.
 
-> **What's new in v3.0?** Complete dashboard rebuild with 5 dedicated tabs (Overview, Channels, Lead Sources, Funnel, Trends), 5 retina Canvas 2D charts, channel deep-dive with inner tabs, 9 lead source cards, vertical funnel visualization, post-conversion journey flow, and 14-month trend analysis. All theme-aware with dark/light mode.
+> **What's new in v3.3?** Multi-select filter pills with checkbox dropdowns, animated KPI counters with staggered entrances, enhanced hover animations, code refactor with CSS section banners, and smooth tab transitions. Built on the v3.0 foundation: 5 dedicated tabs, 5 retina Canvas 2D charts, channel deep-dive with inner tabs, 9 lead source cards, vertical funnel visualization, post-conversion journey flow, and 14-month trend analysis. All theme-aware with dark/light mode.
 
 ---
 
@@ -37,9 +37,9 @@ block/
 
 ---
 
-## 📊 Dashboard 1: B2B Demand Gen (v3.0)
+## 📊 Dashboard 1: B2B Demand Gen (v3.3)
 
-**`afterpay-b2b-demand-gen.html`** — 2,292-line multi-tab analytics dashboard
+**`afterpay-b2b-demand-gen.html`** — 2,512-line multi-tab analytics dashboard
 
 > 🟢 **Powered by real Snowflake data** from `FIVETRAN.MARKETO.LEAD` (11.3M rows, 15 months: Jan 2025 – Feb 2026)
 
@@ -121,7 +121,7 @@ See **[b2b-dg-dashboard/TODO.md](b2b-dg-dashboard/TODO.md)** and **[monks-lite/T
 
 | Item | Status |
 |---|---|
-| v3.0 Dashboard | ✅ Complete (2,292 lines, 5 tabs, 8+ charts, filters, PDF export) |
+| v3.3 Dashboard | ✅ Complete (2,512 lines, 5 tabs, 8+ charts, multi-select filters, animated KPIs) |
 | Blockcell Deploy | ✅ Live at https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ |
 | Python Backend | ✅ Built, needs Snowflake creds |
 | API Wiring | ✅ fetch() + fallback pattern ready, set `API_BASE` to activate |
@@ -134,6 +134,9 @@ See **[b2b-dg-dashboard/TODO.md](b2b-dg-dashboard/TODO.md)** and **[monks-lite/T
 
 | Version | Date | What Changed |
 |---|---|---|
+| **v3.3** | Mar 7, 2026 | Multi-select filter pills, animated KPI counters, staggered animations, CSS refactor — 2,512 lines |
+| v3.2 | Mar 7, 2026 | CSS reorganization, smooth tab transitions, enhanced table hover, section dividers |
+| v3.1 | Mar 7, 2026 | Animated KPI counters, staggered card entrances, enhanced hover effects |
 | **v3.0** | Mar 7, 2026 | 🏗️ Complete rebuild — 5 tabs, 5 charts, 1,905 lines |
 | v2.1 | Mar 6, 2026 | Real Snowflake data, channel-based analytics |
 | v2.0 | Mar 5, 2026 | Python backend, API, Slack/email alerts |
