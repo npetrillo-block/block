@@ -274,9 +274,30 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .filter-pill.date-filter{position:relative;cursor:pointer}
 .filter-dropdown{display:none;position:absolute;top:100%;left:0;margin-top:8px;z-index:100;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:6px 0;box-shadow:var(--kpi-hover-shadow);min-width:160px;transition:background-color 0.3s ease,border-color 0.3s ease}
 .filter-dropdown.open{display:block}
-.filter-option{padding:8px 16px;font-size:0.78rem;color:var(--text-muted);cursor:pointer;transition:all 0.15s}
+.filter-option{padding:8px 16px;font-size:0.78rem;color:var(--text-muted);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:8px}
 .filter-option:hover{background:var(--bg2);color:var(--text)}
 .filter-option.active{color:var(--accent);font-weight:600}
+
+/* v3.3 — Multi-select checkboxes */
+.filter-option .check-box{width:14px;height:14px;border:1.5px solid var(--border);border-radius:3px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0}
+.filter-option.checked .check-box{background:var(--accent);border-color:var(--accent)}
+.filter-option.checked .check-box::after{content:'✓';color:#0f0f1a;font-size:10px;font-weight:700;line-height:1}
+[data-theme="light"] .filter-option.checked .check-box::after{color:#fff}
+.filter-option.all-toggle{border-bottom:1px solid var(--border);margin-bottom:4px;padding-bottom:10px;font-weight:600;color:var(--text)}
+
+/* v3.3 — Apply button */
+.apply-btn{
+  padding:7px 18px;border-radius:8px;font-size:0.78rem;font-weight:700;
+  cursor:pointer;border:none;background:var(--accent);color:#0f0f1a;
+  font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;
+  transition:all 0.25s ease;box-shadow:var(--card-shadow);white-space:nowrap;
+  opacity:0.5;pointer-events:none;
+}
+.apply-btn.ready{opacity:1;pointer-events:auto}
+.apply-btn.ready:hover{transform:scale(1.04);box-shadow:0 4px 16px rgba(78,205,196,0.3)}
+.apply-btn:active{transform:scale(0.97)}
+[data-theme="light"] .apply-btn{color:#fff}
+
 .export-btn{cursor:pointer;border:1px solid var(--border);font-family:'Inter',sans-serif;font-size:0.78rem;font-weight:600}
 .export-btn:hover{border-color:var(--accent);color:var(--accent)}
 @media print{
@@ -473,7 +494,7 @@ canvas{max-width:100%}
       <div class="header-top">
         <div class="header-left">
           <h1 class="gradient-title">AFTERPAY B2B DEMAND GEN DASHBOARD</h1>
-          <div class="subtitle">v3.2 — Powered by Snowflake · FIVETRAN.MARKETO.LEAD</div>
+          <div class="subtitle">v3.3 — Powered by Snowflake · FIVETRAN.MARKETO.LEAD</div>
         </div>
         <div class="header-right">
           <div style="text-align:right">
@@ -486,27 +507,41 @@ canvas{max-width:100%}
 
       <!-- Filters -->
       <div class="filters-row">
-        <div class="filter-pill" id="regionFilter" style="position:relative;cursor:pointer">
+        <div class="filter-pill" id="regionFilter" style="position:relative;cursor:pointer" data-filter="region">
           <span class="filter-label">Region</span>
           <span class="filter-value" id="regionFilterValue">All</span>
           <span class="filter-arrow">▾</span>
           <div class="filter-dropdown" id="regionDropdown">
-            <div class="filter-option active" data-region="All">All Regions</div>
-            <div class="filter-option" data-region="US">🇺🇸 US</div>
-            <div class="filter-option" data-region="UK">🇬🇧 UK</div>
-            <div class="filter-option" data-region="AU">🇦🇺 AU</div>
-            <div class="filter-option" data-region="NZ">🇳🇿 NZ</div>
+            <div class="filter-option all-toggle checked" data-val="all"><span class="check-box"></span> All Regions</div>
+            <div class="filter-option checked" data-val="US"><span class="check-box"></span> 🇺🇸 US</div>
+            <div class="filter-option checked" data-val="UK"><span class="check-box"></span> 🇬🇧 UK</div>
+            <div class="filter-option checked" data-val="AU"><span class="check-box"></span> 🇦🇺 AU</div>
+            <div class="filter-option checked" data-val="NZ"><span class="check-box"></span> 🇳🇿 NZ</div>
           </div>
         </div>
-        <div class="filter-pill">
+        <div class="filter-pill" id="channelFilter" style="position:relative;cursor:pointer" data-filter="channel">
           <span class="filter-label">Channel</span>
-          <span class="filter-value">All</span>
+          <span class="filter-value" id="channelFilterValue">All</span>
           <span class="filter-arrow">▾</span>
+          <div class="filter-dropdown" id="channelDropdown">
+            <div class="filter-option all-toggle checked" data-val="all"><span class="check-box"></span> All Channels</div>
+            <div class="filter-option checked" data-val="paid-search"><span class="check-box"></span> Paid Search</div>
+            <div class="filter-option checked" data-val="paid-social"><span class="check-box"></span> Paid Social</div>
+            <div class="filter-option checked" data-val="paid-display"><span class="check-box"></span> Paid Display</div>
+            <div class="filter-option checked" data-val="non-paid"><span class="check-box"></span> Non-Paid</div>
+          </div>
         </div>
-        <div class="filter-pill">
+        <div class="filter-pill" id="segmentFilter" style="position:relative;cursor:pointer" data-filter="segment">
           <span class="filter-label">Segment</span>
-          <span class="filter-value">All</span>
+          <span class="filter-value" id="segmentFilterValue">All</span>
           <span class="filter-arrow">▾</span>
+          <div class="filter-dropdown" id="segmentDropdown">
+            <div class="filter-option all-toggle checked" data-val="all"><span class="check-box"></span> All Segments</div>
+            <div class="filter-option checked" data-val="small"><span class="check-box"></span> Small</div>
+            <div class="filter-option checked" data-val="medium"><span class="check-box"></span> Medium</div>
+            <div class="filter-option checked" data-val="premium"><span class="check-box"></span> Premium</div>
+            <div class="filter-option checked" data-val="midmarket"><span class="check-box"></span> Mid-Market</div>
+          </div>
         </div>
         <div class="filter-pill date-filter" id="dateFilter">
           <span class="filter-label">Date Range</span>
@@ -520,6 +555,7 @@ canvas{max-width:100%}
             <button class="date-picker-apply" id="dateApply">Apply</button>
           </div>
         </div>
+        <button class="apply-btn" id="applyFilters">✓ Apply</button>
         <button class="filter-pill export-btn" id="exportPdf" title="Export to PDF">
           <span>📄 Export</span>
         </button>
@@ -1489,7 +1525,7 @@ canvas{max-width:100%}
 
     <!-- ═══ Footer ═══ -->
     <footer class="footer">
-      (v3.2) Live Dashboard — Powered by Snowflake · Made with ❤️ by Nick and Goose 🪿
+      (v3.3) Live Dashboard — Powered by Snowflake · Made with ❤️ by Nick and Goose 🪿
     </footer>
 
   </div>
@@ -2319,58 +2355,117 @@ canvas{max-width:100%}
       }
     }
 
-    /* ── 14. Region Filter ── */
-    const regionFilter = document.getElementById('regionFilter');
-    const regionDropdown = document.getElementById('regionDropdown');
-    const regionMap = { US: '🇺🇸 US', AU: '🇦🇺 AU', UK: '🇬🇧 UK', NZ: '🇳🇿 NZ' };
+    /* ── 14. Multi-Select Filter Pills (v3.3) ── */
+    const multiFilters = ['regionFilter', 'channelFilter', 'segmentFilter'];
+    const applyBtn = document.getElementById('applyFilters');
+    let filtersDirty = false; // Track if user changed selections since last Apply
 
-    // SEM Regional data for client-side filtering
-    const semRegionData = [
-      { region: 'US', flag: '🇺🇸', branded: 6549, nonBrand: 2175, competitor: 59, pmax: 8281, total: 17264 },
-      { region: 'UK', flag: '🇬🇧', branded: 2407, nonBrand: 0, competitor: 928, pmax: 2369, total: 5795 },
-      { region: 'AU', flag: '🇦🇺', branded: 4118, nonBrand: 179, competitor: 0, pmax: 2376, total: 6812 },
-      { region: 'NZ', flag: '🇳🇿', branded: 1413, nonBrand: 27, competitor: 0, pmax: 1260, total: 2797 }
-    ];
+    // Label maps for display
+    const filterLabels = {
+      US: '🇺🇸 US', UK: '🇬🇧 UK', AU: '🇦🇺 AU', NZ: '🇳🇿 NZ',
+      'paid-search': 'Paid Search', 'paid-social': 'Paid Social',
+      'paid-display': 'Paid Display', 'non-paid': 'Non-Paid',
+      small: 'Small', medium: 'Medium', premium: 'Premium', midmarket: 'Mid-Market'
+    };
 
-    if (regionFilter && regionDropdown) {
-      regionFilter.addEventListener('click', (e) => {
-        if (e.target.closest('.filter-dropdown') && !e.target.classList.contains('filter-option')) return;
-        if (!e.target.classList.contains('filter-option')) {
-          regionDropdown.classList.toggle('open');
+    function getFilterSelections(filterId) {
+      const dropdown = document.getElementById(filterId.replace('Filter', 'Dropdown'));
+      if (!dropdown) return [];
+      const opts = dropdown.querySelectorAll('.filter-option:not(.all-toggle)');
+      return Array.from(opts).filter(o => o.classList.contains('checked')).map(o => o.dataset.val);
+    }
+
+    function updatePillLabel(filterId) {
+      const pill = document.getElementById(filterId);
+      const dropdown = document.getElementById(filterId.replace('Filter', 'Dropdown'));
+      const valueEl = pill.querySelector('.filter-value');
+      const opts = dropdown.querySelectorAll('.filter-option:not(.all-toggle)');
+      const checked = Array.from(opts).filter(o => o.classList.contains('checked'));
+      const total = opts.length;
+
+      if (checked.length === total || checked.length === 0) {
+        valueEl.textContent = 'All';
+        pill.classList.remove('filter-active');
+      } else if (checked.length <= 2) {
+        valueEl.textContent = checked.map(o => filterLabels[o.dataset.val] || o.dataset.val).join(', ');
+        pill.classList.add('filter-active');
+      } else {
+        valueEl.textContent = checked.length + ' selected';
+        pill.classList.add('filter-active');
+      }
+    }
+
+    function markDirty() {
+      filtersDirty = true;
+      if (applyBtn) applyBtn.classList.add('ready');
+    }
+
+    multiFilters.forEach(filterId => {
+      const pill = document.getElementById(filterId);
+      const dropdown = document.getElementById(filterId.replace('Filter', 'Dropdown'));
+      if (!pill || !dropdown) return;
+
+      pill.addEventListener('click', (e) => {
+        const opt = e.target.closest('.filter-option');
+        if (!opt) {
+          // Clicked pill itself — toggle dropdown
+          // Close other dropdowns first
+          multiFilters.forEach(fid => {
+            if (fid !== filterId) {
+              const dd = document.getElementById(fid.replace('Filter', 'Dropdown'));
+              if (dd) dd.classList.remove('open');
+            }
+          });
+          dropdown.classList.toggle('open');
           return;
         }
-        // Option clicked
-        const selected = e.target.dataset.region;
-        regionDropdown.querySelectorAll('.filter-option').forEach(o => o.classList.remove('active'));
-        e.target.classList.add('active');
-        document.getElementById('regionFilterValue').textContent = selected === 'All' ? 'All' : regionMap[selected] || selected;
-        regionDropdown.classList.remove('open');
-        // v3.2: Toggle active filter pill highlight
-        if (selected === 'All') { regionFilter.classList.remove('filter-active'); }
-        else { regionFilter.classList.add('filter-active'); }
 
-        // Filter SEM Regional Breakdown table rows
-        const semTable = document.querySelector('.section-title + .chart-container table');
-        // Find the SEM table by looking for rows with flag emojis
-        document.querySelectorAll('.compact-table tbody tr').forEach(row => {
-          const firstCell = row.querySelector('td');
-          if (!firstCell) return;
-          const text = firstCell.textContent;
-          // Only filter rows in the SEM Regional table (has flag emojis)
-          if (!text.match(/🇺🇸|🇦🇺|🇬🇧|🇳🇿/)) return;
-          if (selected === 'All') {
-            row.style.display = '';
-          } else {
-            const rowRegion = text.includes('🇺🇸') ? 'US' : text.includes('🇦🇺') ? 'AU' : text.includes('🇬🇧') ? 'UK' : text.includes('🇳🇿') ? 'NZ' : '';
-            row.style.display = rowRegion === selected ? '' : 'none';
-          }
-        });
+        // Clicked an option — toggle check
+        e.stopPropagation();
+        const allToggle = opt.classList.contains('all-toggle');
+        const opts = dropdown.querySelectorAll('.filter-option:not(.all-toggle)');
+        const allBtn = dropdown.querySelector('.all-toggle');
+
+        if (allToggle) {
+          // "All" clicked — check everything
+          opts.forEach(o => o.classList.add('checked'));
+          if (allBtn) allBtn.classList.add('checked');
+        } else {
+          // Individual option — toggle it
+          opt.classList.toggle('checked');
+          // Update "All" toggle state
+          const allChecked = Array.from(opts).every(o => o.classList.contains('checked'));
+          if (allBtn) { allChecked ? allBtn.classList.add('checked') : allBtn.classList.remove('checked'); }
+        }
+
+        updatePillLabel(filterId);
+        markDirty();
+      });
+    });
+
+    // Apply button handler
+    if (applyBtn) {
+      applyBtn.addEventListener('click', () => {
+        if (!filtersDirty) return;
+        const selections = {
+          regions: getFilterSelections('regionFilter'),
+          channels: getFilterSelections('channelFilter'),
+          segments: getFilterSelections('segmentFilter')
+        };
+        console.log('🎯 Filters applied:', selections);
+        // TODO: Wire to data layer in future session — recalculate KPIs, charts, etc.
+        filtersDirty = false;
+        applyBtn.classList.remove('ready');
       });
     }
 
-    // Close dropdowns when clicking outside
+    // Close all dropdowns when clicking outside
     document.addEventListener('click', (e) => {
-      if (regionDropdown && !regionFilter.contains(e.target)) regionDropdown.classList.remove('open');
+      multiFilters.forEach(fid => {
+        const pill = document.getElementById(fid);
+        const dd = document.getElementById(fid.replace('Filter', 'Dropdown'));
+        if (dd && pill && !pill.contains(e.target)) dd.classList.remove('open');
+      });
       if (dateDropdown && !dateFilter.contains(e.target)) dateDropdown.classList.remove('open');
     });
 
