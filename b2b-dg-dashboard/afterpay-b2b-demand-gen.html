@@ -2442,9 +2442,15 @@ canvas{max-width:100%}
         const allBtn = dropdown.querySelector('.all-toggle');
 
         if (allToggle) {
-          // "All" clicked — check everything
-          opts.forEach(o => o.classList.add('checked'));
-          if (allBtn) allBtn.classList.add('checked');
+          // "All" clicked — toggle: if all checked → uncheck all, else check all
+          const allCurrentlyChecked = Array.from(opts).every(o => o.classList.contains('checked'));
+          if (allCurrentlyChecked) {
+            opts.forEach(o => o.classList.remove('checked'));
+            if (allBtn) allBtn.classList.remove('checked');
+          } else {
+            opts.forEach(o => o.classList.add('checked'));
+            if (allBtn) allBtn.classList.add('checked');
+          }
         } else {
           // Individual option — toggle it
           opt.classList.toggle('checked');
