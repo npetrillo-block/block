@@ -148,6 +148,20 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
   - Apply click logs selections to console — data layer wiring is Step 2
   - CSS: checkbox styles (.check-box), all-toggle separator, apply-btn with hover glow
   - 2,417 → 2,512 lines (+95 lines)
+- [x] **v3.4 Filter Data Layer Wiring** — ✅ Added Mar 7, 2026:
+  - `applyFilters()` function with 10 filtering operations wired to Apply button
+  - `data-channel` attributes on 18 HTML elements (table rows, channel cards, deep dive tabs)
+  - `data-region` attributes on 4 SEM Regional Breakdown rows
+  - Channel filter → show/hide table rows, recalculate KPI totals, filter deep dive tabs, channel cards, redraw donuts + lead chart + channel mix chart
+  - Region filter → show/hide SEM Regional Breakdown rows
+  - `drawLeadChart()` and `drawChannelMixChart()` accept optional `activeChannels` parameter
+  - Donut charts redraw with filtered slices, subtitles update dynamically
+  - Totals rows recalculate from visible rows (`.totals-row` class)
+  - `channelDataStore` JS object for KPI recalculation from channel-level data
+  - Segment filter logs note that it requires live Snowflake data
+  - Reset Filters button + "Filtered" KPI indicator (v3.4b)
+  - Blockcell deploy fix: `index.html` copy needed for root path serving
+  - 2,512 → 2,679+ lines
 
 ### P5: External Sharing
 
@@ -277,29 +291,33 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 └── README.md
 ```
 
-### v3.3 Dashboard Architecture (2,512 lines)
-- **CSS:** ~380 lines, dark/light theme vars, 30+ component classes, v3.1–3.3 styles
-- **HTML:** ~1,350 lines across 5 tab panels (multi-select filter HTML added)
-- **JS:** ~680 lines in single IIFE with 20+ functions:
+### v3.4 Dashboard Architecture (2,679+ lines)
+- **CSS:** ~380 lines, dark/light theme vars, 30+ component classes, v3.1–3.4 styles
+- **HTML:** ~1,370 lines across 5 tab panels (data-channel/data-region attributes added)
+- **JS:** ~830 lines in single IIFE with 25+ functions:
   1. Main tab switching (pill buttons)
   2. Theme toggle (localStorage + auto-detect + themeChangeCallbacks array)
   3. IntersectionObserver for .animate-in
   3.1. animateCounter() — requestAnimationFrame counter with ease-out cubic
   3.2. triggerKPIAnimations() — staggered card entrance + counter launch
   3.3. triggerWWAnimations() — staggered wins/watchouts slide-in
-  4. drawLeadChart() — horizontal grouped bars (Overview)
+  4. drawLeadChart(activeChannels?) — horizontal grouped bars, filterable (Overview)
   5. Channel Deep Dive inner tab switching (dd-tab, scoped to .tabs-container)
   6. drawConvRateChart() — horizontal sorted bars (Lead Sources)
   7. drawTrendsLeadChart() — vertical bars + MQL line overlay (Trends, h=340)
   8. drawTrendsMerchantChart() — green-to-red gradient bars (Trends, h=300)
-  9. drawChannelMixChart() — stacked vertical bars (Trends, h=340)
+  9. drawChannelMixChart(activeChannels?) — stacked vertical bars, filterable (Trends, h=340)
   10. renderTargetCards() — vs. Target progress bars with pace indicators
   11. drawDonut() / drawAllDonuts() — Lead + MQL distribution donuts
   12. drawSparkline() / drawAllSparklines() — KPI trend sparklines
   13. hexToRgba() — color utility for gradient fills
   14. loadDashboardData() — API fetch + fallback, source badge flip, auto-refresh
   14.1. Multi-select filter pills — checkbox dropdowns for Region/Channel/Segment
-  14.2. Apply button — dirty state tracking, console.log selections (data wiring TBD)
+  14.2. applyFilters(selections) — v3.4 data layer: 10 filtering operations
+         - channelDataStore, donutLeadData, donutMQLData — JS data stores
+         - Show/hide: table rows, SEM regional rows, DD tabs, channel cards
+         - Recalculate: KPI totals, totals rows, donuts, lead chart, mix chart
+         - Reset Filters button + "Filtered" KPI indicator
   15. Date filter — date picker dropdown + Apply
   16. Export to PDF — window.print() with print stylesheet
 - **All charts:** retina (devicePixelRatio), theme-aware (getComputedStyle), resize-debounced
@@ -338,4 +356,4 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 
 ---
 
-*Last updated: March 7, 2026 — v3.3 multi-select filter pills + Apply button, code refactor, UI polish. 2,512 lines. P0–P4 complete. Next: wire Apply to data layer (Step 2).*
+*Last updated: March 7, 2026 — v3.4 filter data layer wiring, Reset Filters button, "Filtered" KPI indicator. 2,679+ lines. P0–P4 complete. Blockcell live. Next: Snowflake creds (P2) + Slack webhook (P1) on Monday.*

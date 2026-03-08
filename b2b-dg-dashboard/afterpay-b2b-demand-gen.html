@@ -556,6 +556,7 @@ canvas{max-width:100%}
           </div>
         </div>
         <button class="apply-btn" id="applyFilters">✓ Apply</button>
+        <button class="apply-btn" id="resetFilters" style="opacity:0.4;pointer-events:none;background:var(--card);color:var(--text-muted);border:1px solid var(--border)">↺ Reset</button>
         <button class="filter-pill export-btn" id="exportPdf" title="Export to PDF">
           <span>📄 Export</span>
         </button>
@@ -576,7 +577,7 @@ canvas{max-width:100%}
 
       <!-- KPI Summary -->
       <section class="section animate-in">
-        <div class="section-title">📊 KPI Summary</div>
+        <div class="section-title">📊 KPI Summary <span id="filteredBadge" style="display:none;font-size:0.65rem;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber);letter-spacing:0.5px;text-transform:uppercase;vertical-align:middle;margin-left:8px">⚡ Filtered</span></div>
         <div class="kpi-grid">
 
           <div class="kpi-card">
@@ -2609,6 +2610,16 @@ canvas{max-width:100%}
       if (segments.length > 0 && segments.length < 4) {
         console.log('ℹ️ Segment filtering (' + segments.join(', ') + ') requires live Snowflake data. Showing all segments.');
       }
+
+      // ── 11. Show/hide "Filtered" badge + activate Reset button ──
+      const filteredBadge = document.getElementById('filteredBadge');
+      const resetBtn = document.getElementById('resetFilters');
+      const isFiltered = !isAllChannels || !isAllRegions;
+      if (filteredBadge) filteredBadge.style.display = isFiltered ? 'inline' : 'none';
+      if (resetBtn) {
+        resetBtn.style.opacity = isFiltered ? '1' : '0.4';
+        resetBtn.style.pointerEvents = isFiltered ? 'auto' : 'none';
+      }
     }
 
     // Apply button handler
@@ -2623,6 +2634,25 @@ canvas{max-width:100%}
         applyFilters(selections);
         filtersDirty = false;
         applyBtn.classList.remove('ready');
+      });
+    }
+
+    // Reset button handler — resets all filters to "All" and re-applies
+    const resetBtn = document.getElementById('resetFilters');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        // Re-check all options in every filter dropdown
+        multiFilters.forEach(filterId => {
+          const dropdown = document.getElementById(filterId.replace('Filter', 'Dropdown'));
+          if (!dropdown) return;
+          dropdown.querySelectorAll('.filter-option').forEach(o => o.classList.add('checked'));
+          updatePillLabel(filterId);
+        });
+        // Apply with all selections (effectively a reset)
+        applyFilters({ regions: [], channels: [], segments: [] });
+        filtersDirty = false;
+        if (applyBtn) applyBtn.classList.remove('ready');
+        console.log('↺ Filters reset to All');
       });
     }
 
