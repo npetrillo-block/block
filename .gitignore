@@ -28,6 +28,10 @@ env/
 *~
 .DS_Store
 
+# Blockcell deploy artifacts (index.html is a copy of the main dashboard file)
+b2b-dg-dashboard/index.html
+monks-lite/index.html
+
 # Logs
 *.log
 
