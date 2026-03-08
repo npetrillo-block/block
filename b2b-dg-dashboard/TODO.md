@@ -12,9 +12,9 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
 
 | Asset | File | Status |
 |---|---|---|
-| B2B Demand Gen Dashboard v3.2 | `afterpay-b2b-demand-gen.html` | ✅ Complete (2,417 lines) |
+| B2B Demand Gen Dashboard v3.3 | `afterpay-b2b-demand-gen.html` | ✅ Complete (2,512 lines) |
 | Python Backend (shared) | `../backend/` | ✅ Built, needs Snowflake creds to go live |
-| Blockcell (hosted) | https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ | ✅ v3.2 live |
+| Blockcell (hosted) | https://blockcell.sqprod.co/sites/afterpay-b2b-demand-gen/ | ✅ v3.3 live |
 | GitHub | https://github.com/npetrillo-block/block.git | ✅ `main` branch |
 
 ---
@@ -139,6 +139,15 @@ Afterpay B2B Demand Gen Dashboard + shared Python backend, built by Nick Petrill
   - Active filter pill styling — accent border + tint when region filter is not "All"
   - Section dividers — subtle border-top between Overview sections for visual rhythm
   - 2,385 → 2,417 lines (+32 lines)
+- [x] **v3.3 Multi-Select Filter Pills + Apply** — ✅ Added Mar 7, 2026:
+  - Region/Channel/Segment pills converted to multi-select dropdowns with checkboxes
+  - "All" toggle at top of each dropdown checks/unchecks all options
+  - Pill labels update dynamically: "All", "US, UK", or "3 selected"
+  - Accent-colored Apply button between filters and Export
+  - Apply starts dimmed, lights up when user changes any selection (dirty state)
+  - Apply click logs selections to console — data layer wiring is Step 2
+  - CSS: checkbox styles (.check-box), all-toggle separator, apply-btn with hover glow
+  - 2,417 → 2,512 lines (+95 lines)
 
 ### P5: External Sharing
 
@@ -268,10 +277,10 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 └── README.md
 ```
 
-### v3.2 Dashboard Architecture (2,417 lines)
-- **CSS:** ~360 lines, dark/light theme vars, 30+ component classes, v3.1 animation classes
-- **HTML:** ~1,300 lines across 5 tab panels
-- **JS:** ~620 lines in single IIFE with 19+ functions:
+### v3.3 Dashboard Architecture (2,512 lines)
+- **CSS:** ~380 lines, dark/light theme vars, 30+ component classes, v3.1–3.3 styles
+- **HTML:** ~1,350 lines across 5 tab panels (multi-select filter HTML added)
+- **JS:** ~680 lines in single IIFE with 20+ functions:
   1. Main tab switching (pill buttons)
   2. Theme toggle (localStorage + auto-detect + themeChangeCallbacks array)
   3. IntersectionObserver for .animate-in
@@ -289,9 +298,10 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
   12. drawSparkline() / drawAllSparklines() — KPI trend sparklines
   13. hexToRgba() — color utility for gradient fills
   14. loadDashboardData() — API fetch + fallback, source badge flip, auto-refresh
-  15. Region filter — client-side dropdown filtering SEM table
-  16. Date filter — date picker dropdown + Apply
-  17. Export to PDF — window.print() with print stylesheet
+  14.1. Multi-select filter pills — checkbox dropdowns for Region/Channel/Segment
+  14.2. Apply button — dirty state tracking, console.log selections (data wiring TBD)
+  15. Date filter — date picker dropdown + Apply
+  16. Export to PDF — window.print() with print stylesheet
 - **All charts:** retina (devicePixelRatio), theme-aware (getComputedStyle), resize-debounced
 
 ### Backend API Endpoints
@@ -328,4 +338,4 @@ Get Transacting (256) → Adopt (107) → Boost (587) → Retain (939)
 
 ---
 
-*Last updated: March 7, 2026 — v3.2 code refactor + polish: CSS section banners, smooth tab transitions, enhanced table hovers, active filter pill highlights, section dividers. 2,417 lines. P0–P4 complete.*
+*Last updated: March 7, 2026 — v3.3 multi-select filter pills + Apply button, code refactor, UI polish. 2,512 lines. P0–P4 complete. Next: wire Apply to data layer (Step 2).*
